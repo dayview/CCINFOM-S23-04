@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "MainApp",
+      "request": "launch",
+      "mainClass": "businesspermitsystem/businesspermitsystem.MainApp",
+      "projectName": "app"
+    },
+    {
       "name": "Run with Gradle",
       "type": "java",
       "request": "launch",
