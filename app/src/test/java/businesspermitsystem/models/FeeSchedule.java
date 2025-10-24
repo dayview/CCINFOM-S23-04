@@ -1,11 +1,12 @@
 package businesspermitsystem.models;
+import java.time.LocalDate;
 
-enum structureType {
-    SOLE_PROPRIETORSHIP,
-    PARTNERSHIP,
-    CORPORATION,
-    ONE_PERSON_CORPORATION;
-}
+/* This class is exclusively handling the fee scheduling */
+/* Either the main class / this one to implement for the data basis */
+/* Base fee, surcharges/discounts/tiers,
+   do take note that the totals with tax
+   computed at runtime and stored on a Transaction/Invoice
+   not in PermitType/FeeSchedule */
 
 /* DTI Business Name Registration - Step-by-Step w/ Test Cases
     1. Name Search @ MySQL Database
@@ -28,5 +29,16 @@ enum structureType {
  */
 
 public class FeeSchedule {
+    public enum permitTypeID {
+        SOLE_PROPRIETORSHIP, PARTNERSHIP, CORPORATION, BRANCH
+    }
+
+    private double baseFee;
+    private boolean surchargeRule;
+    private boolean discountRule;
+    private int tierRules;
+    // private String effectiveFrom; -- unsure yet, maybe create a date in main
+    // private String effectiveTo; -- unsure yet, maybe create a date in main
+
 
 }
