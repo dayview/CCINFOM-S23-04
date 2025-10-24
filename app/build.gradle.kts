@@ -31,6 +31,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+
+    implementation("com.mysql:mysql-connector-j:9.4.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

@@ -12,12 +12,12 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/ScreenView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/MainView.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/main-theme.css").toExternalForm());
         
-        stage.setTitle("JavaFX and Gradle");
+        stage.setTitle("Business Permit System");
         stage.setScene(scene);
         stage.show();
     }
