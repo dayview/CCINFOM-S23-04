@@ -1,5 +1,7 @@
 package businesspermitsystem.models;
-import java.util.Scanner;
+
+import java.sql.*;
+import util.DatabaseConnection;
 
 /* This class is exclusively handling the permit data (types & data) of a business */
 
@@ -19,36 +21,232 @@ import java.util.Scanner;
  * Backdated filings (use filing/approval date consistently)
  */
 
+/**
+ * Represents a Permit Type and Fee Schedule in the Business Permit System
+ * Contains information about permit categories, fees, validity, and requirements
+ */
 public class PermitType {
-    public enum permitTypeID {
-        SOLE_PROPRIETORSHIP, PARTNERSHIP, CORPORATION, BRANCH
-    }
-
-    private String permitID;
+    private int permitTypeId;
     private String permitName;
-    private String validityMonths;
+    private double baseFee;
+    private String surchargeRule;
+    private int validityMonths;
     private String documentRequirements;
 
-    /* logic for sole proprietorship
-    * 1. fill up BIR Form No. 1901 (use exclusive inputs)
-    * 2. any government-issued ID (PhilID/ePhilID, Passport, Driver's License/eDriver's License)
-    *    that shows the name, address, and birthdate of the applicant, in case the ID has no
-    *    address, any proof of residence or business address -- 1 photocopy
-    *    + valid PRC ID and government ID showing address or proof of residence or business address
-    *    (in case of the practice of profession regulated by PRC) -- 1 photocopy
-    * 3. buy BIR printed invoice (available for sale at the new business registrant counter) or
-    *    final clear sample of OWN invoices (1 original) -- in case taxpayer-applicant will opt to print
-    *    its own invoices, taxpayer-applicant should choose an Accredited Printer who will print the
-    *    invoices
-    *
-    * fees to be paid: payment of 30 (loose stamp) (DST) to be affixed on the certificate of registration
-    *                  procured printing cost of BPI, if opted to use
-    *
-    *
-    * */
+    public PermitType() {
+    }
 
-    /* logic for corporations, partnerships */
+    /**
+     * Constructor with all fields (for creating new records)
+     * @param permitName
+     * @param baseFee
+     * @param surchargeRule
+     * @param validityMonths
+     * @param documentRequirements
+     */
+    public PermitType(String permitName, double baseFee, String surchargeRule, int validityMonths, String documentRequirements) {
+        this.permitName = permitName;
+        this.baseFee = baseFee;
+        this.surchargeRule = surchargeRule;
+        this.validityMonths = validityMonths;
+        this.documentRequirements = documentRequirements;
+    }
 
-    /* logic for branch */
+    /**
+     * Constructor with ID (for existing records from database)
+     */
+    public PermitType(int permitTypeId, String permitName, double baseFee,
+                      String surchargeRule, int validityMonths, String documentRequirements) {
+        this.permitTypeId = permitTypeId;
+        this.permitName = permitName;
+        this.baseFee = baseFee;
+        this.surchargeRule = surchargeRule;
+        this.validityMonths = validityMonths;
+        this.documentRequirements = documentRequirements;
+    }
 
+    public int getPermitTypeId() {
+        return permitTypeId;
+    }
+
+    public void setPermitTypeId(int permitTypeId) {
+        this.permitTypeId = permitTypeId;
+    }
+
+    public String getPermitName() {
+        return permitName;
+    }
+
+    public void setPermitName(String permitName) {
+        this.permitName = permitName;
+    }
+
+    public double getBaseFee() {
+        return baseFee;
+    }
+
+    public void setBaseFee(double baseFee) {
+        this.baseFee = baseFee;
+    }
+
+    public String getSurchargeRule() {
+        return surchargeRule;
+    }
+
+    public void setSurchargeRule(String surchargeRule) {
+        this.surchargeRule = surchargeRule;
+    }
+
+    public int getValidityMonths() {
+        return validityMonths;
+    }
+
+    public void setValidityMonths(int validityMonths) {
+        this.validityMonths = validityMonths;
+    }
+
+    public String getDocumentRequirements() {
+        return documentRequirements;
+    }
+
+    public void setDocumentRequirements(String documentRequirements) {
+        this.documentRequirements = documentRequirements;
+    }
+
+    /**
+     * CREATE - Insert new permit type record into database
+     * @return true if successfully created, false otherwise
+     */
+    public boolean create() {
+        String sql = "INSERT INTO permit_type (permit_name, base_fee, surcharge_rule," +
+                     "validity_months, document_requirements) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setString(1, this.permitName);
+            pstmt.setDouble(2, this.baseFee);
+            pstmt.setString(3, this.surchargeRule);
+            pstmt.setInt(4, this.validityMonths);
+            pstmt.setString(5, this.documentRequirements);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    this.permitTypeId = rs.getInt(1);
+                }
+                System.out.println("Permit type created successfully with ID: " + this.permitTypeId);
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error creating permit type: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * READ - Retrieve a permit type record by ID
+     * @param permitTypeId the ID of the permit type to retrieve
+     * @return permitType object if found, null otherwise
+     */
+    public static PermitType read(int permitTypeId) {
+        String sql = "SELECT * FROM permit_type WHERE permit_type_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, permitTypeId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new PermitType(
+                        rs.getInt("permit_type_id"),
+                        rs.getString("permit_name"),
+                        rs.getDouble("base_fee"),
+                        rs.getString("surcharge_rule"),
+                        rs.getInt("validity_months"),
+                        rs.getString("document_requirements")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error reading permit type: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * UPDATE - Update existing permit type record in database
+     * @return true if successfully updated, false otherwise
+     */
+    public boolean update() {
+        String sql = "UPDATE permit_type SET permit_name = ?, base_fee = ?, " +
+                     "surcharge_rule = ?, validity_months = ?, document_requirements = ? " +
+                     "WHERE permit_type_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, this.permitName);
+            pstmt.setDouble(2, this.baseFee);
+            pstmt.setString(3, this.surchargeRule);
+            pstmt.setInt(4, this.validityMonths);
+            pstmt.setString(5, this.documentRequirements);
+            pstmt.setInt(6, this.permitTypeId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Permit type updated successfully.");
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating permit type: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * DELETE - Remove permit type record from database
+     * @return true if successfully deleted, false otherwise
+     */
+    public boolean delete() {
+        String sql = "DELETE FROM permit_type WHERE permit_type_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, this.permitTypeId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Permit type deleted successfully.");
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error deleting permit type: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to display permit type information
+     */
+    @Override
+    public String toString() {
+        return "PermitType{" +
+               "permitTypeId=" + permitTypeId +
+               ", permitName='" + permitName + '\'' +
+               ", baseFee=" + baseFee +
+               ", surchargeRule'" + surchargeRule + '\'' +
+               ", validityMonths=" + validityMonths +
+               ", documentRequirements='" + documentRequirements + '\'' +
+               '}';
+    }
 }
