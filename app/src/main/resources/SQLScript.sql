@@ -1,22 +1,16 @@
+-- RUN THIS IN MYSQL WORKBENCH BEFORE LOGIN IN
+-- Common Login Credentials:
+-- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
+-- Username: root
+-- Password: 
+
 CREATE DATABASE `business_database`;
 
 USE `business_database`;
 
 DROP TABLE IF EXISTS `inspector`;
-
-CREATE TABLE `inspector` (
-`inspector_id` INT NOT NULL AUTO_INCREMENT, 
-`last_name` VARCHAR(35) NOT NULL DEFAULT '',
-`first_name`VARCHAR(35) NOT NULL DEFAULT '',
-`designation`VARCHAR(35) NOT NULL DEFAULT '',
-`license_no`VARCHAR(35) NOT NULL DEFAULT '',
-`active` TINYINT(1) NOT NULL DEFAULT 1,
-`office_location_id` INT NOT NULL DEFAULT '',
-PRIMARY KEY (`inspector_id`),
-FOREIGN KEY (`office_location_id`) REFERENCES `municipality`(`municipality_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 DROP TABLE IF EXISTS `municipality`;
+
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -27,6 +21,18 @@ CREATE TABLE `municipality` (
   `contact_no` VARCHAR(15),
   `office_address` VARCHAR(255),
   PRIMARY KEY (`municipality_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `inspector` (
+`inspector_id` INT NOT NULL AUTO_INCREMENT, 
+`last_name` VARCHAR(35) NOT NULL DEFAULT '',
+`first_name`VARCHAR(35) NOT NULL DEFAULT '',
+`designation`VARCHAR(35) NOT NULL DEFAULT '',
+`license_no`VARCHAR(35) NOT NULL DEFAULT '',
+`active` TINYINT(1) NOT NULL DEFAULT 1,
+`office_location_id` INT NOT NULL,
+PRIMARY KEY (`inspector_id`),
+FOREIGN KEY (`office_location_id`) REFERENCES `municipality`(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `inspector`

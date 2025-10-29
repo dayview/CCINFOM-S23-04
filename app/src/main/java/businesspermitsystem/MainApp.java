@@ -7,12 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/**
+ * Entry point for the Business Permit System JavaFX application.
+ */
 public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/SQLLoginView.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/main-theme.css").toExternalForm());
