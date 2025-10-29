@@ -1,16 +1,11 @@
 package businesspermitsystem.controllers;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import businesspermitsystem.db.DatabaseConnector;
 import businesspermitsystem.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -61,8 +56,10 @@ public class LoginController {
         String url = urlField.getText().trim();
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
-       try (Connection connection = DatabaseConnector.testConnection(url, username, password)) {
-            if (connection != null) {
+       try{
+            DatabaseConnector.getConnection(url, username, password);
+
+            if (DatabaseConnector.connection != null) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Database connection successful!");
                 Stage currentStage = (Stage) connectButton.getScene().getWindow();
                 SceneManager sceneManager = new SceneManager(currentStage);
