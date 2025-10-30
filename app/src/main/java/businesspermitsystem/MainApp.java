@@ -1,6 +1,7 @@
 
 package businesspermitsystem;
 
+import businesspermitsystem.db.DatabaseConnector;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,6 +23,12 @@ public class MainApp extends Application {
         stage.setTitle("Business Permit System");
         stage.setScene(scene);
         stage.show();
+
+        stage.setOnCloseRequest(
+            event -> {
+                DatabaseConnector.closeConnection();
+            }
+        );
     }
 
     public static void main(String[] args) {

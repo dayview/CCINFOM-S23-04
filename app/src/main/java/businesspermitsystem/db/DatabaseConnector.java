@@ -34,4 +34,15 @@ public class DatabaseConnector {
             throw new SQLException("MySQL JDBC Driver not found.", e);
         }
     }
+
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            }
+            catch (SQLException ignored) {
+
+            }
+        }
+    }
 }
