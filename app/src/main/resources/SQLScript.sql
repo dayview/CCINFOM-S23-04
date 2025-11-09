@@ -8,9 +8,14 @@ CREATE DATABASE `business_database`;
 
 USE `business_database`;
 
+--Core
+
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `municipality`;
 
+--Transactions
+DROP TABLE IF EXISTS `inspection_schedule`;
+DROP TABLE IF EXISTS `inspection_result`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -30,9 +35,9 @@ CREATE TABLE `inspector` (
 `designation`VARCHAR(35) NOT NULL DEFAULT '',
 `license_no`VARCHAR(35) NOT NULL DEFAULT '',
 `active` TINYINT(1) NOT NULL DEFAULT 1,
-`office_location_id` INT NOT NULL,
+`municipality_id` INT NOT NULL,
 PRIMARY KEY (`inspector_id`),
-FOREIGN KEY (`office_location_id`) REFERENCES `municipality`(`municipality_id`)
+FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `inspector`

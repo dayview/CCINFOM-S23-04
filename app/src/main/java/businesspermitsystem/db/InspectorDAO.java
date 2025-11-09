@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import businesspermitsystem.models.InspectorModel;
 
 /**
- * Data Access Object (DAO) for the {@link Inspector} model.
+ * Data Access Object (DAO) for the {@link InspectorModel}.
  * 
  * This class handles all database interactions related to inspectors —
  * including creating, reading, updating, and deleting records.
@@ -24,7 +24,7 @@ public class InspectorDAO {
         statement.setString(3, inspector.getDesignation());
         statement.setString(4, inspector.getLicenseNumber());
         statement.setInt(5, (inspector.isActive()) ? 1 : 0);
-        statement.setString(6, inspector.getOfficeLocation());
+        statement.setString(6, inspector.getMunicipalityID());
 
         statement.executeUpdate();
     }

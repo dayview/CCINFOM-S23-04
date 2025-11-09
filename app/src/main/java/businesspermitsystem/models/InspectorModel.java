@@ -1,37 +1,41 @@
 package businesspermitsystem.models;
 
 /**
- * 
+ * The model for the inspector data from the database
  */
 public class InspectorModel {
     /**
-     * 
+     * The main primary key and unique identifier of each inspector
      */
     private int inspectorID;
     /**
-     * 
+     * The last name of the inspector
      */
     private String lastName;
     /**
-     * 
+     * The first name of each inspector
      */
     private String firstName;
     /**
-     * 
+     * The middle name of each inspector
+     */
+    private String middleName;
+    /**
+     * Formal title or the inspector's offical authorized and specific inspection duty (e.g fire inspector, health and sanitation inspector).
      */
     private String designation;
     /**
-     * 
+     * Unique license number of the inspector
      */
     private String licenseNumber;
     /**
-     * 
+     * Boolean that states if the inspector is currently active in service
      */
     private Boolean active;
     /**
-     * 
+     * The Foreign key and ID of the municipality where the inspector is employed.
      */
-    private String officeLocation;
+    private String municipalityID;
 
     public int getInspectorID() {
         return inspectorID;
@@ -81,11 +85,11 @@ public class InspectorModel {
         this.active = active;
     }
     
-    public String getOfficeLocation() {
-        return officeLocation;
+    public String getMunicipalityID() {
+        return municipalityID;
     }
     
-    public void setOfficeLocation(String officeLocation) {
-        this.officeLocation = officeLocation;
+    public void setMunicipalityID(String municipalityID) {
+        this.municipalityID = municipalityID;
     }
 }
