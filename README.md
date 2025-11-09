@@ -10,3 +10,6 @@ This project demonstrates the use of a **3-tier architecture** (UI → Service �
 - **Java 17+**  
 - **JavaFX 21** (UI framework)   
 - **MySQL** (Database)  
+
+## 🔔 Reminder
+- Open **SQLScript.sql** and run once in mysql workbench before logging in

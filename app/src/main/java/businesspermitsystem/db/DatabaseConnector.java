@@ -1,0 +1,48 @@
+package businesspermitsystem.db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+/**
+ * Utility class for managing MySQL database connections.
+ * 
+ * Provides methods for connecting to and testing a database
+ * using dynamic credentials. This version is designed for
+ * use with a JavaFX login screen where users can input
+ * their own connection details.
+ */
+public class DatabaseConnector {
+
+    public static Connection connection;
+
+    /**
+     * Establishes and returns a MySQL database connection.
+     * 
+     * @param url       the JDBC connection URL
+     * @param username  the database username
+     * @param password  the database password
+     * @return a valid {@link Connection} object if successful
+     * @throws SQLException if the connection fails or driver is missing
+     */
+    public static Connection getConnection(String url, String username, String password) throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(url, username, password);
+            return connection;
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL JDBC Driver not found.", e);
+        }
+    }
+
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            }
+            catch (SQLException ignored) {
+
+            }
+        }
+    }
+}
