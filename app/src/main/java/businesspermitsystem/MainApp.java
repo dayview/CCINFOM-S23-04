@@ -1,18 +1,21 @@
 
 package businesspermitsystem;
 
+import businesspermitsystem.db.DatabaseConnector;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/**
+ * Entry point for the Business Permit System JavaFX application.
+ */
 public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/SQLLoginView.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/main-theme.css").toExternalForm());
@@ -20,6 +23,12 @@ public class MainApp extends Application {
         stage.setTitle("Business Permit System");
         stage.setScene(scene);
         stage.show();
+
+        stage.setOnCloseRequest(
+            event -> {
+                DatabaseConnector.closeConnection();
+            }
+        );
     }
 
     public static void main(String[] args) {
