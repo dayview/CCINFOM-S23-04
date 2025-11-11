@@ -12,7 +12,7 @@ public class SelectMunicipalityController {
     /**
      * 
      */
-    @FXML private ChoiceBox municipalityIDChoiceBox;
+    @FXML private ChoiceBox<Integer> municipalityIDChoiceBox;
 
     /**
      * 
@@ -22,7 +22,7 @@ public class SelectMunicipalityController {
     /**
      * 
      */
-    @FXML private ChoiceBox municipalityNameChoiceBox;
+    @FXML private ChoiceBox<String> municipalityNameChoiceBox;
 
     /**
      * 
@@ -32,7 +32,7 @@ public class SelectMunicipalityController {
     /**
      * 
      */
-    @FXML private ChoiceBox regionChoiceBox;
+    @FXML private ChoiceBox<String> regionChoiceBox;
     
     /**
      * 
@@ -42,7 +42,7 @@ public class SelectMunicipalityController {
     /**
      * 
      */
-    @FXML private ChoiceBox provinceChoiceBox;
+    @FXML private ChoiceBox<String> provinceChoiceBox;
 
     /**
      * 

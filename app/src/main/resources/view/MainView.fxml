@@ -4,13 +4,20 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.MainController">
    <children>
       <Label id="titleLabel" text="Business Permit System" />
-      <Button id="newBusinessButton" mnemonicParsing="false" text="New Business Registration and Initial Permit Issuance" />
-      <Button id="permitRenewalButton" mnemonicParsing="false" text="Permit Renewal Transaction" />
-      <Button id="inspectionSchedulingButton" mnemonicParsing="false" text="Inspection Scheduling &amp; Clearance Transaction" />
-      <Button id="businessStatusButton" mnemonicParsing="false" text="Business Status Update Transaction" />
+      <Button id="newBusinessButton" fx:id="newBusinessRegistrationButton" mnemonicParsing="false" onAction="#newBusinessRegistrationButtonPressed" text="New Business Registration and Initial Permit Issuance" />
+      <Button id="permitRenewalButton" fx:id="permitRenewalButton" mnemonicParsing="false" onAction="#permitRenewalButtonPressed" text="Permit Renewal Transaction" />
+      <Button id="inspectionSchedulingButton" fx:id="inspectionScheduleButton" mnemonicParsing="false" onAction="#inspectionScheduleButtonPressed" text="Inspection Scheduling &amp; Clearance Transaction" />
+      <Button id="businessStatusButton" fx:id="businessStatusUpdateButton" mnemonicParsing="false" onAction="#businessStatusUpdateButtonPressed" text="Business Status Update Transaction" />
+      <Label text="Inspectors" />
+      <Button fx:id="addInspectorButton" mnemonicParsing="false" onAction="#addInspectorButtonPressed" text="Add Inspector" />
+      <Button fx:id="updateInspectorButton" layoutX="265.0" layoutY="148.0" mnemonicParsing="false" onAction="#updateInspectorButtonPressed" text="Update Inspector" />
+      <Button fx:id="deleteInspectorButton" layoutX="256.0" layoutY="173.0" mnemonicParsing="false" onAction="#deleteInspectorButtonPressed" text="Delete Inspector" />
+      <Label layoutX="283.0" layoutY="130.0" text="Municipality" />
+      <Button fx:id="addMunicipalityButton" layoutX="265.0" layoutY="148.0" mnemonicParsing="false" onAction="#addMunicipalityButtonPressed" text="Add Municipality" />
+      <Button fx:id="updateMunicipalityButton" layoutX="265.0" layoutY="242.0" mnemonicParsing="false" onAction="#updateMunicipalityButtonPressed" text="Update Municipality" />
+      <Button fx:id="addMunicipalityButton11" layoutX="265.0" layoutY="268.0" mnemonicParsing="false" onAction="#addMunicipalityButtonPressed" text="Delete Municipality" />
    </children>
 </VBox>
