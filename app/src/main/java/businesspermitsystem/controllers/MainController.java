@@ -88,12 +88,12 @@ public class MainController {
     }
 
     @FXML
-    private void inspectionScheduleButton(ActionEvent event) {
+    private void inspectionScheduleButtonPressed(ActionEvent event) {
 
     }
 
     @FXML
-    private void businessStatusUpdateButton(ActionEvent event) {
+    private void businessStatusUpdateButtonPressed(ActionEvent event) {
 
     }
     // BUSINESS ACTIONS
