@@ -11,5 +11,7 @@ import businesspermitsystem.models.MunicipalityModel;
  * It uses {@link DatabaseConnector} to establish connections.
  */
 public class MunicipalityDAO {
-
+    public void addMunicipality() {
+        
+    }
 }

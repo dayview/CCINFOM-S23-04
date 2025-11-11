@@ -4,6 +4,7 @@ package businesspermitsystem.models;
  * The model for the inspector data from the database
  */
 public class InspectorModel {
+
     /**
      * The main primary key and unique identifier of each inspector
      */
@@ -35,7 +36,18 @@ public class InspectorModel {
     /**
      * The Foreign key and ID of the municipality where the inspector is employed.
      */
-    private String municipalityID;
+    private int municipalityID;
+
+    public InspectorModel(int inspectorID, String lastName, String firstName, String middleName, String designation, String licenseNumber, Boolean active, int municipalityID) {
+        this.inspectorID = inspectorID;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.designation = designation;
+        this.licenseNumber = licenseNumber;
+        this.active = active;
+        this.municipalityID = municipalityID;
+    }
 
     public int getInspectorID() {
         return inspectorID;
@@ -85,11 +97,11 @@ public class InspectorModel {
         this.active = active;
     }
     
-    public String getMunicipalityID() {
+    public int getMunicipalityID() {
         return municipalityID;
     }
     
-    public void setMunicipalityID(String municipalityID) {
+    public void setMunicipalityID(int municipalityID) {
         this.municipalityID = municipalityID;
     }
 }
