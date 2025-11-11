@@ -1,9 +1,10 @@
 package businesspermitsystem.controllers;
 
+import businesspermitsystem.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 /**
  * 
@@ -81,6 +82,20 @@ public class MainController {
 
     }
 
+    @FXML
+    private void permitRenewalButtonPressed(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void inspectionScheduleButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void businessStatusUpdateButton(ActionEvent event) {
+
+    }
     // BUSINESS ACTIONS
     
 
@@ -95,7 +110,9 @@ public class MainController {
      */
     @FXML
     private void addInspectorButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) addInspectorButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/addInspectorView.fxml", "Add Inspector");
     }
 
     /**
@@ -103,7 +120,9 @@ public class MainController {
      */
     @FXML
     private void updateInspectorButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) updateInspectorButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/updateInspectorView.fxml", "Update Inspector");
     }
 
     /**
@@ -111,7 +130,9 @@ public class MainController {
      */
     @FXML
     private void deleteInspectorButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) deleteInspectorButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/deleteInspectorView.fxml", "Delete Inspector");
     }
     
     // MUNICIPALITY ACTIONS
@@ -121,7 +142,9 @@ public class MainController {
      */
     @FXML
     private void addMunicipalityButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) addMunicipalityButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/addMunicipalityView.fxml", "Add Municipality");
     }
 
     /**
@@ -129,7 +152,9 @@ public class MainController {
      */
     @FXML
     private void updateMunicipalityButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) updateMunicipalityButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/updateMunicipalityView.fxml", "Update Municipality");
     }
 
     /**
@@ -137,6 +162,8 @@ public class MainController {
      */
     @FXML
     private void deleteMunicipalityButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) deleteMunicipalityButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/deleteMunicipalityView.fxml", "Delete Municipality");
     }
 }
