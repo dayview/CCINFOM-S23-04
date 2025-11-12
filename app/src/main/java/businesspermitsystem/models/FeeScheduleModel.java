@@ -84,15 +84,4 @@ public class FeeScheduleModel {
     public void setDocumentRequirements(String documentRequirements) {
         this.documentRequirements = documentRequirements;
     }
-
-    @Override
-    public String toString() {
-        return "FeeSchedule{" +
-                "id=" + id +
-                ", baseFee=" + baseFee +
-                ", surchargeRule='" + surchargeRule + '\'' +
-                ", validityMonths=" + validityMonths +
-                ", documentRequirements=" + documentRequirements +
-                '}';
-    }
 }

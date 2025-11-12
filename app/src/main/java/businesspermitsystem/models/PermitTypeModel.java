@@ -28,17 +28,17 @@ import util.DatabaseConnection;
 public class PermitTypeModel {
     private int permitTypeID;
     private String permitName;
-    private FeeSchedule feeSchedule;
+    private FeeScheduleModel feeSchedule;
     private String documentRequirements;
     private int validityMonths;
 
     /**
      * Constructor with all fields (for creating new records)
-     * @param permitTypeID
-     * @param permitName
-     * @param feeSchedule
+     * @param permitTypeID description here
+     * @param permitName description here
+     * @param feeSchedule description here
      */
-    public PermitTypeModel(int permitTypeID, String permitName, FeeSchedule feeSchedule, String documentRequirements, int validityMonths) {
+    public PermitTypeModel(int permitTypeID, String permitName, FeeScheduleModel feeSchedule, String documentRequirements, int validityMonths) {
         this.permitTypeID = permitTypeID;
         this.permitName = permitName;
         this.feeSchedule = feeSchedule;
@@ -54,7 +54,7 @@ public class PermitTypeModel {
         return permitName;
     }
 
-    public FeeSchedule getFeeSchedule() {
+    public FeeScheduleModel getFeeSchedule() {
         return feeSchedule;
     }
 
@@ -74,7 +74,7 @@ public class PermitTypeModel {
         this.permitName = permitName;
     }
 
-    public void setFeeSchedule(FeeSchedule feeSchedule) {
+    public void setFeeSchedule(FeeScheduleModel feeSchedule) {
         this.feeSchedule = feeSchedule;
     }
 
