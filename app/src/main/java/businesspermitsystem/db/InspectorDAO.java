@@ -53,14 +53,14 @@ public class InspectorDAO {
 
         while (result.next()) {
             InspectorModel inspector = new InspectorModel(
-                result.getInt("inspectorID"),
+                result.getInt("inspector_id"),
                 result.getString("last_name"),
                 result.getString("first_name"),
                 result.getString("middle_name"),
                 result.getString("designation"),
                 result.getString("licenseNumber"),
                 result.getBoolean("active"),
-                result.getInt("municipalityID")
+                result.getInt("municipality_id")
             );
             inspectors.add(inspector);
         }
