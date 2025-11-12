@@ -1,7 +1,7 @@
 package businesspermitsystem.models;
 
 import java.sql.*;
-import util.DatabaseConnection;
+import businesspermitsystem.db.DatabaseConnector;
 
 /* This class is exclusively handling the permit data (types & data) of a business */
 
