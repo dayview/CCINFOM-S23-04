@@ -30,13 +30,18 @@ public class MunicipalityDAO {
 
         while (result.next()) {
             MunicipalityModel municipality = new MunicipalityModel(
-                result.getInt(0),
-                result.getString(1),
-                result.getString(0),
-                result.getString(0),
-                result.getString(0),
-                result.getString(0)
+                result.getInt("municipality_id"),
+                result.getString("municipality_name"),
+                result.getString("province"),
+                result.getString("region"),
+                result.getString("classification"),
+                result.getString("contact_number"),
+                result.getString("office_street"),
+                result.getString("office_barangay"),
+                result.getString("office_zipcode")
             );
+
+            municipalities.add(municipality);
         }
 
         return municipalities;

@@ -1,8 +1,11 @@
 package businesspermitsystem.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import businesspermitsystem.db.MunicipalityDAO;
+import businesspermitsystem.models.MunicipalityModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +15,8 @@ import javafx.scene.control.ChoiceBox;
  * 
  */
 public class SelectMunicipalityController {
+
+    ArrayList<MunicipalityModel> municipalityModels = new ArrayList<>();
 
     /**
      * 
@@ -80,11 +85,50 @@ public class SelectMunicipalityController {
     }
 
     /**
-     * Runs after all the FXML objects are loaded. Sets up the choices box contents
+     * Runs after all the FXML objects are loaded. Sets up the choices box contents by creating the MunicipalityDAO
      */
     @FXML
     private void initialize() {
+        System.out.println("Initialize method called SelectMunicipalityController");
 
+        MunicipalityDAO municipalityDAO = new MunicipalityDAO();
+        try {
+            municipalityModels = municipalityDAO.getMunicipalities();
+
+            // clear previous contents 
+            municipalityIDChoiceBox.getItems().clear();
+            municipalityNameChoiceBox.getItems().clear();
+            classificationChoiceBox.getItems().clear();
+            regionChoiceBox.getItems().clear();
+            provinceChoiceBox.getItems().clear();
+
+            for (MunicipalityModel model : municipalityModels) {
+                municipalityIDChoiceBox.getItems().add(model.getMunicipalityID());
+                municipalityNameChoiceBox.getItems().add(model.getMunicipalityName());
+            }
+
+            ArrayList<String> classifications = new ArrayList<>();
+            ArrayList<String> regions = new ArrayList<>();
+            ArrayList<String> provinces = new ArrayList<>();
+
+            // Avoid Duplicates
+            for (MunicipalityModel model : municipalityModels) {
+                if (!classifications.contains(model.getClassification()))
+                    classifications.add(model.getClassification());
+                if (!regions.contains(model.getRegion()))
+                    regions.add(model.getRegion());
+                if (!provinces.contains(model.getProvince()))
+                    provinces.add(model.getProvince());
+            }
+
+            classificationChoiceBox.getItems().addAll(classifications);
+            regionChoiceBox.getItems().addAll(regions);
+            provinceChoiceBox.getItems().addAll(provinces);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     //--------------------------------------------------------------------

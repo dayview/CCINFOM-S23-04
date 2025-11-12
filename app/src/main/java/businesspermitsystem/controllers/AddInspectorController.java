@@ -1,8 +1,10 @@
 package businesspermitsystem.controllers;
 
+import businesspermitsystem.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * 
@@ -12,25 +14,59 @@ public class AddInspectorController {
     /**
      * 
      */
-    @FXML private Label lastNameLabel;
+    @FXML private TextField lastNameTextField;
     /**
      * 
      */
-    @FXML private Label firstNameLabel;
+    @FXML private TextField firstNameTextField;
     /**
      * 
      */
-    @FXML private Label middleNameLabel;
+    @FXML private TextField middleNameTextField;
     /**
      * 
      */
-    @FXML private Label designationLabel;
+    @FXML private TextField designationTextField;
     /**
      * 
      */
-    @FXML private Label licenseNumberLabel;
+    @FXML private TextField licenseNumberTextField;
     /**
      * 
      */
-    @FXML private Button officeLocationLButton;
+    @FXML private Button officeLocationButton;
+    /**
+     * 
+     */
+    @FXML private Button confirmButton;
+    /**
+     * 
+     */
+    @FXML private Button cancelButton;
+
+    @FXML
+    private void initialize() {
+
+    }
+
+    @FXML
+    private void officeLocationButtonPressed() {
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/SelectMunicipalityView.fxml", "Select Municipality");
+    }
+
+    @FXML
+    private void confirmButtonPressed() {
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
+    }
+
+    @FXML
+    private void cancelButtonPressed() {
+        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
+    }
 }
