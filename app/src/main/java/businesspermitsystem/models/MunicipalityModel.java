@@ -111,5 +111,7 @@ public class MunicipalityModel {
         this.officeZipCode = officeZipCode;
     }
 
-    
+    public String toString() {
+        return municipalityName + ", " + region + ", " + province;
+    }
 }

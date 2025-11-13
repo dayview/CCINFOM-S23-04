@@ -66,4 +66,8 @@ public class InspectorDAO {
         }
         return inspectors;
     }
+
+    public void deleteInspector(int id) {
+        String query = "DELETE FROM inspector WHERE id = ?";
+    }
 }

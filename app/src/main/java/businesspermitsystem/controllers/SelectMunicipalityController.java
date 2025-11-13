@@ -1,5 +1,6 @@
 package businesspermitsystem.controllers;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,13 @@ import javafx.stage.Stage;
  */
 public class SelectMunicipalityController {
 
+
+    // The FXML path of the previous view.
+    private String returnFXMLPath = "";
+    
+    // The window title of the previous fxml path
+    private String returnWindowTitle = "";
+    
     /** Complete list of all municipalities loaded from the database */
     private List<MunicipalityModel> municipalityModels = new ArrayList<>();
     
@@ -435,7 +443,14 @@ public class SelectMunicipalityController {
             MunicipalityModel selected = filteredMunicipalityModels.get(0);
             System.out.println("Confirmed selection: " + selected.getMunicipalityName() + 
                                " (ID: " + selected.getMunicipalityID() + ")");
-            // TODO: Implement logic to close the window and pass the selected data back
+            Stage currentStage = (Stage) confirmButton.getScene().getWindow();
+            SceneManager sceneManager = new SceneManager(currentStage);
+            try {
+                Object controller = sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+            } catch (IOException e) {
+                // TODO: handle exception
+            }
+            
         } else {
             System.out.println("Error: Cannot confirm. Filtered list size is " + filteredMunicipalityModels.size());
         }
@@ -453,6 +468,28 @@ public class SelectMunicipalityController {
         System.out.println("Selection cancelled.");
         Stage currentStage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
+        try {
+            Object controller = sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+        } catch (IOException e) {
+            // TODO: handle exception
+        }
     }
+
+	public String getReturnFXMLPath() {
+		return returnFXMLPath;
+	}
+
+	public void setReturnFXMLPath(String returnFXMLPath) {
+		this.returnFXMLPath = returnFXMLPath;
+	}
+
+	public String getReturnWindowTitle() {
+		return returnWindowTitle;
+	}
+
+	public void setReturnWindowTitle(String returnWindowTitle) {
+		this.returnWindowTitle = returnWindowTitle;
+	}
+
+    
 }

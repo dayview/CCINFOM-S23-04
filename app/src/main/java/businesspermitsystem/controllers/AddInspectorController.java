@@ -1,5 +1,9 @@
 package businesspermitsystem.controllers;
 
+import java.io.IOException;
+
+import businesspermitsystem.models.InspectorModel;
+import businesspermitsystem.models.MunicipalityModel;
 import businesspermitsystem.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +14,9 @@ import javafx.stage.Stage;
  * 
  */
 public class AddInspectorController {
+
+    private InspectorModel inspectorModel;
+    private MunicipalityModel municipalityModel;
 
     /**
      * 
@@ -53,7 +60,13 @@ public class AddInspectorController {
     private void officeLocationButtonPressed() {
         Stage currentStage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/SelectMunicipalityView.fxml", "Select Municipality");
+            try {
+                SelectMunicipalityController controller = (SelectMunicipalityController) sceneManager.switchSceneWithController("/view/SelectMunicipalityView.fxml", "Select Municipality");
+                controller.setReturnFXMLPath(null);
+                controller.setReturnWindowTitle("Add Inspector");
+            } catch (IOException e) {
+                // TODO: handle exception
+            }
     }
 
     @FXML
@@ -69,4 +82,11 @@ public class AddInspectorController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
     }
-}
+
+    public void initializeMunicipality(Object inspectorModel, Object municipalityModel) {
+        this.municipalityModel = (MunicipalityModel) municipalityModel;
+        this.inspectorModel = (InspectorModel) inspectorModel;
+
+        officeLocationButton.setText(municipalityModel.toString());
+    }
+ }
