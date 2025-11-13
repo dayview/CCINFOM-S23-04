@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="CENTER" text="Add Business" textAlignment="CENTER">
+            <VBox.margin>
+                <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+        </Label>
+
+        <!-- Business Name -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Business Name" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Trade Name -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Trade Name" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Street Address -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Street Address" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Barangay -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Barangay" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- City -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="City" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Province -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Province" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Business Type -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Business Type" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Tax ID -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Tax ID" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Start Date -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Start Date" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <DatePicker HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+
+        <!-- Status -->
+        <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="554.0">
+            <children>
+                <Label text="Status" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </Label>
+                <TextField HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="10.0" right="10.0"/>
+    </padding>
+</VBox>

@@ -34,6 +34,12 @@ public class MainController {
 
     // BUSINESS BUTTONS
 
+    @FXML private Button addBusinessButton;
+
+    @FXML private Button removeBusinessButton;
+
+    @FXML private Button updateBusinessButton;
+
     // OWNERS BUTTONS
 
     // PERMIT TYPE AND FEE SCHEDULE BUTTONS
@@ -97,7 +103,28 @@ public class MainController {
 
     }
     // BUSINESS ACTIONS
-    
+    @FXML
+    private void addBusinessButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/addBusinessView.fxml", "Add Business");
+    }
+
+    @FXML
+    private void removeBusinessButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/removeBusinessView.fxml", "Add Business");
+    }
+
+    @FXML
+    private void updateBusinessButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/updateBusinessView.fxml", "Add Business");
+    }
+
+
 
     // OWNERS ACTIONS
 
