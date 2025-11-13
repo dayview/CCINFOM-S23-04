@@ -17,16 +17,16 @@ public class OwnerDAO {
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
                     return new OwnerModel(
-                        result.getInt("ownerID"),
-                        result.getString("lastName"),
-                        result.getString("firstName"),
-                        result.getString("middleName"),
-                        result.getString("contactNo"),
+                        result.getInt("owner_id"),
+                        result.getString("last_name"),
+                        result.getString("first_name"),
+                        result.getString("middle_name"),
+                        result.getString("contact_no"),
                         result.getString("email"),
-                        result.getString("govID_type"),
-                        result.getString("govID_no"),
+                        result.getString("gov_id_type"),
+                        result.getString("gov_id_no"),
                         result.getString("tin"),
-                        result.getString("homeAddress")
+                        result.getString("home_address")
                     );
                 }
             }
@@ -46,15 +46,16 @@ public class OwnerDAO {
 
             while (result.next()) {
                 OwnerModel owner = new OwnerModel(
-                    result.getInt("ownerID"),
-                    result.getString("lastName"),
-                    result.getString("firstName"),
-                    result.getString("middleName"),
-                    result.getString("contactNo"),
+                    result.getInt("owner_id"),
+                    result.getString("last_name"),
+                    result.getString("first_name"),
+                    result.getString("middle_name"),
+                    result.getString("contact_no"),
                     result.getString("email"),
-                    result.getString("govID_type"),
-                    result.getString("govID_no"),                        result.getString("tin"),
-                    result.getString("homeAddress")
+                    result.getString("gov_id_type"),
+                    result.getString("gov_id_no"),                        
+                    result.getString("tin"),
+                    result.getString("home_dddress")
                 );
                 owners.add(owner);
             }
@@ -90,19 +91,20 @@ public class OwnerDAO {
     }
 
     public boolean updateOwner(OwnerModel owner) {
-        String query = "UPDATE owner SET last_name = ?, first_name = ?, middle_name = ?, contact_no = ?, email = ?, gov_id_type = ?, gov_id_no = ?, tin = ?, home_address = ?";
+        String query = "UPDATE owner SET last_name = ?, first_name = ?, middle_name = ?, contact_no = ?, email = ?, gov_id_type = ?, gov_id_no = ?, tin = ?, home_address = ? WHERE owner_id = ?";
         
         try (PreparedStatement statement = DatabaseConnector.connection.prepareStatement(query)) {
             
-            statement.setString(1, owner.getLastName());
-            statement.setString(2, owner.getFirstName());
-            statement.setString(3, owner.getMiddleName());
-            statement.setString(4, owner.getContactNo());
-            statement.setString(5, owner.getEmail());
-            statement.setString(6, owner.getGovID_type());
-            statement.setString(7, owner.getGovID_no());
-            statement.setString(8, owner.getTin());
-            statement.setString(9, owner.getHomeAddress());
+            statement.setInt(1, owner.getOwnerID());
+            statement.setString(2, owner.getLastName());
+            statement.setString(3, owner.getFirstName());
+            statement.setString(4, owner.getMiddleName());
+            statement.setString(5, owner.getContactNo());
+            statement.setString(6, owner.getEmail());
+            statement.setString(7, owner.getGovID_type());
+            statement.setString(8, owner.getGovID_no());
+            statement.setString(9, owner.getTin());
+            statement.setString(10, owner.getHomeAddress());
 
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
