@@ -10,8 +10,8 @@ public class PermitTypeView {
         for (PermitTypeModel permitType : permitTypeModels) {
             FeeScheduleModel fee = permitType.getFeeSchedule();
             System.out.println(
-                    "ID: " + permitType.getPermitTypeID() +
-                    ", Name: " + permitType.getPermitName() +
+                    "ID: " + permitType.getID() +
+                    ", Name: " + permitType.getName() +
                     ", Base Fee: " + (fee != null ? fee.getBaseFee() : "N/A") +
                     ", Validity (Months): " + permitType.getValidityMonths()
             );
@@ -34,7 +34,7 @@ public class PermitTypeView {
 
     public PermitTypeModel getInputForNewPermitType() {
         // Implementation to get input for new PermitType, returning dummy at the moment
-        return new PermitTypeModel(0, "", 0.0, "", 0, "", null);
+        return new PermitTypeModel(0, "", null, "", 0);
     }
 
     public PermitTypeModel getInputForUpdatePermitType(PermitTypeModel permitTypeModel) {
