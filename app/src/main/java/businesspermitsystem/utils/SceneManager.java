@@ -39,4 +39,20 @@ public class SceneManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Switches the currently displayed scene to a new one.
+     * 
+     * @param fxmlPath the classpath location of the FXML file to load
+     * @param title the new title for the window
+     * @return the controller of the scene for possible passing of data.
+     */
+    public Object switchSceneWithController(String fxmlPath, String title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Scene newScene = new Scene(loader.load());
+        stage.setTitle(title);
+        stage.setScene(newScene);
+        stage.show();
+        return loader.getController();
+    }
 }
