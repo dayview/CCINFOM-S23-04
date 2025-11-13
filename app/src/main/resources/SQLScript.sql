@@ -1,4 +1,4 @@
--- RUN THIS IN MYSQL WORKBENCH BEFORE LOGIN IN
+-- RUN THIS IN MYSQL WORKBENCH BEFORE LOGGING IN
 -- Common Login Credentials:
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
@@ -11,6 +11,7 @@ USE `business_database`;
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `municipality`;
 DROP TABLE IF EXISTS `business`;
+DROP TABLE IF EXISTS `permit_type`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -26,30 +27,39 @@ CREATE TABLE `municipality` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `business` (
-    `business_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `business_name` VARCHAR(150) NOT NULL,
-    `trade_name` VARCHAR(150),
-    `barangay` VARCHAR(100),
-    `street_address` VARCHAR(150),
-    `business_type` VARCHAR(100),
-    `tax_id` VARCHAR(50) UNIQUE,
-    `start_date` DATE,
-    `status` VARCHAR(50) NOT NULL DEFAULT '',
-    `municipality_id` INT,
-    FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
-);
-
+  `business_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `business_name` VARCHAR(150) NOT NULL,
+  `trade_name` VARCHAR(150),
+  `barangay` VARCHAR(100),
+  `street_address` VARCHAR(150),
+  `business_type` VARCHAR(100),
+  `tax_id` VARCHAR(50) UNIQUE,
+  `start_date` DATE,
+  `status` VARCHAR(50) NOT NULL DEFAULT '',
+  `municipality_id` INT,
+  FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `inspector` (
-`inspector_id` INT NOT NULL AUTO_INCREMENT, 
-`last_name` VARCHAR(35) NOT NULL DEFAULT '',
-`first_name`VARCHAR(35) NOT NULL DEFAULT '',
-`designation`VARCHAR(35) NOT NULL DEFAULT '',
-`license_number`VARCHAR(35) NOT NULL DEFAULT '',
-`active` TINYINT(1) NOT NULL DEFAULT 1,
-`municipality_id` INT NOT NULL,
-PRIMARY KEY (`inspector_id`),
-FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
+  `inspector_id` INT NOT NULL AUTO_INCREMENT, 
+  `last_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `first_name`VARCHAR(35) NOT NULL DEFAULT '',
+  `designation`VARCHAR(35) NOT NULL DEFAULT '',
+  `license_number`VARCHAR(35) NOT NULL DEFAULT '',
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
+  `municipality_id` INT NOT NULL,
+  PRIMARY KEY (`inspector_id`),
+  FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `permit_type` (
+  `permit_type_id` INT NOT NULL AUTO_INCREMENT,
+  `permit_name` VARCHAR(100) NOT NULL,
+  `base_fee` DECIMAL(10,2) NOT NULL,
+  `surcharge_rule` VARCHAR(200),
+  `validity_months` INT NOT NULL,
+  `document_requirements` TEXT,
+  PRIMARY KEY (`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality` 
@@ -65,7 +75,6 @@ VALUES
 ('Taytay', 'Rizal', 'Region IV-A (CALABARZON)', 'First Class Municipality', '02-658-7600', 'Municipal Hall, Rizal Ave.', NULL, '1920'),
 ('Maribojoc', 'Bohol', 'Region VII (Central Visayas)', 'Fourth Class Municipality', '038-537-9911', 'Municipal Hall, Poblacion', NULL, '6338'),
 ('Laoang', 'Northern Samar', 'Region VIII (Eastern Visayas)', 'Second Class Municipality', '055-251-9302', 'Municipal Hall, Barangay Geracdo', 'Geracdo', '6410');
-
 
 INSERT INTO `inspector`
 (`last_name`, `first_name`, `designation`, `license_number`, `active`, `municipality_id`)
@@ -94,3 +103,17 @@ VALUES
 ('Rizal Garment Export Inc.', 'RGEI', 'Manufacturing/Export', 'TIN-400-008', '2019-02-28', 'Active', 'Taytay Industrial Zone, Lot 22', 'San Juan', 8),
 ('Bohol Aquatic Farms', 'Aquafish Maribojoc', 'Agriculture/Fishery', 'TIN-400-009', '2024-01-05', 'Pending', 'Purok 1, Coastal Area', 'Poblacion', 9),
 ('Samar Power Systems', 'SPS Energy', 'Utilities/Service', 'TIN-400-010', '2017-06-19', 'Closed', 'Barangay Hall Road', 'Geracdo', 10);
+
+INSERT INTO `permit_type`
+(`permit_name`, `base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
+VALUES
+('Mayor\'s Permit', 5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
+('Sanitary Permit', 1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
+('Fire Safety Inspection Certificate', 2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
+('Building Permit', 8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
+('Zoning Clearance', 1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
+('Environmental Compliance Certificate', 3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
+('Occupancy Permit', 2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
+('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
+('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
+('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayor\'s Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
