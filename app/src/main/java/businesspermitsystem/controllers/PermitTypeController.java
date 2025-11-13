@@ -1,26 +1,26 @@
 package businesspermitsystem.controllers;
 
 import businesspermitsystem.models.PermitTypeModel;
-import businesspermitsystem.services.PermitTypeService;
+import businesspermitsystem.db.PermitTypeDAO;
 import businesspermitsystem.views.PermitTypeView;
 import java.util.List;
 
 public class PermitTypeController {
-    private PermitTypeService permitTypeService;
+    private PermitTypeDAO permitTypeDAO;
     private PermitTypeView permitTypeView;
 
-    public PermitTypeController(PermitTypeService permitTypeService, PermitTypeView permitTypeView) {
-        this.permitTypeService = permitTypeService;
+    public PermitTypeController(PermitTypeDAO permitTypeDAO, PermitTypeView permitTypeView) {
+        this.permitTypeDAO = permitTypeDAO;
         this.permitTypeView = permitTypeView;
     }
 
     public void listPermitTypes() {
-        List<PermitTypeModel> permitTypeModels = permitTypeService.getAllPermitTypes();
+        List<PermitTypeModel> permitTypeModels = permitTypeDAO.getAllPermitTypes();
         permitTypeView.displayPermitTypeList(permitTypeModels);
     }
 
     public void viewPermitType(int permitTypeID) {
-        PermitTypeModel permitTypeModel = permitTypeService.getPermitTypeByID(permitTypeID);
+        PermitTypeModel permitTypeModel = permitTypeDAO.getPermitTypeByID(permitTypeID);
         if (permitTypeModel != null) {
             permitTypeView.displayPermitTypeDetails(permitTypeModel);
         } else {
@@ -30,15 +30,15 @@ public class PermitTypeController {
 
     public void createPermitType() {
         PermitTypeModel newPermitTypeModel = permitTypeView.getInputForNewPermitType();
-        permitTypeService.addPermitType(newPermitTypeModel);
+        permitTypeDAO.addPermitType(newPermitTypeModel);
         System.out.println("Permit Type added successfully.");
     }
 
     public void updatePermitType(int permitTypeID) {
-        PermitTypeModel permitTypeModel = permitTypeService.getPermitTypeByID(permitTypeID);
+        PermitTypeModel permitTypeModel = permitTypeDAO.getPermitTypeByID(permitTypeID);
         if (permitTypeModel != null) {
             PermitTypeModel updatedPermitTypeModel = permitTypeView.getInputForUpdatePermitType(permitTypeModel);
-            permitTypeService.updatePermitType(updatedPermitTypeModel);
+            permitTypeDAO.updatePermitType(updatedPermitTypeModel);
             System.out.println("Permit Type updated successfully.");
             } else {
                 System.out.println("Permit Type not found.");
@@ -46,7 +46,7 @@ public class PermitTypeController {
         }
 
     public void deletePermitType(int permitTypeID) {
-        boolean success = permitTypeService.deletePermitType(permitTypeID);
+        boolean success = permitTypeDAO.deletePermitType(permitTypeID);
         if (success) {
             System.out.println("Permit Type deleted successfully.");
         } else {

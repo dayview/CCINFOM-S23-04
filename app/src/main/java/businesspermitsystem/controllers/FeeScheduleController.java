@@ -2,25 +2,25 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.models.FeeScheduleModel;
 import businesspermitsystem.views.FeeScheduleView;
-import businesspermitsystem.services.FeeScheduleService;
+import businesspermitsystem.db.FeeScheduleDAO;
 import java.util.List;
 
 public class FeeScheduleController {
-    private FeeScheduleService feeScheduleService;
+    private FeeScheduleDAO feeScheduleDAO;
     private FeeScheduleView feeScheduleView;
 
-    public FeeScheduleController(FeeScheduleService service, FeeScheduleView view) {
-        this.feeScheduleService = service;
+    public FeeScheduleController(FeeScheduleDAO service, FeeScheduleView view) {
+        this.feeScheduleDAO = service;
         this.feeScheduleView = view;
     }
 
     public void listFeeSchedules() {
-        List<FeeScheduleModel> feeScheduleModels = feeScheduleService.getAllFeeSchedules();
+        List<FeeScheduleModel> feeScheduleModels = feeScheduleDAO.getAllFeeSchedules();
         feeScheduleView.displayFeeScheduleList(feeScheduleModels);
     }
 
     public void viewFeeSchedule(int feeScheduleID) {
-        FeeScheduleModel feeScheduleModel = feeScheduleService.getFeeScheduleByID(feeScheduleID);
+        FeeScheduleModel feeScheduleModel = feeScheduleDAO.getFeeScheduleByID(feeScheduleID);
         if (feeScheduleModel != null) {
             feeScheduleView.displayFeeScheduleDetails(feeScheduleModel);
         } else {
@@ -30,15 +30,15 @@ public class FeeScheduleController {
 
     public void createFeeSchedule() {
         FeeScheduleModel newFeeScheduleModel = feeScheduleView.getInputForNewFeeSchedule();
-        feeScheduleService.addFeeSchedule(newFeeScheduleModel);
+        feeScheduleDAO.addFeeSchedule(newFeeScheduleModel);
         System.out.println("Fee Schedule added successfully.");
     }
 
     public void updateFeeSchedule(int feeScheduleID) {
-        FeeScheduleModel feeScheduleModel = feeScheduleService.getFeeScheduleByID(feeScheduleID);
+        FeeScheduleModel feeScheduleModel = feeScheduleDAO.getFeeScheduleByID(feeScheduleID);
         if (feeScheduleModel != null) {
             FeeScheduleModel updatedFeeScheduleModel = feeScheduleView.getInputForUpdateFeeSchedule(feeScheduleModel);
-            feeScheduleService.updateFeeSchedule(updatedFeeScheduleModel);
+            feeScheduleDAO.updateFeeSchedule(updatedFeeScheduleModel);
             System.out.println("Fee Schedule updated successfully.");
         } else {
             System.out.println("Fee Schedule not found.");
@@ -46,7 +46,7 @@ public class FeeScheduleController {
     }
 
     public void deleteFeeSchedule(int feeScheduleID) {
-        boolean success = feeScheduleService.deleteFeeSchedule(feeScheduleID);
+        boolean success = feeScheduleDAO.deleteFeeSchedule(feeScheduleID);
         if (success) {
             System.out.println("Fee Schedule deleted successfully.");
         } else {

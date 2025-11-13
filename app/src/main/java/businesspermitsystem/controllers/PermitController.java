@@ -1,26 +1,26 @@
 package businesspermitsystem.controllers;
 
 import businesspermitsystem.models.PermitModel;
-import businesspermitsystem.services.PermitService;
+import businesspermitsystem.db.PermitDAO;
 import businesspermitsystem.views.PermitView;
 import java.util.List;
 
 public class PermitController {
-    private PermitService permitService;
+    private PermitDAO permitDAO;
     private PermitView permitView;
 
-    public PermitController(PermitService service, PermitView view) {
-        this.permitService = service;
+    public PermitController(PermitDAO service, PermitView view) {
+        this.permitDAO = service;
         this.permitView = view;
     }
 
     public void listPermits() {
-        List<PermitModel> permitModels = permitService.getAllPermits();
+        List<PermitModel> permitModels = permitDAO.getAllPermits();
         permitView.displayPermitList(permitModels);
     }
 
     public void viewPermit(int permitID) {
-        PermitModel permitModel = permitService.getPermitByID(permitID);
+        PermitModel permitModel = permitDAO.getPermitByID(permitID);
         if (permitModel != null) {
             permitView.displayPermitDetails(permitModel);
         } else {
@@ -30,15 +30,15 @@ public class PermitController {
 
     public void createPermit() {
         PermitModel newPermitModel = permitView.getInputForNewPermit();
-        permitService.addPermit(newPermitModel);
+        permitDAO.addPermit(newPermitModel);
         System.out.println("Permit added successfully.");
     }
 
     public void updatePermit(int permitID) {
-        PermitModel permitModel = permitService.getPermitByID(permitID);
+        PermitModel permitModel = permitDAO.getPermitByID(permitID);
         if (permitModel != null) {
             PermitModel updatedPermitModel = permitView.getInputForUpdatePermit(permitModel);
-            permitService.updatePermit(updatedPermitModel);
+            permitDAO.updatePermit(updatedPermitModel);
             System.out.println("Permit updated successfully.");
         } else {
             System.out.println("Permit not found.");
@@ -46,7 +46,7 @@ public class PermitController {
     }
 
     public void deletePermit(int permitID) {
-        boolean success = permitService.deletePermit(permitID);
+        boolean success = permitDAO.deletePermit(permitID);
         if (success) {
             System.out.println("Permit deleted successfully.");
         } else {
