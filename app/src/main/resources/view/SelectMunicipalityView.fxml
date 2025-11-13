@@ -31,7 +31,7 @@
                </HBox.margin>
             </Label>
             <ChoiceBox id="municipalityChoiceBox" fx:id="municipalityNameChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="municipalityNameResetButton1" mnemonicParsing="false" onAction="#municipalityNameResetButtonPressed" text="Reset" visible="false" />
+            <Button fx:id="municipalityNameResetButton" mnemonicParsing="false" onAction="#municipalityNameResetButtonPressed" text="Reset" visible="false" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="600.0">
@@ -51,7 +51,7 @@
                   <Insets left="33.0" right="33.0" />
                </HBox.margin></Label>
             <ChoiceBox id="regionChoiceBox" fx:id="regionChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="regionButton" mnemonicParsing="false" onAction="#regionResetButtonPressed" text="Reset" visible="false" />
+            <Button fx:id="regionResetButton" mnemonicParsing="false" onAction="#regionResetButtonPressed" text="Reset" visible="false" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="600.0">
@@ -61,7 +61,7 @@
                   <Insets left="29.0" right="29.0" />
                </HBox.margin></Label>
             <ChoiceBox id="provinceChoiceBox" fx:id="provinceChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="provinceButton" layoutX="254.0" layoutY="10.0" mnemonicParsing="false" onAction="#provinceResetButtonPressed" text="Reset" visible="false" />
+            <Button fx:id="provinceResetButton" layoutX="254.0" layoutY="10.0" mnemonicParsing="false" onAction="#provinceResetButtonPressed" text="Reset" visible="false" />
          </children>
       </HBox>
       <HBox alignment="CENTER" maxWidth="1.7976931348623157E308">

@@ -8,15 +8,9 @@ CREATE DATABASE `business_database`;
 
 USE `business_database`;
 
---Core
-
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `municipality`;
 DROP TABLE IF EXISTS `business`;
-
---Transactions
-DROP TABLE IF EXISTS `inspection_schedule`;
-DROP TABLE IF EXISTS `inspection_result`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
