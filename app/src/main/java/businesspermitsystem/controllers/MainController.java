@@ -114,14 +114,14 @@ public class MainController {
     private void removeBusinessButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/removeBusinessView.fxml", "Add Business");
+        sceneManager.switchScene("/view/removeBusinessView.fxml", "Remove Business");
     }
 
     @FXML
     private void updateBusinessButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/updateBusinessView.fxml", "Add Business");
+        sceneManager.switchScene("/view/updateBusinessView.fxml", "Update Business");
     }
 
 

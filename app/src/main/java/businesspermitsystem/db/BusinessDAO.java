@@ -1,71 +1,68 @@
 package businesspermitsystem.db;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import businesspermitsystem.models.BusinessModel;
+
 /**
  * Data Access Object (DAO) for the {@link BusinessModel} model.
  *
  * This class handles all database interactions related to Business,
- * Includes adding, deleting, or editing
+ * including adding, deleting, and updating records.
  *
  * It uses {@link DatabaseConnector} to establish connections.
  */
 public class BusinessDAO {
+
     /**
-     *  Adds a new business to the table
+     * Adds a new business to the table.
      */
     public boolean addBusiness(BusinessModel business) throws SQLException {
-        String sql = "INSERT INTO business (business_name, trade_name, street_address, barangay, city, province," +
-                " business_type, tax_id, start_date, status, municipality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO business (business_name, trade_name, street_address, barangay," +
+                " business_type, tax_id, start_date, status, municipality_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
 
         statement.setString(1, business.getBusinessName());
         statement.setString(2, business.getTradeName());
         statement.setString(3, business.getStreetAddress());
         statement.setString(4, business.getBarangay());
-        statement.setString(5, business.getCity());
-        statement.setString(6, business.getProvince());
-        statement.setString(7, business.getBusinessType());
-        statement.setString(8, business.getTaxId());
-        statement.setDate(9, java.sql.Date.valueOf(business.getStartDate()));
-        statement.setString(10, business.getStatus());
-        statement.setInt(11, business.getMunicipalityId());
+        statement.setString(5, business.getBusinessType());
+        statement.setString(6, business.getTaxId());
+        statement.setDate(7, java.sql.Date.valueOf(business.getStartDate()));
+        statement.setString(8, business.getStatus());
+        statement.setInt(9, business.getMunicipalityId());
 
         int rowsInserted = statement.executeUpdate();
-        return rowsInserted > 0; // returns 1 if something actually changed
+        return rowsInserted > 0;
     }
 
     /**
-     *  Allows for updates of a table
+     * Updates an existing business record.
      */
-    public boolean updateBusiness(BusinessModel business) throws SQLException{
-        String sql = "UPDATE business SET business_name = ?, trade_name = ?, street_address = ?, barangay = ?, city = ?, " +
-                "province = ?, business_type = ?, tax_id = ?, start_date = ?, status = ?, municipality_id = ? WHERE business_id = ?";
+    public boolean updateBusiness(BusinessModel business) throws SQLException {
+        String sql = "UPDATE business SET business_name = ?, trade_name = ?, street_address = ?, barangay = ?, " +
+                "business_type = ?, tax_id = ?, start_date = ?, status = ?, municipality_id = ? " +
+                "WHERE business_id = ?";
         PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
 
         statement.setString(1, business.getBusinessName());
         statement.setString(2, business.getTradeName());
         statement.setString(3, business.getStreetAddress());
         statement.setString(4, business.getBarangay());
-        statement.setString(5, business.getCity());
-        statement.setString(6, business.getProvince());
-        statement.setString(7, business.getBusinessType());
-        statement.setString(8, business.getTaxId());
-        statement.setDate(9, java.sql.Date.valueOf(business.getStartDate()));
-        statement.setString(10, business.getStatus());
-        statement.setInt(11, business.getMunicipalityId());
-        statement.setInt(12, business.getBusinessId());
+        statement.setString(5, business.getBusinessType());
+        statement.setString(6, business.getTaxId());
+        statement.setDate(7, java.sql.Date.valueOf(business.getStartDate()));
+        statement.setString(8, business.getStatus());
+        statement.setInt(9, business.getMunicipalityId());
+        statement.setInt(10, business.getBusinessId());
 
-        int rowsInserted = statement.executeUpdate();
-        return rowsInserted > 0; // returns 1 if something actually changed
-
+        int rowsUpdated = statement.executeUpdate();
+        return rowsUpdated > 0;
     }
 
     /**
-     * Deletes a Business by its ID.
+     * Deletes a business by its ID.
      */
     public boolean deleteBusiness(int businessId) throws SQLException {
         String sql = "DELETE FROM business WHERE business_id = ?";
@@ -75,5 +72,4 @@ public class BusinessDAO {
         int rowsDeleted = statement.executeUpdate();
         return rowsDeleted > 0;
     }
-
 }
