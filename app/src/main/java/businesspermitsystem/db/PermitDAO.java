@@ -1,16 +1,15 @@
-package businesspermitsystem.services;
+package businesspermitsystem.db;
 
 import businesspermitsystem.models.PermitModel;
-import businesspermitsystem.db.DatabaseConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermitService {
+public class PermitDAO {
     private Connection connection;
 
-    public PermitService() {
+    public PermitDAO() {
         this.connection = DatabaseConnector.connection;
         if (this.connection == null) {
             System.err.println("Warning: Database connection not established. Call DatabaseConnector.getConnection() first.");
@@ -120,7 +119,7 @@ public class PermitService {
             pstmt.setInt(1, permit.getBusinessID());
             pstmt.setInt(2, permit.getPermitTypeID());
             pstmt.setString(3, permit.getStatus());
-            pstmt.setDate(4, new java.sql.Date(permit.getStatusEffectiveDate.getTime()));
+            pstmt.setDate(4, new java.sql.Date(permit.getStatusEffectiveDate().getTime()));
             pstmt.setString(5, permit.getNote());
             pstmt.setInt(6, permit.getPermitID());
 

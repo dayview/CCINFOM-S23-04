@@ -1,16 +1,15 @@
-package businesspermitsystem.services;
+package businesspermitsystem.db;
 
 import businesspermitsystem.models.FeeScheduleModel;
-import businesspermitsystem.db.DatabaseConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeeScheduleService {
+public class FeeScheduleDAO {
     private Connection connection;
 
-    public FeeScheduleService() {
+    public FeeScheduleDAO() {
         this.connection = DatabaseConnector.connection;
         if (this.connection == null) {
             System.err.println("Warning: Database connection not established. Call DatabaseConnector.getConnection() first.");

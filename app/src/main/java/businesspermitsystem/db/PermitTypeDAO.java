@@ -1,20 +1,19 @@
-package businesspermitsystem.services;
+package businesspermitsystem.db;
 
 import businesspermitsystem.models.PermitTypeModel;
 import businesspermitsystem.models.FeeScheduleModel;
-import businesspermitsystem.db.DatabaseConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermitTypeService {
+public class PermitTypeDAO {
     private Connection connection;
-    private FeeScheduleService feeScheduleService;
+    private FeeScheduleDAO feeScheduleDAO;
 
-    public PermitTypeService() {
+    public PermitTypeDAO() {
         this.connection = DatabaseConnector.connection;
-        this.feeScheduleService = new FeeScheduleService();
+        this.feeScheduleDAO = new FeeScheduleDAO();
 
         if (this.connection == null) {
             System.err.println("Warning: Database connection not established. Call DatabaseConnector.getConnection() first.");
@@ -30,7 +29,7 @@ public class PermitTypeService {
 
             while (rs.next()) {
                 int feeScheduleID = rs.getInt("fee_schedule_id");
-                FeeScheduleModel feeSchedule = feeScheduleService.getFeeScheduleByID(feeScheduleID);
+                FeeScheduleModel feeSchedule = feeScheduleDAO.getFeeScheduleByID(feeScheduleID);
 
                 PermitTypeModel permitType = new PermitTypeModel(
                         rs.getInt("permit_type_id"),
@@ -57,7 +56,7 @@ public class PermitTypeService {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     int feeScheduleID = rs.getInt("fee_schedule_id");
-                    FeeScheduleModel feeSchedule = feeScheduleService.getFeeScheduleByID(feeScheduleID);
+                    FeeScheduleModel feeSchedule = feeScheduleDAO.getFeeScheduleByID(feeScheduleID);
 
                     return new PermitTypeModel(
                             rs.getInt("permit_type_id"),
