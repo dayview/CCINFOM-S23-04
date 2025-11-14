@@ -31,6 +31,7 @@ CREATE TABLE `inspector` (
   `inspector_id` INT NOT NULL AUTO_INCREMENT, 
   `last_name` VARCHAR(35) NOT NULL DEFAULT '',
   `first_name`VARCHAR(35) NOT NULL DEFAULT '',
+  `middle_name`VARCHAR(35) NOT NULL DEFAULT '',
   `designation`VARCHAR(35) NOT NULL DEFAULT '',
   `license_number`VARCHAR(35) NOT NULL DEFAULT '',
   `active` TINYINT(1) NOT NULL DEFAULT 1,
@@ -77,18 +78,18 @@ VALUES
 ('Samar Power Systems', 'SPS Energy', 'Utilities/Service', 'TIN-400-010', '2017-06-19', 'Closed', 'Barangay Hall Road', 'Geracdo', 10);
 
 INSERT INTO `inspector`
-(`last_name`, `first_name`, `designation`, `license_number`, `active`, `municipality_id`)
+(`last_name`, `first_name`, `middle_name`, `designation`, `license_number`, `active`, `municipality_id`)
 VALUES
-('Dela Cruz', 'Juan', 'Chief Building Inspector', 'LIC-2023-001', 1, 1),
-('Reyes', 'Maria', 'Sanitation Inspector', 'LIC-2023-002', 1, 2),
-('Santos', 'Jose', 'Electrical Inspector', 'LIC-2023-003', 1, 3),
-('Garcia', 'Ana', 'Mechanical Inspector', 'LIC-2023-004', 1, 4),
-('Villanueva', 'Carlos', 'Structural Inspector', 'LIC-2023-005', 1, 5),
-('Cruz', 'Emilia', 'Plumbing Inspector', 'LIC-2023-006', 1, 6),
-('Torres', 'Roberto', 'Fire Safety Inspector', 'LIC-2023-007', 0, 7),
-('Domingo', 'Liza', 'Environmental Inspector', 'LIC-2023-008', 1, 8),
-('Perez', 'Mark', 'Building Inspector', 'LIC-2023-009', 1, 9),
-('Santiago', 'Angela', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
+('Dela Cruz', 'Juan', 'Perez', 'Chief Building Inspector', 'LIC-2023-001', 1, 1),
+('Reyes', 'Maria', 'Santos', 'Sanitation Inspector', 'LIC-2023-002', 1, 2),
+('Santos', 'Jose', 'Mariano', 'Electrical Inspector', 'LIC-2023-003', 1, 3),
+('Garcia', 'Ana', 'Lim', 'Mechanical Inspector', 'LIC-2023-004', 1, 4),
+('Villanueva', 'Carlos', 'Ramos', 'Structural Inspector', 'LIC-2023-005', 1, 5),
+('Cruz', 'Emilia', 'Flores', 'Plumbing Inspector', 'LIC-2023-006', 1, 6),
+('Torres', 'Roberto', 'Alonzo', 'Fire Safety Inspector', 'LIC-2023-007', 0, 7),
+('Domingo', 'Liza', 'Chua', 'Environmental Inspector', 'LIC-2023-008', 1, 8),
+('Perez', 'Mark', 'Bernardo', 'Building Inspector', 'LIC-2023-009', 1, 9),
+('Santiago', 'Angela', 'Diaz', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
 
 INSERT INTO `permit_type`
 (`permit_name`, `base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
