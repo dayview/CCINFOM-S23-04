@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `municipality`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `permit_type`;
+DROP TABLE IF EXISTS `owner`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -60,6 +61,20 @@ CREATE TABLE `permit_type` (
   `validity_months` INT NOT NULL,
   `document_requirements` TEXT,
   PRIMARY KEY (`permit_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `owner` (
+  `owner_id` INT NOT NULL AUTO_INCREMENT,
+  `last_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `first_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `middle_name` VARCHAR(35) DEFAULT '',
+  `contact_no` VARCHAR(15) NOT NULL, 
+  `email` VARCHAR(35) NOT NULL,
+  `gov_id_type` VARCHAR(35) NOT NULL,
+  `gov_id_no` VARCHAR(35) NOT NULL,
+  `tin` VARCHAR(35) NOT NULL,
+  `home_address` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`owner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality` 
@@ -117,3 +132,17 @@ VALUES
 ('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
 ('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
 ('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayor\'s Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+
+INSERT INTO `owner`
+(`last_name`, `first_name`, `middle_name`, `contact_no`, `email`, `gov_id_type`, `gov_id_no`, `tin`, `home_address`)
+VALUES
+('Aquino', 'Miguel', 'Santos', '0917-123-4567', 'maquino@email.com', 'Driver\'s License', 'N01-12-345678', '123-456-789-000', '123 Mabini St., Quezon City, Metro Manila'),
+('Bautista', 'Sofia', 'Cruz', '0928-234-5678', 'sbautista@email.com', 'Passport', 'P1234567A', '234-567-890-000', '456 Rizal Ave., Makati City, Metro Manila'),
+('Castillo', 'Ricardo', 'Lopez', '0939-345-6789', 'rcastillo@email.com', 'UMID', 'UMID-1234-5678-9012', '345-678-901-000', '789 Del Pilar St., San Fernando, Pampanga'),
+('Mendoza', 'Elena', 'Reyes', '0945-456-7890', 'emendoza@email.com', 'SSS ID', 'SSS-01-2345678-9', '456-789-012-000', '321 Bonifacio St., Santa Rosa, Laguna'),
+('Fernandez', 'Antonio', 'Garcia', '0956-567-8901', 'afernandez@email.com', 'PhilHealth ID', 'PH-12-345678901-2', '567-890-123-000', '654 Luna St., Naga City, Camarines Sur'),
+('Gonzales', 'Patricia', 'Diaz', '0963-678-9012', 'pgonzales@email.com', 'Driver\'s License', 'N02-23-456789', '678-901-234-000', '987 Magsaysay Blvd., Tagum City, Davao del Norte'),
+('Ramos', 'Ferdinand', 'Torres', '0974-789-0123', 'framos@email.com', 'Postal ID', 'POST-2023-123456', '789-012-345-000', '246 Aguinaldo Ave., Ilagan City, Isabela'),
+('Santiago', 'Carmen', 'Villanueva', '0985-890-1234', 'csantiago@email.com', 'Voter\'s ID', 'VOTER-2023-789012', '890-123-456-000', '135 Osmena St., Bayawan City, Negros Oriental'),
+('Morales', 'Daniel', 'Perez', '0996-901-2345', 'dmorales@email.com', 'TIN ID', '901-234-567-000', '901-234-567-000', '579 Quezon Blvd., Taytay, Rizal'),
+('Valencia', 'Isabella', 'Santos', '0912-012-3456', 'ivalencia@email.com', 'PRC ID', 'PRC-2023-567890', '012-345-678-000', '864 Roxas Ave., Bayombong, Nueva Vizcaya');
