@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import businesspermitsystem.db.MunicipalityDAO;
+import businesspermitsystem.models.InspectorModel;
 import businesspermitsystem.models.MunicipalityModel;
 import businesspermitsystem.utils.SceneManager;
 import javafx.application.Platform;
@@ -19,17 +20,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.stage.Stage;
 
-/**
- * Controller for selecting a municipality with dynamic filtering.
- * 
- * This controller implements a filter system where selecting values in one
- * ChoiceBox automatically filters and updates the available options in other ChoiceBoxes.
- * When filtering narrows down to a single municipality, all fields auto-lock. Users can
- * reset individual filters, which clears all auto-locked filters while preserving
- * manually selected filters.
- */
-public class SelectMunicipalityController {
+public class UpdateInspectorSelectMunicipalityController {
 
+
+    private InspectorModel inspectorData;
+
+
+    private MunicipalityModel previousMunicipalityModel;
 
     // The FXML path of the previous view.
     private String returnFXMLPath = "";
@@ -80,7 +77,7 @@ public class SelectMunicipalityController {
     /**
      * Constructor for SelectMunicipalityController.
      */
-    public SelectMunicipalityController() {
+    public UpdateInspectorSelectMunicipalityController() {
         System.out.println("SelectMunicipalityController constructed");
     }
 
@@ -443,12 +440,17 @@ public class SelectMunicipalityController {
             MunicipalityModel selected = filteredMunicipalityModels.get(0);
             System.out.println("Confirmed selection: " + selected.getMunicipalityName() + 
                                " (ID: " + selected.getMunicipalityID() + ")");
+
+
             Stage currentStage = (Stage) confirmButton.getScene().getWindow();
             SceneManager sceneManager = new SceneManager(currentStage);
             try {
-                Object controller = sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+                UpdateInspectorController controller = (UpdateInspectorController) sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+                controller.setInspectorData(this.inspectorData);
+                controller.setMunicipalityModel(selected);
+                controller.restoreUITextFields();
             } catch (IOException e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
             
         } else {
@@ -466,12 +468,16 @@ public class SelectMunicipalityController {
     @FXML
     private void cancelButtonPressed(ActionEvent event) {
         System.out.println("Selection cancelled.");
-        Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+
+        Stage currentStage = (Stage) confirmButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
         try {
-            Object controller = sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+            AddInspectorController controller = (AddInspectorController) sceneManager.switchSceneWithController(returnFXMLPath, returnWindowTitle);
+            controller.setInspectorData(this.inspectorData);
+            controller.setMunicipalityModel(previousMunicipalityModel);
+            controller.restoreUITextFields();
         } catch (IOException e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
     }
 
@@ -491,5 +497,17 @@ public class SelectMunicipalityController {
 		this.returnWindowTitle = returnWindowTitle;
 	}
 
+    public void setPreviousMunicipalityModel(MunicipalityModel model) {
+        this.previousMunicipalityModel = model;
+    }
+
+    public InspectorModel getInspectorData() {
+        return inspectorData;
+    }
+
+    public void setInspectorData(InspectorModel inspectorData) {
+        this.inspectorData = inspectorData;
+    }
     
+
 }
