@@ -11,7 +11,7 @@ USE `business_database`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
-DROP TABLE IF EXISTS `municipiality`;
+DROP TABLE IF EXISTS `municipality`;
 
 CREATE TABLE `business` (
   `business_id` INT AUTO_INCREMENT PRIMARY KEY,
