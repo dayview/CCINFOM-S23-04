@@ -30,7 +30,6 @@ public class AddBusinessController {
     @FXML private DatePicker startDatePicker;
 
     @FXML private Button saveButton;
-    @FXML private Button cancelButton;
 
     private final BusinessDAO businessDAO = new BusinessDAO();
 
@@ -40,7 +39,7 @@ public class AddBusinessController {
     @FXML
     private void onSave(ActionEvent event) {
         try {
-            // Validate required fields
+            // checks if the inputs are correct
             if (businessNameField.getText().isEmpty() || tradeNameField.getText().isEmpty()) {
                 showAlert(Alert.AlertType.WARNING, "Validation Error", "Business name and trade name are required.");
                 return;
@@ -60,7 +59,7 @@ public class AddBusinessController {
                 return;
             }
 
-            // Create a new BusinessModel from user input
+            // Creates a new business from the users inputs
             BusinessModel business = new BusinessModel();
             business.setBusinessName(businessNameField.getText());
             business.setTradeName(tradeNameField.getText());
@@ -72,7 +71,7 @@ public class AddBusinessController {
             business.setStatus("Active"); // default status
             business.setMunicipalityId(municipalityId);
 
-            // Save using DAO
+            //adds using the mthod from the BusinessDAO
             boolean success = businessDAO.addBusiness(business);
 
             if (success) {
@@ -92,17 +91,16 @@ public class AddBusinessController {
 
     /** Closes the current window when cancel is pressed. */
     @FXML
-    private void onCancel(ActionEvent event)  {
-        closeWindow();
+    private void handleCancel(ActionEvent event)  {
+        Stage currentStage = (Stage) saveButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/MainView.fxml", "Main Menu");;
     }
 
-    /** Utility method to close the current stage. */
-    private void closeWindow() {
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
-    }
-
-    /** Utility method for showing alerts. */
+    /**
+     * Utility method for showing alerts.
+     * Source: https://www.geeksforgeeks.org/java/javafx-alert-with-examples/
+     *  */
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

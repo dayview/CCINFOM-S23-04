@@ -121,7 +121,7 @@ public class MainController {
     private void updateBusinessButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/updateBusinessView.fxml", "Update Business");
+        sceneManager.switchScene("/view/UpdateBusinessView.fxml", "Update Business");
     }
 
 
