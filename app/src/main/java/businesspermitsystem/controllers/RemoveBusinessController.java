@@ -42,9 +42,9 @@ public class RemoveBusinessController {
             }
 
         } catch (NumberFormatException e) {
-            showError("Please enter a valid numeric Business ID.");
+            showAlert("Please enter a valid numeric Business ID.");
         } catch (Exception e) {
-            showError("An error occurred while deleting the business:\n" + e.getMessage());
+            showAlert("An error occurred while deleting the business:\n" + e.getMessage());
         }
     }
 
@@ -60,11 +60,10 @@ public class RemoveBusinessController {
     }
 
     /**
-     * Displays an error message in an alert box.
-     *
-     * @param message error message to display
-     */
-    private void showError(String message) {
+     * Utility method for showing alerts.
+     * Source: https://www.geeksforgeeks.org/java/javafx-alert-with-examples/
+     *  */
+    private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
