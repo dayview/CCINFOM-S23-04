@@ -15,7 +15,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/SQLLoginView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/LoginView.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/main-theme.css").toExternalForm());
