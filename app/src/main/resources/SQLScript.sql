@@ -172,4 +172,4 @@ VALUES
 ('Occupancy Permit', 2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
 ('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
 ('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
-('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayor\'s Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit', 'Police Clearance', 'Barangay Certification', 'SEC/DTI Registration');
