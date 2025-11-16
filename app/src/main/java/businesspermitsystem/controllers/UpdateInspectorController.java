@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import businesspermitsystem.db.InspectorDAO;
-import businesspermitsystem.db.MunicipalityDAO; // <--- ADDED
+import businesspermitsystem.db.MunicipalityDAO; 
 import businesspermitsystem.models.InspectorModel;
 import businesspermitsystem.models.MunicipalityModel;
 import businesspermitsystem.utils.SceneManager;
@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,7 +25,7 @@ import javafx.stage.Stage;
 public class UpdateInspectorController {
 
     private InspectorDAO inspectorDAO = new InspectorDAO();
-    private MunicipalityDAO municipalityDAO = new MunicipalityDAO(); // <--- ADDED
+    private MunicipalityDAO municipalityDAO = new MunicipalityDAO(); 
     private List<InspectorModel> allInspectors = new ArrayList<>();
     
     private InspectorModel inspectorData = new InspectorModel(0, "", "", "", "", "", false, 0);
@@ -38,6 +39,7 @@ public class UpdateInspectorController {
     @FXML private TextField middleNameTextField;
     @FXML private TextField designationTextField;
     @FXML private TextField licenseNumberTextField;
+    @FXML private CheckBox isActiveCheckbox;
     @FXML private Button officeLocationButton;
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
@@ -69,6 +71,7 @@ public class UpdateInspectorController {
         middleNameTextField.setDisable(disable);
         designationTextField.setDisable(disable);
         licenseNumberTextField.setDisable(disable);
+        isActiveCheckbox.setDisable(disable);
         officeLocationButton.setDisable(disable);
     }
 
@@ -113,18 +116,18 @@ public class UpdateInspectorController {
             this.inspectorData = selectedInspector;
             
             try {
-                // Attempt to fetch the full MunicipalityModel using the inspector's office_location_id
+                
                 this.municipalityModel = municipalityDAO.getMunicipalityById(selectedInspector.getMunicipalityID());
                 
-                // If fetching fails or model is null, create a temporary one for display/fallback
+                
                 if (this.municipalityModel == null) {
                      this.municipalityModel = new MunicipalityModel(selectedInspector.getMunicipalityID(), "Office ID: " + selectedInspector.getMunicipalityID(), null, null, null, null, null, null, null);
                 }
                 
-                // Update UI
+                
                 restoreUITextFields();
                 officeLocationButton.setText(this.municipalityModel.toString());
-                setFieldsDisabled(false); // Enable fields for editing
+                setFieldsDisabled(false); 
                 confirmButton.setDisable(false); 
                 
             } catch (SQLException e) {
@@ -146,6 +149,7 @@ public class UpdateInspectorController {
         middleNameTextField.setText(inspectorData.getMiddleName());
         designationTextField.setText(inspectorData.getDesignation());
         licenseNumberTextField.setText(inspectorData.getLicenseNumber());
+        isActiveCheckbox.setSelected(inspectorData.isActive());
     }
 
     @FXML
@@ -159,7 +163,7 @@ public class UpdateInspectorController {
             UpdateInspectorSelectMunicipalityController controller = (UpdateInspectorSelectMunicipalityController) 
                 sceneManager.switchSceneWithController("/view/UpdateInspectorSelectMunicipalityView.fxml", "Select Municipality");
             
-            // Set the path to return to (the current view)
+            
             controller.setReturnFXMLPath("/view/UpdateInspectorView.fxml"); 
             controller.setReturnWindowTitle("Update Inspector");
             
@@ -176,43 +180,42 @@ public class UpdateInspectorController {
     @FXML
     private void confirmButtonPressed() {
         
-        // 1. Check if an ID is selected
+        
         if (inspectorIDChoiceBox.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(AlertType.ERROR, "Please select an Inspector ID to update.");
             alert.showAndWait();
             return;
         }
         
-        // 2. Validate Text Field Data
+        
         if (isInspectorDataValid()) {
             
             System.out.println("Inspector data is valid. Proceeding to update.");
             
             try {
-                // 3. Set the primary key ID from the ChoiceBox selection
+                
                 inspectorData.setInspectorID(inspectorIDChoiceBox.getSelectionModel().getSelectedItem());
 
-                // 4. Set the foreign key ID from the Municipality Model
-                // isInspectorDataValid() ensures municipalityModel is not null
+             
                 inspectorData.setMunicipalityID(municipalityModel.getMunicipalityID());
                 
-                // 5. Perform Update
+               
                 inspectorDAO.updateInspector(inspectorData);
                 
-                // Success message
+                
                 Alert successAlert = new Alert(AlertType.INFORMATION);
                 successAlert.setTitle("Success");
                 successAlert.setHeaderText(null);
                 successAlert.setContentText("Inspector ID " + inspectorData.getInspectorID() + " updated successfully!");
                 successAlert.showAndWait();
 
-                // Switch back to Main View
+              
                 Stage currentStage = (Stage) confirmButton.getScene().getWindow();
                 SceneManager sceneManager = new SceneManager(currentStage);
                 sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
                 
             } catch (SQLException e) {
-                // Database Error Handling
+                
                 e.printStackTrace();
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setTitle("Database Error");
@@ -231,7 +234,7 @@ public class UpdateInspectorController {
     }
 
     private boolean isInspectorDataValid() {
-        // ... (body remains the same as your original and my previous answer)
+        
         saveTextFieldsToModel(); 
         
         StringBuilder missingFields = new StringBuilder();
@@ -266,12 +269,13 @@ public class UpdateInspectorController {
     }
 
     private void saveTextFieldsToModel() {
-        // ... (body remains the same as your original)
+        
         inspectorData.setLastName(lastNameTextField.getText());
         inspectorData.setFirstName(firstNameTextField.getText());
         inspectorData.setMiddleName(middleNameTextField.getText());
         inspectorData.setDesignation(designationTextField.getText());
         inspectorData.setLicenseNumber(licenseNumberTextField.getText());
+        inspectorData.setActive(isActiveCheckbox.isSelected());
     }
 
     public InspectorModel getInspectorData() {

@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -27,31 +28,35 @@ public class AddInspectorController {
      */
     @FXML private TextField lastNameTextField;
     /**
-     * 
+     * Inspector's First Name Text Field
      */
     @FXML private TextField firstNameTextField;
     /**
-     * 
+     * Inspector's Middle Name Text Field
      */
     @FXML private TextField middleNameTextField;
     /**
-     * 
+     * Inspector's Designation Text Field
      */
     @FXML private TextField designationTextField;
     /**
-     * 
+     * Inspector's License Number Text Field
      */
     @FXML private TextField licenseNumberTextField;
     /**
-     * 
+     * Inspector's Active Status Checkbox
+     */
+    @FXML private CheckBox isActiveCheckbox;
+    /**
+     * Button to select Office Location (Municipality)
      */
     @FXML private Button officeLocationButton;
     /**
-     * 
+     * Confirmation Button (Save)
      */
     @FXML private Button confirmButton;
     /**
-     * 
+     * Cancel Button (Exit)
      */
     @FXML private Button cancelButton;
 
@@ -69,6 +74,7 @@ public class AddInspectorController {
         middleNameTextField.setText(inspectorData.getMiddleName());
         designationTextField.setText(inspectorData.getDesignation());
         licenseNumberTextField.setText(inspectorData.getLicenseNumber());
+        isActiveCheckbox.setSelected(inspectorData.isActive());
     }
 
     @FXML
@@ -192,6 +198,7 @@ try {
         inspectorData.setMiddleName(middleNameTextField.getText());
         inspectorData.setDesignation(designationTextField.getText());
         inspectorData.setLicenseNumber(licenseNumberTextField.getText());
+        inspectorData.setActive(isActiveCheckbox.isSelected());
     }
 
     public InspectorModel getInspectorData() {

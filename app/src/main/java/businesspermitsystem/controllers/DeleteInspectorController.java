@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
  * Controller for the Delete Inspector UI. Allows the user to select an
  * Inspector ID, view details for verification, and confirm the permanent deletion
  * of the inspector record from the database.
- * NOTE: This version is optimized to fetch all inspector data once upon initialization
- * by utilizing InspectorDAO.getInspectors() and converting the list to a Map for fast lookup.
  */
 public class DeleteInspectorController {
 
