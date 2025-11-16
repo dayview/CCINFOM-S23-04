@@ -58,15 +58,37 @@ public class BusinessModel {
     private LocalDate startDate;
     /**
      * The current status of their business permit application
+     * Valid values: Active, Suspended, Closed, Pending, Revoked, Merged, Retired
      */
-    private String status;            //can be active, suspended, closed, or pending
+    private String status;
 
-    private int municipalityId; //foriegn key
+    /**
+     * The date when the current status became effective
+     * Used for tracking status change history
+     */
+    private LocalDate statusEffectiveDate;
+
+    /**
+     * The reason or justification for the current status
+     * Example: "Failed health inspection", "Business closure", "Merger with Company X"
+     */
+    private String statusReason;
+
+    /**
+     * Reference to supporting documents for status change
+     * Could be a file path, document ID, or URL
+     */
+    private String supportDocRef;
+
+    /**
+     * Foreign key
+     * ID of the Municipality where Business is registered
+     */
+    private int municipalityId;
+    
     /**
      * Default constructor.
-     * <p>
      * Initializes a new instance of {@code BusinessModel} with no predefined values.
-     * </p>
      */
     public BusinessModel() {
     }
@@ -103,8 +125,23 @@ public class BusinessModel {
         this.municipalityId = municipalityId;
     }
 
-
-    // ============ Getters and Setters ============
+    /**
+     * Extended constructor with status tracking fields -- additional
+     *
+     * @param businessId unique business ID
+     * @param businessName legal business name
+     * @param tradeName trade or operating name
+     * @param streetAddress street address of the business
+     * @param barangay barangay where the business is located
+     * @param businessType type or classification of the business
+     * @param taxId tax identification number
+     * @param startDate date when the business started operations
+     * @param status operational status
+     * @param statusEffectiveDate date when current status became effective
+     * @param statusReason reason for status change
+     * @param supportDocRef reference to supporting documents
+     * @param municipalityId municipality where business is registered
+     */
 
     /** @return the unique business ID */
     public int getBusinessId() {
