@@ -80,6 +80,20 @@ CREATE TABLE `inspector` (
   FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `permit_renewal_application` (
+  `renewal_id` INT NOT NULL AUTO_INCREMENT,
+  `business_id` INT NOT NULL,
+  `previous_permit_id` INT NOT NULL,
+  `application_date` DATE NOT NULL,
+  `renewal_fee` DECIMAL(10, 2) NOT NULL,
+  `surcharge` DECIMAL(10, 2) NOT NULL,
+  `total_amount` DECIMAL(10, 2) NOT NULL,
+  `status` VARCHAR(35) NOT NULL DEFAULT '',
+  PRIMARY KEY (`renewal_id`),
+  FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+  FOREIGN KEY (`previous_permit_id`) REFERENCES `permit`(`permit_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO `municipality` 
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
 VALUES
@@ -149,3 +163,19 @@ VALUES
 ('Domingo', 'Liza', 'Chua', 'Environmental Inspector', 'LIC-2023-008', 1, 8),
 ('Perez', 'Mark', 'Bernardo', 'Building Inspector', 'LIC-2023-009', 1, 9),
 ('Santiago', 'Angela', 'Diaz', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
+
+INSERT INTO `permit_renewal_application`
+(`business_id`, `previous_permit_id`, `application_date`, `renewal_fee`, `surcharge`, `total_amount`, `status`)
+VALUES
+(1, 1, '2024-12-15', 5000.00, 0.00, 5000.00, 'Pending'),      
+(1, 2, '2024-12-15', 1500.00, 0.00, 1500.00, 'Approved'),         
+(2, 3, '2025-01-15', 5000.00, 0.00, 5000.00, 'Under Review'),     
+(3, 4, '2024-11-15', 5000.00, 1250.00, 6250.00, 'Approved'),  
+(4, 5, '2024-02-20', 5000.00, 0.00, 5000.00, 'Completed'),   
+(4, 6, '2024-02-20', 2000.00, 0.00, 2000.00, 'Completed'),         
+(5, 7, '2024-11-01', 5000.00, 0.00, 5000.00, 'Denied'),       
+(6, 8, '2024-12-25', 5000.00, 0.00, 5000.00, 'Payment Pending'), 
+(7, 9, '2025-01-10', 5000.00, 0.00, 5000.00, 'Pending'), 
+(8, 10, '2024-12-01', 5000.00, 0.00, 5000.00, 'Completed'),  
+(8, 11, '2024-12-01', 1500.00, 0.00, 1500.00, 'Completed'),
+(9, 12, '2024-01-10', 5000.00, 0.00, 5000.00, 'Cancelled');
