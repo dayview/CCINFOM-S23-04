@@ -27,30 +27,6 @@ CREATE TABLE `municipality` (
   PRIMARY KEY (`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `owner` (
-  `owner_id` INT NOT NULL AUTO_INCREMENT,
-  `last_name` VARCHAR(35) NOT NULL DEFAULT '',
-  `first_name` VARCHAR(35) NOT NULL DEFAULT '',
-  `middle_name` VARCHAR(35) DEFAULT '',
-  `contact_no` VARCHAR(15) NOT NULL, 
-  `email` VARCHAR(35) NOT NULL,
-  `gov_id_type` VARCHAR(35) NOT NULL,
-  `gov_id_no` VARCHAR(35) NOT NULL,
-  `tin` VARCHAR(35) NOT NULL,
-  `home_address` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`owner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `permit_type` (
-  `permit_type_id` INT NOT NULL AUTO_INCREMENT,
-  `permit_name` VARCHAR(100) NOT NULL,
-  `base_fee` DECIMAL(10,2) NOT NULL,
-  `surcharge_rule` VARCHAR(200),
-  `validity_months` INT NOT NULL,
-  `document_requirements` TEXT,
-  PRIMARY KEY (`permit_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE `business` (
   `business_id` INT AUTO_INCREMENT PRIMARY KEY,
   `business_name` VARCHAR(150) NOT NULL,
@@ -163,7 +139,7 @@ VALUES
 INSERT INTO `permit_type`
 (`permit_name`, `base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
 VALUES
-('Mayor\'s Permit', 5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
+('Mayors Permit', 5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
 ('Sanitary Permit', 1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
 ('Fire Safety Inspection Certificate', 2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
 ('Building Permit', 8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
@@ -172,4 +148,4 @@ VALUES
 ('Occupancy Permit', 2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
 ('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
 ('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
-('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit', 'Police Clearance', 'Barangay Certification', 'SEC/DTI Registration');
+('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
