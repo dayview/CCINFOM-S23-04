@@ -62,7 +62,7 @@ CREATE TABLE `business` (
   `start_date` DATE,
   `status` VARCHAR(50) NOT NULL DEFAULT '',
   `municipality_id` INT,
-  FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
+  FOREIGN KEY (municipality_id) REFERENCES municipality(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `inspector` (
