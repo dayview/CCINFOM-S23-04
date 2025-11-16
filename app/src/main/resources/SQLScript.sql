@@ -14,6 +14,30 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `municipality`;
 
+CREATE TABLE `owner` (
+  `owner_id` INT NOT NULL AUTO_INCREMENT,
+  `last_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `first_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `middle_name` VARCHAR(35) DEFAULT '',
+  `contact_no` VARCHAR(15) NOT NULL, 
+  `email` VARCHAR(35) NOT NULL,
+  `gov_id_type` VARCHAR(35) NOT NULL,
+  `gov_id_no` VARCHAR(35) NOT NULL,
+  `tin` VARCHAR(35) NOT NULL,
+  `home_address` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`owner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `permit_type` (
+  `permit_type_id` INT NOT NULL AUTO_INCREMENT,
+  `permit_name` VARCHAR(100) NOT NULL,
+  `base_fee` DECIMAL(10,2) NOT NULL,
+  `surcharge_rule` VARCHAR(200),
+  `validity_months` INT NOT NULL,
+  `document_requirements` TEXT,
+  PRIMARY KEY (`permit_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `business` (
   `business_id` INT AUTO_INCREMENT PRIMARY KEY,
   `business_name` VARCHAR(150) NOT NULL,
@@ -25,7 +49,7 @@ CREATE TABLE `business` (
   `start_date` DATE,
   `status` VARCHAR(50) NOT NULL DEFAULT '',
   `municipality_id` INT,
-  FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
+  FOREIGN KEY (municipality_id) REFERENCES municipality(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `owner` (
