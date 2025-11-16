@@ -1,7 +1,6 @@
 package businesspermitsystem.controllers;
 
 import java.io.IOException;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 
 import businesspermitsystem.db.InspectorDAO;
@@ -12,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -59,7 +57,7 @@ public class AddInspectorController {
 
     @FXML
     private void initialize() {
-        // Restore the selected Municipality if one exists
+        
         if (municipalityModel != null) {
             officeLocationButton.setText(municipalityModel.toString());
         }
@@ -84,7 +82,7 @@ public class AddInspectorController {
             AddInspectorSelectMunicipalityController controller = (AddInspectorSelectMunicipalityController) 
                 sceneManager.switchSceneWithController("/view/AddInspectorSelectMunicipalityView.fxml", "Select Municipality");
             
-            // Set the path to return to (the current view)
+           
             controller.setReturnFXMLPath("/view/AddInspectorView.fxml"); 
             controller.setReturnWindowTitle("Add Inspector");
             
@@ -92,7 +90,7 @@ public class AddInspectorController {
             controller.setPreviousMunicipalityModel(this.municipalityModel);
             
         } catch (IOException e) {
-            // TODO: handle exception
+           
             e.printStackTrace(); 
         }
     }
@@ -111,20 +109,20 @@ try {
                 InspectorDAO inspectorDAO = new InspectorDAO();
                 inspectorDAO.addInspector(inspectorData);
                 
-                // If saving succeeds, show a success message
+               
                 Alert successAlert = new Alert(AlertType.INFORMATION);
                 successAlert.setTitle("Success");
                 successAlert.setHeaderText(null);
                 successAlert.setContentText("Inspector '" + inspectorData.getLastName() + "' successfully added!");
                 successAlert.showAndWait();
 
-                // Proceed to switch scene only after successful save
+                
                 Stage currentStage = (Stage) confirmButton.getScene().getWindow();
                 SceneManager sceneManager = new SceneManager(currentStage);
                 sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
 
             } catch (SQLException e) {
-                // Catch SQLException and inform the user
+                
                 e.printStackTrace();
                 Alert errorAlert = new Alert(AlertType.ERROR);
                 errorAlert.setTitle("Database Error");
@@ -153,7 +151,7 @@ try {
         
         StringBuilder missingFields = new StringBuilder();
         
-        // 1. Check required string fields
+      
         if (inspectorData.getLastName() == null || inspectorData.getLastName().trim().isEmpty()) {
             missingFields.append("- Last Name\n");
         }
@@ -167,13 +165,13 @@ try {
             missingFields.append("- License Number\n");
         }
 
-        // 2. Check if a Municipality has been selected
+        
         if (municipalityModel == null) {
             missingFields.append("- Office Location\n");
         }
 
         if (missingFields.length() > 0) {
-            // Validation failed. Show an Alert.
+            
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Validation Error");
             alert.setHeaderText("Required Fields Missing");
@@ -182,7 +180,7 @@ try {
             return false;
         }
 
-        return true; // All checks passed
+        return true;
     }
 
     /**

@@ -160,17 +160,17 @@ public class AddInspectorSelectMunicipalityController {
      */
     private void updateChoiceBoxes() {
         
-        // Detach listeners to prevent cascading loop during programmed updates
+     
         detachAllListeners();
 
-        // Get current selections from each ChoiceBox
+       
         Integer selectedID = municipalityIDChoiceBox.getSelectionModel().getSelectedItem();
         String selectedName = municipalityNameChoiceBox.getSelectionModel().getSelectedItem();
         String selectedClassification = classificationChoiceBox.getSelectionModel().getSelectedItem();
         String selectedRegion = regionChoiceBox.getSelectionModel().getSelectedItem();
         String selectedProvince = provinceChoiceBox.getSelectionModel().getSelectedItem();
         
-        // Filter the entire list of municipalities based on all active filters
+        
         filteredMunicipalityModels = municipalityModels.stream()
             .filter(m -> selectedID == null || selectedID.equals(m.getMunicipalityID()))
             .filter(m -> selectedName == null || 
@@ -183,16 +183,16 @@ public class AddInspectorSelectMunicipalityController {
                          (m.getProvince() != null && m.getProvince().equals(selectedProvince)))
             .collect(Collectors.toCollection(ArrayList::new));
 
-        // Update UI on JavaFX Application Thread
+      
         Platform.runLater(() -> {
-            // Clear all ChoiceBoxes before adding new filtered items
+            
             municipalityIDChoiceBox.getItems().clear();
             municipalityNameChoiceBox.getItems().clear();
             classificationChoiceBox.getItems().clear();
             regionChoiceBox.getItems().clear();
             provinceChoiceBox.getItems().clear();
             
-            // Extract unique values from the filtered list for each ChoiceBox
+          
             Set<Integer> uniqueIDs = filteredMunicipalityModels.stream()
                     .map(MunicipalityModel::getMunicipalityID)
                     .collect(Collectors.toSet());
@@ -209,24 +209,24 @@ public class AddInspectorSelectMunicipalityController {
                     .map(MunicipalityModel::getProvince)
                     .collect(Collectors.toSet());
 
-            // Populate each ChoiceBox with filtered options and handle auto-selection
+          
             populateAndHandleSingle(municipalityIDChoiceBox, uniqueIDs, selectedID);
             populateAndHandleSingle(municipalityNameChoiceBox, uniqueNames, selectedName);
             populateAndHandleSingle(classificationChoiceBox, uniqueClassifications, selectedClassification);
             populateAndHandleSingle(regionChoiceBox, uniqueRegions, selectedRegion);
             populateAndHandleSingle(provinceChoiceBox, uniqueProvinces, selectedProvince);
             
-            // Manage reset button visibility based on user interaction flags
+        
             municipalityIDResetButton.setVisible(isIDSelected);
             municipalityNameResetButton.setVisible(isNameSelected);
             classificationResetButton.setVisible(isClassificationSelected);
             regionResetButton.setVisible(isRegionSelected);
             provinceResetButton.setVisible(isProvinceSelected);
             
-            // Enable confirm button only when exactly one municipality is selected
+         
             confirmButton.setDisable(filteredMunicipalityModels.size() != 1);
 
-            // Re-attach listeners after UI updates are complete
+           
             attachAllListeners();
         });
     }
@@ -244,11 +244,11 @@ public class AddInspectorSelectMunicipalityController {
         SingleSelectionModel<T> selectionModel = choiceBox.getSelectionModel();
         T currentSelection = selectionModel.getSelectedItem();
 
-        // Add all unique items to the ChoiceBox
+     
         choiceBox.getItems().addAll(uniqueItems);
 
         if (uniqueItems.size() == 1) {
-            // Only one option available - auto-select and lock the ChoiceBox
+  
             T singleItem = uniqueItems.iterator().next();
             
             if (!singleItem.equals(currentSelection)) {
@@ -256,14 +256,14 @@ public class AddInspectorSelectMunicipalityController {
             }
             choiceBox.setDisable(true);
         } else {
-            // Multiple options available - enable the ChoiceBox
+          
             choiceBox.setDisable(false);
             
-            // Restore previous selection if still valid
+         
             if (selectedItem != null && uniqueItems.contains(selectedItem) && !selectedItem.equals(currentSelection)) {
                 selectionModel.select(selectedItem);
             } else if (selectedItem != null && !uniqueItems.contains(selectedItem)) {
-                // Clear selection if previously selected item is no longer available
+               
                 selectionModel.clearSelection();
             }
         }
@@ -281,10 +281,10 @@ public class AddInspectorSelectMunicipalityController {
      * fields but keep ID and Classification selected.
      */
     private void clearAutoLockedFilters() {
-        // Temporarily detach listeners to prevent cascading updates
+    
         detachAllListeners();
         
-        // Clear each filter that was NOT manually selected by the user
+      
         if (!isIDSelected) {
             municipalityIDChoiceBox.getSelectionModel().clearSelection();
             municipalityIDChoiceBox.setDisable(false);
@@ -310,7 +310,7 @@ public class AddInspectorSelectMunicipalityController {
             provinceChoiceBox.setDisable(false);
         }
         
-        // Re-attach listeners
+       
         attachAllListeners();
     }
 
@@ -343,8 +343,6 @@ public class AddInspectorSelectMunicipalityController {
         provinceChoiceBox.getSelectionModel().selectedItemProperty().addListener(provinceListener);
     }
 
-    //--------------------------------------------------------------------
-    // Reset Button Handlers
     
     /**
      * Handles the Municipality ID reset button press.
@@ -431,8 +429,7 @@ public class AddInspectorSelectMunicipalityController {
         updateChoiceBoxes();
     }
 
-    //--------------------------------------------------------------------
-    // Action Button Handlers
+
     
     /**
      * Handles the Confirm button press.

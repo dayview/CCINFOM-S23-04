@@ -72,12 +72,12 @@ public class DeleteMunicipalityController {
                 showAlert(Alert.AlertType.INFORMATION, "No Municipalities", "There are no municipalities currently registered to delete.");
                 allMunicipalitiesMap = Map.of(); 
             } else {
-                // Convert the list to a Map 
+               
                 allMunicipalitiesMap = municipalitiesList.stream()
                     .collect(Collectors.toMap(MunicipalityModel::getMunicipalityID, municipality -> municipality));
             }
             
-            // Extract IDs, sort them, and populate the ChoiceBox
+          
             List<Integer> ids = allMunicipalitiesMap.keySet().stream()
                                                 .sorted()
                                                 .collect(Collectors.toList());
@@ -100,7 +100,7 @@ public class DeleteMunicipalityController {
         selectedMunicipality = allMunicipalitiesMap.get(municipalityID);
         
         if (selectedMunicipality != null) {
-            // Update Labels
+            
             municipalityNameLabel.setText(selectedMunicipality.getMunicipalityName());
             provinceRegionLabel.setText(selectedMunicipality.getProvince() + " (" + selectedMunicipality.getRegion() + ")");
             classificationLabel.setText(selectedMunicipality.getClassification());
@@ -135,7 +135,7 @@ public class DeleteMunicipalityController {
             return;
         }
 
-        // Show Confirmation Dialog
+        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Permanent Deletion");
         alert.setHeaderText("Delete Municipality Record?");
@@ -151,7 +151,7 @@ public class DeleteMunicipalityController {
                 
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Municipality " + municipalityIdToDelete + " has been successfully deleted.");
                 
-                // Reset UI and Data after deletion
+               
                 clearDetails();
                 municipalityIDChoiceBox.getSelectionModel().clearSelection();
                 loadAllMunicipalitiesAndSetupUI(); 

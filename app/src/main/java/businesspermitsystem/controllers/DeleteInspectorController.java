@@ -1,6 +1,5 @@
 package businesspermitsystem.controllers;
 
-import businesspermitsystem.db.DatabaseConnector;
 import businesspermitsystem.db.InspectorDAO;
 import businesspermitsystem.db.MunicipalityDAO;
 import businesspermitsystem.models.InspectorModel;
@@ -58,10 +57,10 @@ public class DeleteInspectorController {
         
         loadAllInspectorsAndSetupUI();
         
-        // Listener for when an inspector ID is selected
+       
         inspectorIDChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Load details from the in-memory map instead of the database
+                
                 loadInspectorDataFromMap(newValue);
             } else {
                 clearInspectorDetails();
@@ -80,14 +79,14 @@ public class DeleteInspectorController {
             
             if (inspectorsList.isEmpty()) {
                 showAlert(Alert.AlertType.INFORMATION, "No Inspectors", "There are no inspectors currently registered to delete.");
-                allInspectorsMap = Map.of(); // Empty map
+                allInspectorsMap = Map.of(); 
             } else {
-                // Convert the list to a Map for O(1) detail lookup speed
+             
                 allInspectorsMap = inspectorsList.stream()
                     .collect(Collectors.toMap(InspectorModel::getInspectorID, inspector -> inspector));
             }
             
-            // Extract IDs from the map keys, sort them, and populate the ChoiceBox
+            
             List<Integer> ids = allInspectorsMap.keySet().stream()
                                                 .sorted()
                                                 .collect(Collectors.toList());
@@ -108,15 +107,15 @@ public class DeleteInspectorController {
     private void loadInspectorDataFromMap(int inspectorID) {
         clearInspectorDetails();
         
-        // Retrieve the InspectorModel directly from the map
+        
         selectedInspector = allInspectorsMap.get(inspectorID);
         
         try {
             if (selectedInspector != null) {
-                // Use MunicipalityDAO to fetch the full location name
+            
                 MunicipalityModel officeLocation = municipalityDAO.getMunicipalityById(selectedInspector.getMunicipalityID());
 
-                // Update Labels
+              
                 lastNameLabel.setText(selectedInspector.getLastName());
                 firstNameLabel.setText(selectedInspector.getFirstName());
                 middleNameLabel.setText(selectedInspector.getMiddleName());
@@ -167,7 +166,7 @@ public class DeleteInspectorController {
             return;
         }
 
-        // Show Confirmation Dialog
+        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Deletion");
         alert.setHeaderText("Permanently Delete Inspector?");
@@ -176,18 +175,18 @@ public class DeleteInspectorController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Execute Deletion
+        
             try {
                 int inspectorIdToDelete = selectedInspector.getInspectorID();
                 inspectorDAO.deleteInspector(inspectorIdToDelete);
                 
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Inspector " + inspectorIdToDelete + " has been successfully deleted.");
                 
-                //Reset UI and Data after Deletion
+                
                 clearInspectorDetails();
                 inspectorIDChoiceBox.getSelectionModel().clearSelection();
                 
-                // Re-fetch ALL data to reflect the deletion and update the ChoiceBox
+               
                 loadAllInspectorsAndSetupUI(); 
                 
             } catch (SQLException e) {
@@ -202,7 +201,6 @@ public class DeleteInspectorController {
      */
     @FXML
     private void cancelButtonPressed() {
-        // Get the current stage (window) and close it
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
