@@ -192,6 +192,7 @@ public class BusinessModel {
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
+    
     /** @return the business type or classification */
     public String getBusinessType() {
         return businessType;
@@ -232,6 +233,36 @@ public class BusinessModel {
         this.status = status;
     }
 
+    /** @return the date when the current status became effective */
+    public LocalDate getStatusEffectiveDate() {
+        return statusEffectiveDate;
+    }
+
+    /** @param statusEffectiveDate sets the effective date of current status */
+    public void setStatusEffectiveDate(LocalDate statusEffectiveDate) {
+        this.statusEffectiveDate = statusEffectiveDate;
+    }
+
+    /** @return the reason for the current status */
+    public String getStatusReason() {
+        return statusReason;
+    }
+
+    /** @param statusReason sets the reason for status change */
+    public void setStatusReason(String statusReason) {
+        this.statusRason = statusReason;
+    }
+
+    /** @return reference to supporting documents */
+    public String getSupportDocRef() {
+        return supportDocRef;
+    }
+
+    /** @param supportDocRef sets the reference to supporting documents */
+    public void setSupportDocRef(String supportDocRef) {
+        this.supportDocRef = supportDocRef;
+    }
+
     /** @return Municipality */
     public int getMunicipalityId() {
         return municipalityId;
@@ -241,5 +272,4 @@ public class BusinessModel {
     public void setMunicipalityId(int municipalityId) {
         this.municipalityId = municipalityId;
     }
-
 }
