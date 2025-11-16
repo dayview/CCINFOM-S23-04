@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
-import businesspermitsystem.models.OwnerModel;
 import businesspermitsystem.models.PermitRenewalApplicationModel;
 
 
@@ -78,12 +76,12 @@ public class PermitRenewalApplicationDAO {
     }
 
     public boolean addRenewalApplication(PermitRenewalApplicationModel renewalApplication) {
-        String query = "INSERT INTO owner (business_id, previous_permit_id, application_date, renewal_fee, surcharge, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO permit_renewal_application (business_id, previous_permit_id, application_date, renewal_fee, surcharge, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, renewalApplication.getBusinessID());
             statement.setInt(2, renewalApplication.getPreviousPermitID());
-            statement.setDate(3, renewalApplication.getApplicationDate());
+            statement.setDate(3, new java.sql.Date(renewalApplication.getApplicationDate().getTime()));
             statement.setDouble(4, renewalApplication.getRenewalFee());
             statement.setDouble(5, renewalApplication.getSurcharge());
             statement.setDouble(6, renewalApplication.getTotalAmount());
@@ -100,13 +98,13 @@ public class PermitRenewalApplicationDAO {
     }
 
     public boolean updateRenewalApplication(PermitRenewalApplicationModel renewalApplication) {
-        String query = "UPDATE permit_renewal_application SET business_id, previous_permit_id, application_date, renewal_fee, surcharge, total_amount, status WHERE renewal_id = ?";
+        String query = "UPDATE permit_renewal_application SET business_id = ?, previous_permit_id = ?, application_date = ?, renewal_fee = ?, surcharge = ?, total_amount = ?, status = ? WHERE renewal_id = ?";
         
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             
             statement.setInt(1, renewalApplication.getBusinessID());
             statement.setInt(2, renewalApplication.getPreviousPermitID());
-            statement.setDate(3, renewalApplication.getApplicationDate());
+            statement.setDate(3, new java.sql.Date(renewalApplication.getApplicationDate().getTime()));
             statement.setDouble(4, renewalApplication.getRenewalFee());
             statement.setDouble(5, renewalApplication.getSurcharge());
             statement.setDouble(6, renewalApplication.getTotalAmount());
@@ -123,7 +121,7 @@ public class PermitRenewalApplicationDAO {
         }
     }
 
-    public boolean deleteRenewalApplication(PermitRenewalApplicationModel renewalApplication) {
+    public boolean deleteRenewalApplication(int renewalID) {
         String query = "DELETE FROM permit_renewal_application WHERE renewal_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -138,5 +136,4 @@ public class PermitRenewalApplicationDAO {
             return false;
         }
     }
-    
 }
