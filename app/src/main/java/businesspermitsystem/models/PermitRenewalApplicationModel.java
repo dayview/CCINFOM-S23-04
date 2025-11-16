@@ -5,18 +5,18 @@ import java.util.Date;
 public class PermitRenewalApplicationModel {
     private int renewalID;
     private int businessID;
-    private int permitID;
+    private int previousPermitID;
     private Date applicationDate;
     private double renewalFee;
     private double surcharge;
     private double totalAmount;
     private String status;
 
-    public PermitRenewalApplicationModel(int renewalID, int businessID, int permitID, Date applicationDate, double renewalFee,
+    public PermitRenewalApplicationModel(int renewalID, int businessID, int previousPermitID, Date applicationDate, double renewalFee,
             double surcharge, double totalAmount, String status) {
                 this.renewalID = renewalID;
                 this.businessID = businessID;
-                this.permitID = permitID;
+                this.previousPermitID = previousPermitID;
                 this.applicationDate = applicationDate;
                 this.renewalFee = renewalFee;
                 this.surcharge = surcharge;
@@ -40,12 +40,12 @@ public class PermitRenewalApplicationModel {
         this.businessID = businessID;
     }
 
-    public int getPermitID() {
-        return permitID;
+    public int getPreviousPermitID() {
+        return previousPermitID;
     }
 
-    public void setPermitID(int permitID) {
-        this.permitID = permitID;
+    public void setPreviousPermitID(int previousPermitID) {
+        this.previousPermitID = previousPermitID;
     }
 
     public Date getApplicationDate() {
