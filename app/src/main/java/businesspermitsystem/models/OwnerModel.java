@@ -108,4 +108,9 @@ public class OwnerModel {
     public void setHomeAddress(String homeAddress) {
         this.homeAddress = homeAddress;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
 }
