@@ -7,10 +7,8 @@ import businesspermitsystem.models.BusinessModel;
 
 /**
  * Data Access Object (DAO) for the {@link BusinessModel} model.
- *
  * This class handles all database interactions related to Business,
  * including adding, deleting, and updating records.
- *
  * It uses {@link DatabaseConnector} to establish connections.
  */
 public class BusinessDAO {
@@ -77,7 +75,6 @@ public class BusinessDAO {
     /**
      * This Method finds a business by its ID
      */
-
     public BusinessModel getBusinessByID(int businessId) throws SQLException{
         String sql= "SELECT * FROM business WHERE business_id = ?";
         PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
@@ -98,7 +95,6 @@ public class BusinessDAO {
             business.setStartDate(result.getDate("start_date").toLocalDate());
             business.setStatus(result.getString("status"));
             business.setMunicipalityId(result.getInt("municipality_id"));
-
             return business; //returns the new business
         }
 

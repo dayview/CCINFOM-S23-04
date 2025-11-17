@@ -24,10 +24,12 @@ public class UpdateBusinessController{
     @FXML private TextField businessTypeField;
     @FXML private TextField taxIdField;
     @FXML private TextField municipalityField;
+    @FXML private TextField businessIdField;
 
     @FXML private DatePicker startDatePicker;
 
     @FXML private Button saveButton;
+    @FXML private Button cancelButton;
     @FXML private Button Button;
 
     // make an object for the businessDao
@@ -67,6 +69,21 @@ public class UpdateBusinessController{
         }
     }
 
+    @FXML
+    private void handleLoadBusiness(ActionEvent event) {
+        String idText = businessIdField.getText();
+
+        if (!idText.matches("\\d+")) {
+            showAlert(Alert.AlertType.WARNING, "Invalid Input", "Business ID must be a number.");
+            return;
+        }
+
+        int id = Integer.parseInt(idText);
+        loadBusinessData(id);
+    }
+
+
+    @FXML
     private void onSave(ActionEvent event){
         try{
             if(businessNameField.getText().isEmpty() || tradeNameField.getText().isEmpty()){
@@ -126,6 +143,7 @@ public class UpdateBusinessController{
     }
 
 
+    @FXML
     private void onCancel(ActionEvent event){
         Stage currentStage = (Stage) saveButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
