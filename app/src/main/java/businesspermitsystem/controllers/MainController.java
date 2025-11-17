@@ -17,6 +17,8 @@ public class MainController {
      */
     @FXML private Button newBusinessRegistrationButton;
 
+    @FXML private Button initialPermitIssuanceButton;
+
     /**
      * 
      */
@@ -89,6 +91,14 @@ public class MainController {
         Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/BusinessSelectionView.fxml", "New Business Registration and Others");
+    }
+
+
+    @FXML
+    private void initialPermitIssuanceButtonPressed(ActionEvent event){
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InitialPermitIssuanceView.fxml", "Initital Permit Issuance");
     }
 
     @FXML

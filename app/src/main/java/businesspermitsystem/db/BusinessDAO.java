@@ -164,4 +164,49 @@ public class BusinessDAO {
         return list;
     }
 
+    public List<BusinessModel> getBusinessesWithOwnerCount() {
+        List<BusinessModel> list = new ArrayList<>();
+
+        String sql =
+                "SELECT b.business_id, b.business_name, b.trade_name, b.street_address, b.barangay, " +
+                        "b.business_type, b.tax_id, b.start_date, b.status, b.municipality_id, " +
+                        "COUNT(bo.owner_id) AS owner_count " +
+                        "FROM business b " +
+                        "JOIN business_owner bo ON b.business_id = bo.business_id " +
+                        "GROUP BY b.business_id " +
+                        "ORDER BY b.business_name ASC";
+
+        try (PreparedStatement stmt = DatabaseConnector.connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                BusinessModel b = new BusinessModel();
+                b.setBusinessId(rs.getInt("business_id"));
+                b.setBusinessName(rs.getString("business_name"));
+                b.setTradeName(rs.getString("trade_name"));
+                b.setStreetAddress(rs.getString("street_address"));
+                b.setBarangay(rs.getString("barangay"));
+                b.setBusinessType(rs.getString("business_type"));
+                b.setTaxId(rs.getString("tax_id"));
+
+                if (rs.getDate("start_date") != null)
+                    b.setStartDate(rs.getDate("start_date").toLocalDate());
+
+                b.setStatus(rs.getString("status"));
+                b.setMunicipalityId(rs.getInt("municipality_id"));
+
+                // NEW FIELD
+                b.setOwnerCount(rs.getInt("owner_count"));
+
+                list.add(b);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
 }

@@ -257,7 +257,18 @@ public class BusinessModel {
 
     @Override
     public String toString() {
+        if (ownerCount > 0) {
+            return businessName + " (" + ownerCount + " owners linked)";
+        }
         return businessName;
     }
+
+    private int ownerCount;
+
+    public int getOwnerCount() { return ownerCount; }
+    public void setOwnerCount(int ownerCount) { this.ownerCount = ownerCount; }
+
+
+
 
 }
