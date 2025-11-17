@@ -87,6 +87,31 @@ CREATE TABLE business_owner (
     FOREIGN KEY(business_id) REFERENCES business(business_id)
 );
 
+CREATE TABLE permit_application (
+    application_id INT NOT NULL AUTO_INCREMENT,
+
+    business_id INT NOT NULL,
+    permit_type_id INT NOT NULL,
+
+    application_date DATE NOT NULL,
+    approval_date DATE,
+    expiration_date DATE,
+
+    status VARCHAR(30) NOT NULL DEFAULT 'Pending',
+
+    base_fee DECIMAL(10,2) NOT NULL,
+    surcharge DECIMAL(10,2) DEFAULT 0.00,
+    total_fee DECIMAL(10,2) NOT NULL,
+
+    remarks TEXT,
+
+    PRIMARY KEY (application_id),
+
+    FOREIGN KEY (business_id) REFERENCES business(business_id),
+    FOREIGN KEY (permit_type_id) REFERENCES permit_type(permit_type_id)
+);
+
+
 
 INSERT INTO `municipality`
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)

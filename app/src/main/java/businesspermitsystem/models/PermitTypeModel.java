@@ -1,88 +1,78 @@
 package businesspermitsystem.models;
 
-import java.sql.*;
-import businesspermitsystem.db.DatabaseConnector;
+import java.math.BigDecimal;
 
-/* This class is exclusively handling the permit data (types & data) of a business */
-
-/* Load PermitType (master record), pick the active FeeSchedule for that type and date
-   Pick the active FeeSchedule for that type and date
-   subtotal = feeSchedule.computeSubtotal(permitType, feeContext)
-   taxes = taxCalculator.computeTaxes(subtotal, taxContent)
-   total = subtotal + taxes.totalTax
- */
-
-/* Edge cases to handle
- * Late renewal penalties (surcharge vs separate fee line)
- * Tax-exempt applicants
- * Tax-inclusive jurisdictions (prices include VAT)
- * Caps/maximum surcharge
- * Mid-year rule changes (effective dates)
- * Backdated filings (use filing/approval date consistently)
- */
-
-/**
- * Represents a Permit Type and Fee Schedule in the Business Permit System
- * Contains information about permit categories, fees, validity, and requirements
- */
 public class PermitTypeModel {
-    private int permitTypeID;
+
+    private int permitTypeId;
     private String permitName;
-    private FeeScheduleModel feeSchedule;
-    private String documentRequirements;
+    private BigDecimal baseFee;
+    private String surchargeRule;
     private int validityMonths;
+    private String documentRequirements;
 
-    /**
-     * Constructor with all fields (for creating new records)
-     * @param permitTypeID description here
-     * @param permitName description here
-     * @param feeSchedule description here
-     */
-    public PermitTypeModel(int permitTypeID, String permitName, FeeScheduleModel feeSchedule, String documentRequirements, int validityMonths) {
-        this.permitTypeID = permitTypeID;
+    public PermitTypeModel(int permitTypeId, String permitName, BigDecimal baseFee,
+                           String surchargeRule, int validityMonths, String documentRequirements) {
+        this.permitTypeId = permitTypeId;
         this.permitName = permitName;
-        this.feeSchedule = feeSchedule;
-        this.documentRequirements = documentRequirements;
+        this.baseFee = baseFee;
+        this.surchargeRule = surchargeRule;
         this.validityMonths = validityMonths;
+        this.documentRequirements = documentRequirements;
     }
 
-    public int getID() {
-        return permitTypeID;
+    // Getters
+    public int getPermitTypeId() {
+        return permitTypeId;
     }
 
-    public String getName() {
+    public String getPermitName() {
         return permitName;
     }
 
-    public FeeScheduleModel getFeeSchedule() {
-        return feeSchedule;
+    public BigDecimal getBaseFee() {
+        return baseFee;
     }
 
-    public String getDocumentRequirements() {
-        return documentRequirements;
+    public String getSurchargeRule() {
+        return surchargeRule;
     }
 
     public int getValidityMonths() {
         return validityMonths;
     }
 
-    public void setID(int permitTypeID) {
-        this.permitTypeID = permitTypeID;
+    public String getDocumentRequirements() {
+        return documentRequirements;
     }
 
-    public void setName(String permitName) {
+    // Setters
+    public void setPermitTypeId(int permitTypeId) {
+        this.permitTypeId = permitTypeId;
+    }
+
+    public void setPermitName(String permitName) {
         this.permitName = permitName;
     }
 
-    public void setFeeSchedule(FeeScheduleModel feeSchedule) {
-        this.feeSchedule = feeSchedule;
+    public void setBaseFee(BigDecimal baseFee) {
+        this.baseFee = baseFee;
+    }
+
+    public void setSurchargeRule(String surchargeRule) {
+        this.surchargeRule = surchargeRule;
+    }
+
+    public void setValidityMonths(int validityMonths) {
+        this.validityMonths = validityMonths;
     }
 
     public void setDocumentRequirements(String documentRequirements) {
         this.documentRequirements = documentRequirements;
     }
 
-    public void setValidityMonths(int validityMonths) {
-        this.validityMonths = validityMonths;
+    @Override
+    public String toString() {
+        return permitName;
     }
 }

@@ -6,6 +6,7 @@ import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.OwnerModel;
 import businesspermitsystem.utils.SceneManager;
 
+import businesspermitsystem.utils.SessionStorage;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -86,4 +87,22 @@ public class InitialPermitController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/MainView.fxml", "Main Menu");
     }
+
+    @FXML
+    private void handleNext(ActionEvent event) {
+        BusinessModel selectedBusiness = businessComboBox.getValue();
+
+        if (selectedBusiness == null) {
+            return; // button should already be disabled
+        }
+
+        // Store selected business to session
+        SessionStorage.setSelectedBusiness(selectedBusiness);
+
+        // Navigate to Step 2
+        Stage currentStage = (Stage) nextButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/PermitTypeSelectionView.fxml", "Select Permit Type");
+    }
+
 }

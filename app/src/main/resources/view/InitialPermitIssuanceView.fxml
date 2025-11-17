@@ -48,7 +48,8 @@
             <Button fx:id="nextButton"
                     text="Next → Permit Type"
                     prefWidth="150"
-                    disable="true" />
+                    disable="true"
+                    onAction="#handleNext" />
             <Button fx:id="cancelButton"
                     text="Cancel"
                     prefWidth="150"
