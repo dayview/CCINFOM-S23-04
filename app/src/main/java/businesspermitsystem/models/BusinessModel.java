@@ -85,6 +85,22 @@ public class BusinessModel {
      * ID of the Municipality where Business is registered
      */
     private int municipalityId;
+    /**
+     * Date when the current business status became effective.
+     * 
+     */
+    private LocalDate statusEffectiveDate;
+    
+    /**
+     * Reason for the current business status 
+     */
+    private String statusReason;
+    
+    /**
+     * Reference to supporting documents 
+     */
+    private String supportDocRef;
+
     
     /**
      * Default constructor.
@@ -92,7 +108,7 @@ public class BusinessModel {
      */
     public BusinessModel() {
     }
-
+    
     /**
      * Full-argument constructor.
      * <p>
@@ -250,7 +266,7 @@ public class BusinessModel {
 
     /** @param statusReason sets the reason for status change */
     public void setStatusReason(String statusReason) {
-        this.statusRason = statusReason;
+        this.statusReason = statusReason;
     }
 
     /** @return reference to supporting documents */
