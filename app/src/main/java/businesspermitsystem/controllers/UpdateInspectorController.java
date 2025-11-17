@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import businesspermitsystem.db.InspectorDAO;
-import businesspermitsystem.db.MunicipalityDAO; 
+import businesspermitsystem.db.MunicipalityDAO;
 import businesspermitsystem.models.InspectorModel;
 import businesspermitsystem.models.MunicipalityModel;
 import businesspermitsystem.utils.SceneManager;

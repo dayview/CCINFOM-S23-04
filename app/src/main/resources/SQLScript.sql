@@ -14,6 +14,9 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `municipality`;
 
+DROP TABLE IF EXISTS `inspector_resultt`;
+DROP TABLE IF EXISTS `inspector_schedule`;
+
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
   `municipality_name` VARCHAR(35) NOT NULL,
@@ -78,6 +81,21 @@ CREATE TABLE `permit_type` (
   PRIMARY KEY (`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `inspection_result` (
+`inspection_id` INT NOT NULL AUTO_INCREMENT,
+`inspector_id` INT NOT NULL,
+`schedule_id` INT NOT NULL,
+`result` VARCHAR(35),
+`remarks` TEXT
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `inspection_schedule` (
+`schedule_id` INT NOT NULL AUTO_INCREMENT
+`inspector_id` INT NOT NULL,
+`business_id` INT NOT NULL,
+`inspection_date` DATE,
+`status` VARCHAR(20),
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality` 
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
