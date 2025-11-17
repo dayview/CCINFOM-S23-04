@@ -37,6 +37,9 @@ CREATE TABLE `business` (
   `tax_id` VARCHAR(50) UNIQUE,
   `start_date` DATE,
   `status` VARCHAR(50) NOT NULL DEFAULT '',
+  `status_effective_date` DATE,
+  `status_reason` VARCHAR(500),
+  `support_doc_ref` VARCHAR(255),
   `municipality_id` INT,
   FOREIGN KEY (municipality_id) REFERENCES municipality(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
