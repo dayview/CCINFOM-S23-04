@@ -101,4 +101,31 @@ public class BusinessDAO {
         return null; //if theres no business found with smae business_Id
 
     }
+
+    public BusinessModel getBusinessByName(String businessName) {
+        String sql = "SELECT * FROM business WHERE business_name = ?";
+        try (PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);) {
+            statement.setString(1, businessName);
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    BusinessModel business = new BusinessModel();
+                    business.setBusinessId(result.getInt("business_id"));
+                    business.setBusinessName(result.getString("business_name"));
+                    business.setTradeName(result.getString("trade_name"));
+                    business.setStreetAddress(result.getString("street_address"));
+                    business.setBarangay(result.getString("barangay"));
+                    business.setBusinessType(result.getString("business_type"));
+                    business.setTaxId(result.getString("tax_id"));
+                    business.setStartDate(result.getDate("start_date").toLocalDate());
+                    business.setStatus(result.getString("status"));
+                    business.setMunicipalityId(result.getInt("municipality_id"));
+                    return business;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // not found
+    }
+
 }
