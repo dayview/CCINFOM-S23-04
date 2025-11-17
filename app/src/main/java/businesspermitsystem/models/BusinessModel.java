@@ -85,22 +85,7 @@ public class BusinessModel {
      * ID of the Municipality where Business is registered
      */
     private int municipalityId;
-    /**
-     * Date when the current business status became effective.
-     * 
-     */
-    private LocalDate statusEffectiveDate;
     
-    /**
-     * Reason for the current business status 
-     */
-    private String statusReason;
-    
-    /**
-     * Reference to supporting documents 
-     */
-    private String supportDocRef;
-
     
     /**
      * Default constructor.
