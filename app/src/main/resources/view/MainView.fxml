@@ -16,6 +16,7 @@
        <Button fx:id="updateBusinessButton" layoutX="248.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateBusinessButtonPressed" text="Update Business" />
        <Button fx:id="deleteBusinessButton" layoutX="251.0" layoutY="269.0" mnemonicParsing="false" onAction="#removeBusinessButtonPressed" text="Delete Business" />
       <Label id="titleLabel" layoutX="288.0" layoutY="130.0" text="Owner" />
+       <Button fx:id="addOwnerButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addOwnerButtonPressed" text="Add Owner" />
       <Label id="titleLabel" layoutX="292.0" layoutY="148.0" text="Permit Type And Fee Schedule" />
       <Label id="titleLabel" layoutX="229.0" layoutY="165.0" text="Inspector" />
       <Button fx:id="addInspectorButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addInspectorButtonPressed" text="Add Inspector" />

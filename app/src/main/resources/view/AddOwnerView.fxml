@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.AddOwnerController"
+      alignment="TOP_CENTER"
+      prefHeight="600.0" prefWidth="600.0"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <children>
+
+        <Label text="Add Owner" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <!-- Last Name -->
+        <HBox spacing="10">
+            <Label text="Last Name:" prefWidth="150" />
+            <TextField fx:id="txtLastName" prefWidth="300" />
+        </HBox>
+
+        <!-- First Name -->
+        <HBox spacing="10">
+            <Label text="First Name:" prefWidth="150" />
+            <TextField fx:id="txtFirstName" prefWidth="300" />
+        </HBox>
+
+        <!-- Middle Name -->
+        <HBox spacing="10">
+            <Label text="Middle Name:" prefWidth="150" />
+            <TextField fx:id="txtMiddleName" prefWidth="300" />
+        </HBox>
+
+        <!-- Contact Number -->
+        <HBox spacing="10">
+            <Label text="Contact No:" prefWidth="150" />
+            <TextField fx:id="txtContactNo" prefWidth="300" />
+        </HBox>
+
+        <!-- Email -->
+        <HBox spacing="10">
+            <Label text="Email:" prefWidth="150" />
+            <TextField fx:id="txtEmail" prefWidth="300" />
+        </HBox>
+
+        <!-- Gov ID Type -->
+        <HBox spacing="10">
+            <Label text="Gov ID Type:" prefWidth="150" />
+            <TextField fx:id="txtGovIDType" prefWidth="300" />
+        </HBox>
+
+        <!-- Gov ID Number -->
+        <HBox spacing="10">
+            <Label text="Gov ID No:" prefWidth="150" />
+            <TextField fx:id="txtGovIDNo" prefWidth="300" />
+        </HBox>
+
+        <!-- TIN -->
+        <HBox spacing="10">
+            <Label text="TIN:" prefWidth="150" />
+            <TextField fx:id="txtTIN" prefWidth="300" />
+        </HBox>
+
+        <!-- Home Address -->
+        <HBox spacing="10">
+            <Label text="Home Address:" prefWidth="150" />
+            <TextField fx:id="txtHomeAddress" prefWidth="300" />
+        </HBox>
+
+        <!-- Buttons -->
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+            <Button fx:id="saveButton" text="Save" onAction="#handleSave" prefWidth="100" />
+            <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" prefWidth="100" />
+        </HBox>
+
+    </children>
+</VBox>
