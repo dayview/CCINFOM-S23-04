@@ -43,8 +43,8 @@ public class PermitTypeDAO {
         } catch (SQLException e) {
             System.err.println("Error retrieving permit type: " + e.getMessage());
             e.printStackTrace();
-    }
-    return permitTypes;
+        }
+        return permitTypes;
     }
 
     public PermitTypeModel getPermitTypeByID(int permitTypeID) {
