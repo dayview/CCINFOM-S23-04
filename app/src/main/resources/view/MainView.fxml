@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.MainController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.MainController">
    <children>
       <Label id="titleLabel" text="Business Permit System" />
       <Button id="newBusinessButton" fx:id="newBusinessRegistrationButton" mnemonicParsing="false" onAction="#newBusinessRegistrationButtonPressed" text="New Business Registration and Initial Permit Issuance" />
@@ -12,7 +12,13 @@
       <Button id="inspectionSchedulingButton" fx:id="inspectionScheduleButton" mnemonicParsing="false" onAction="#inspectionScheduleButtonPressed" text="Inspection Scheduling &amp; Clearance Transaction" />
       <Button id="businessStatusButton" fx:id="businessStatusUpdateButton" mnemonicParsing="false" onAction="#businessStatusUpdateButtonPressed" text="Business Status Update Transaction" />
       <Label id="titleLabel" layoutX="248.0" layoutY="10.0" text="Business" />
+       <Button fx:id="addBusinessButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addBusinessButtonPressed" text="Add Business" />
+       <Button fx:id="updateBusinessButton" layoutX="248.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateBusinessButtonPressed" text="Update Business" />
+       <Button fx:id="deleteBusinessButton" layoutX="251.0" layoutY="269.0" mnemonicParsing="false" onAction="#removeBusinessButtonPressed" text="Delete Business" />
       <Label id="titleLabel" layoutX="288.0" layoutY="130.0" text="Owner" />
+      <Button fx:id="addOwnerButton" mnemonicParsing="false" onAction="#addOwnerButtonPressed" text="Add Owner" />
+      <Button fx:id="updateOwnerButton" mnemonicParsing="false" onAction="#updateOwnerButtonPressed" text="Update Owner" />
+      <Button fx:id="deleteOwnerButton" mnemonicParsing="false" onAction="#deleteOwnerButtonPressed" text="Delete Owner" />
       <Label id="titleLabel" layoutX="292.0" layoutY="148.0" text="Permit Type And Fee Schedule" />
       <Label id="titleLabel" layoutX="229.0" layoutY="165.0" text="Inspector" />
       <Button fx:id="addInspectorButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addInspectorButtonPressed" text="Add Inspector" />
