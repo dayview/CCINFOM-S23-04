@@ -3,6 +3,9 @@ package businesspermitsystem.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import businesspermitsystem.models.BusinessModel;
 
 /**
@@ -126,6 +129,39 @@ public class BusinessDAO {
             e.printStackTrace();
         }
         return null; // not found
+    }
+
+    public List<BusinessModel> getAllBusinesses() {
+        List<BusinessModel> list = new ArrayList<>();
+
+        String sql = "SELECT business_id, business_name, trade_name, street_address, " +
+                "barangay, business_type, tax_id, start_date, status, municipality_id " +
+                "FROM business";
+
+        try (PreparedStatement preparedStatement = DatabaseConnector.connection.prepareStatement(sql);
+             ResultSet result = preparedStatement.executeQuery()) {
+
+            while (result.next()) {
+                BusinessModel business = new BusinessModel(
+                        result.getInt("business_id"),
+                        result.getString("business_name"),
+                        result.getString("trade_name"),
+                        result.getString("street_address"),
+                        result.getString("barangay"),
+                        result.getString("business_type"),
+                        result.getString("tax_id"),
+                        result.getDate("start_date").toLocalDate(),
+                        result.getString("status"),
+                        result.getInt("municipality_id")
+                );
+                list.add(business);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
 }

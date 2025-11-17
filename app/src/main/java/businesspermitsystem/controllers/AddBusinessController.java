@@ -41,13 +41,13 @@ public class AddBusinessController {
         try {
             // checks if the inputs are correct
             if (businessNameField.getText().isEmpty() || tradeNameField.getText().isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Validation Error", "Business name and trade name are required.");
+                showAlert(Alert.AlertType.WARNING, "Error", "Business name and trade name are required.");
                 return;
             }
 
             LocalDate selectedDate = startDatePicker.getValue();
             if (selectedDate == null) {
-                showAlert(Alert.AlertType.WARNING, "Validation Error", "Please select a start date.");
+                showAlert(Alert.AlertType.WARNING, "Error", "Please select a start date.");
                 return;
             }
 
@@ -55,7 +55,7 @@ public class AddBusinessController {
             try {
                 municipalityId = Integer.parseInt(municipalityIdField.getText());
             } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.WARNING, "Validation Error", "Municipality ID must be a valid number.");
+                showAlert(Alert.AlertType.WARNING, "Error", "Municipality ID must be a valid number.");
                 return;
             }
 
