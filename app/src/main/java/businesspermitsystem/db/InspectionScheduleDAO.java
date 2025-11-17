@@ -11,5 +11,5 @@ import businesspermitsystem.models.InspectionScheduleModel;
  * It uses {@link DatabaseConnector} to establish connections.
  */
 public class InspectionScheduleDAO {
-
+    
 }
