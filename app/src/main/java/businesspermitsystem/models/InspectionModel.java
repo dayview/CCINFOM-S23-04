@@ -35,7 +35,7 @@ public class InspectionModel {
         return inspectorID;
     }
 
-    public void setInspectornID(int inspectorID) {
+    public void setInspectorID(int inspectorID) {
         this.inspectorID = inspectorID;
     }
 

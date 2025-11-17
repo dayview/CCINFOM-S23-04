@@ -44,6 +44,29 @@ public class InspectionDAO {
         return null;
     }
 
+    public InspectionModel getInspectionByRenewal(int renewalID) {
+        String query = "SELECT * FROM inspection WHERE renewal_id = ?";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, renewalID);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new InspectionModel(
+                        result.getInt("inspection_id"),
+                        result.getInt("renewal_id"),
+                        result.getInt("inspector_id"),
+                        result.getDate("inspection_date")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving inspection: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ArrayList<InspectionModel> getAllInspection() {
         ArrayList<InspectionModel> inspections = new ArrayList<>();
         String query = "SELECT * FROM inspection";
