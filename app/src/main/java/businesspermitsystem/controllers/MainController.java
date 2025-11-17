@@ -85,7 +85,6 @@ public class MainController {
 
     @FXML
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
-
     }
 
     @FXML
