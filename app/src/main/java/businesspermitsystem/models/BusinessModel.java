@@ -126,24 +126,6 @@ public class BusinessModel {
         this.municipalityId = municipalityId;
     }
 
-    /**
-     * Extended constructor with status tracking fields -- additional
-     *
-     * @param businessId unique business ID
-     * @param businessName legal business name
-     * @param tradeName trade or operating name
-     * @param streetAddress street address of the business
-     * @param barangay barangay where the business is located
-     * @param businessType type or classification of the business
-     * @param taxId tax identification number
-     * @param startDate date when the business started operations
-     * @param status operational status
-     * @param statusEffectiveDate date when current status became effective
-     * @param statusReason reason for status change
-     * @param supportDocRef reference to supporting documents
-     * @param municipalityId municipality where business is registered
-     */
-
     /** @return the unique business ID */
     public int getBusinessId() {
         return businessId;
@@ -243,7 +225,6 @@ public class BusinessModel {
     public void setStatusEffectiveDate(LocalDate statusEffectiveDate) {
         this.statusEffectiveDate = statusEffectiveDate;
     }
-
     /** @return the reason for the current status */
     public String getStatusReason() {
         return statusReason;
@@ -273,4 +254,10 @@ public class BusinessModel {
     public void setMunicipalityId(int municipalityId) {
         this.municipalityId = municipalityId;
     }
+
+    @Override
+    public String toString() {
+        return businessName;
+    }
+
 }
