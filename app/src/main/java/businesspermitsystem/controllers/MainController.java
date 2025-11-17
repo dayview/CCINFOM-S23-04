@@ -91,7 +91,6 @@ public class MainController {
 
     @FXML
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
-
     }
 
     @FXML
@@ -153,7 +152,7 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/DeleteOwnerView.fxml", "Delete Owner");
     }    
-    
+
     // PERMIT TYPE AND FEE SCHEDULE ACTIONS
 
     // INSPECTORS ACTIONS
