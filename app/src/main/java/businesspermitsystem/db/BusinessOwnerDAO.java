@@ -12,10 +12,10 @@ public class BusinessOwnerDAO {
     public static boolean linkBusinessAndOwner(int businessId, int ownerId) {
         String sql = "INSERT INTO business_owner (business_id, owner_id) VALUES (?, ?)";
 
-        try (PreparedStatement ps = DatabaseConnector.connection.prepareStatement(sql)) {
-            ps.setInt(1, businessId);
-            ps.setInt(2, ownerId);
-            return ps.executeUpdate() > 0;
+        try (PreparedStatement prepareStatement = DatabaseConnector.connection.prepareStatement(sql)) {
+            prepareStatement.setInt(1, businessId);
+            prepareStatement.setInt(2, ownerId);
+            return prepareStatement.executeUpdate() > 0;
 
         } catch (SQLException e) {
 

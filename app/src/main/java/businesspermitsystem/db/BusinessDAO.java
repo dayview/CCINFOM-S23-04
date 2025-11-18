@@ -180,25 +180,25 @@ public class BusinessDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                BusinessModel b = new BusinessModel();
-                b.setBusinessId(rs.getInt("business_id"));
-                b.setBusinessName(rs.getString("business_name"));
-                b.setTradeName(rs.getString("trade_name"));
-                b.setStreetAddress(rs.getString("street_address"));
-                b.setBarangay(rs.getString("barangay"));
-                b.setBusinessType(rs.getString("business_type"));
-                b.setTaxId(rs.getString("tax_id"));
+                BusinessModel businessModel = new BusinessModel();
+                businessModel.setBusinessId(rs.getInt("business_id"));
+                businessModel.setBusinessName(rs.getString("business_name"));
+                businessModel.setTradeName(rs.getString("trade_name"));
+                businessModel.setStreetAddress(rs.getString("street_address"));
+                businessModel.setBarangay(rs.getString("barangay"));
+                businessModel.setBusinessType(rs.getString("business_type"));
+                businessModel.setTaxId(rs.getString("tax_id"));
 
                 if (rs.getDate("start_date") != null)
-                    b.setStartDate(rs.getDate("start_date").toLocalDate());
+                    businessModel.setStartDate(rs.getDate("start_date").toLocalDate());
 
-                b.setStatus(rs.getString("status"));
-                b.setMunicipalityId(rs.getInt("municipality_id"));
+                businessModel.setStatus(rs.getString("status"));
+                businessModel.setMunicipalityId(rs.getInt("municipality_id"));
 
                 // NEW FIELD
-                b.setOwnerCount(rs.getInt("owner_count"));
+                businessModel.setOwnerCount(rs.getInt("owner_count"));
 
-                list.add(b);
+                list.add(businessModel);
             }
 
         } catch (SQLException e) {

@@ -29,7 +29,7 @@ public class PermitTypeSelectionController {
     @FXML
     public void initialize() {
 
-        // Load the selected business from session
+        // loads the selected business
         this.selectedBusiness = SessionStorage.getSelectedBusiness();
 
         loadPermitTypes();
@@ -54,7 +54,6 @@ public class PermitTypeSelectionController {
                 return;
             }
 
-            // ✔ Updated: no more feeSchedule
             baseFeeLabel.setText(permitType.getBaseFee().toString());
             validityLabel.setText(permitType.getValidityMonths() + " month(s)");
             requirementsLabel.setText(permitType.getDocumentRequirements());

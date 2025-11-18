@@ -45,20 +45,20 @@ public class PermitApplicationController {
             return;
         }
 
-        // Fill labels
+        // displays the label
         businessNameLabel.setText(selectedBusiness.getBusinessName());
         permitTypeLabel.setText(selectedPermit.getPermitName());
 
-        // Fill base fee
+        // displays the base fee
         baseFeeField.setText(selectedPermit.getBaseFee().toString());
 
-        // Default values
+        // sets default values
         surchargeField.setText("0.00");
         totalFeeField.setText(baseFeeField.getText());
 
         applicationDatePicker.setValue(LocalDate.now());
 
-        // Recalculate when surcharge changes
+        // the recalculates based on the choice
         surchargeField.textProperty().addListener((obs, oldVal, newVal) -> computeTotal());
     }
 
@@ -89,7 +89,7 @@ public class PermitApplicationController {
         app.setPermitTypeId(selectedPermit.getPermitTypeId());
 
         app.setApplicationDate(applicationDatePicker.getValue());
-        app.setApprovalDate(null);  // Not approved yet
+        app.setApprovalDate(null);  // since initial does not have approved status
 
         // Expiration date (application date + validity)
         app.setExpirationDate(

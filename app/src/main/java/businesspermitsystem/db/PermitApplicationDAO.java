@@ -24,9 +24,6 @@ public class PermitApplicationDAO {
         }
     }
 
-    // ============================
-    // INSERT NEW APPLICATION
-    // ============================
     public boolean addPermitApplication(PermitApplicationModel app) {
         String sql = """
             INSERT INTO permit_application
@@ -60,9 +57,6 @@ public class PermitApplicationDAO {
         return false;
     }
 
-    // ============================
-    // GET APPLICATION BY ID
-    // ============================
     public PermitApplicationModel getApplicationById(int id) {
         String sql = "SELECT * FROM permit_application WHERE application_id = ?";
 
@@ -83,9 +77,6 @@ public class PermitApplicationDAO {
         return null;
     }
 
-    // ============================
-    // GET APPLICATIONS BY BUSINESS
-    // ============================
     public List<PermitApplicationModel> getApplicationsByBusinessId(int businessId) {
         List<PermitApplicationModel> list = new ArrayList<>();
 
@@ -108,9 +99,6 @@ public class PermitApplicationDAO {
         return list;
     }
 
-    // ============================
-    // GET APPLICATIONS BY STATUS
-    // ============================
     public List<PermitApplicationModel> getApplicationsByStatus(String status) {
         List<PermitApplicationModel> list = new ArrayList<>();
 
@@ -133,9 +121,6 @@ public class PermitApplicationDAO {
         return list;
     }
 
-    // ============================
-    // UPDATE APPLICATION
-    // ============================
     public boolean updatePermitApplication(PermitApplicationModel app) {
         String sql = """
             UPDATE permit_application
@@ -170,9 +155,6 @@ public class PermitApplicationDAO {
         return false;
     }
 
-    // ============================
-    // DELETE APPLICATION
-    // ============================
     public boolean deletePermitApplication(int id) {
         String sql = "DELETE FROM permit_application WHERE application_id = ?";
 
@@ -188,9 +170,6 @@ public class PermitApplicationDAO {
         return false;
     }
 
-    // ============================
-    // INTERNAL MAPPER
-    // ============================
     private PermitApplicationModel extractApplication(ResultSet rs) throws SQLException {
         PermitApplicationModel app = new PermitApplicationModel();
 

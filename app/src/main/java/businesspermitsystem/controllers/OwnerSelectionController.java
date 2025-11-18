@@ -24,7 +24,7 @@ public class OwnerSelectionController {
 
         OwnerDropDown.getItems().addAll(ownerDAO.getAllOwners());
 
-        //Show the names of all owners as text
+        //Show the names of all owners as text instead of object
         OwnerDropDown.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
             protected void updateItem(OwnerModel item, boolean empty) {
@@ -69,7 +69,7 @@ public class OwnerSelectionController {
         // Attempt to link business + owner
         boolean success = BusinessOwnerDAO.linkBusinessAndOwner(businessId, ownerId);
 
-
+        // auto check to not hav duplicate owners for one business
         if (!success) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Duplicate Owner");

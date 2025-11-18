@@ -25,7 +25,7 @@ public class InitialPermitController {
     @FXML private ComboBox<BusinessModel> businessComboBox;
     @FXML private Label ownerListLabel;
     @FXML private Button nextButton;
-    @FXML private Button cancelButton; // <-- REQUIRED for handleCancel
+    @FXML private Button cancelButton;
 
     private final BusinessDAO businessDAO = new BusinessDAO();
     private final OwnerDAO ownerDAO = new OwnerDAO();
@@ -34,7 +34,7 @@ public class InitialPermitController {
 
     @FXML
     public void initialize() {
-        // Load businesses that have at least 1 owner
+        // Loads the businesses that have 1 owner only
         List<BusinessModel> businesses = businessDAO.getBusinessesWithOwnerCount();
         filteredList = new FilteredList<>(FXCollections.observableArrayList(businesses), p -> true);
         businessComboBox.setItems(filteredList);
@@ -65,15 +65,12 @@ public class InitialPermitController {
                 return;
             }
 
-            // Load ALL owners for this business
+            // Loads all the owners for a specific business
             List<OwnerModel> owners = ownerDAO.getOwnersByBusinessId(business.getBusinessId());
 
             StringBuilder sb = new StringBuilder();
             for (OwnerModel o : owners) {
-                sb.append(o.getFirstName())
-                        .append(" ")
-                        .append(o.getLastName())
-                        .append("\n");
+                sb.append(o.getFirstName()).append(" ").append(o.getLastName()).append("\n");
             }
 
             ownerListLabel.setText(sb.toString());
@@ -93,13 +90,12 @@ public class InitialPermitController {
         BusinessModel selectedBusiness = businessComboBox.getValue();
 
         if (selectedBusiness == null) {
-            return; // button should already be disabled
+            return;
         }
 
-        // Store selected business to session
+        // stores it in the session storage for later reference
         SessionStorage.setSelectedBusiness(selectedBusiness);
-
-        // Navigate to Step 2
+        
         Stage currentStage = (Stage) nextButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/PermitTypeSelectionView.fxml", "Select Permit Type");

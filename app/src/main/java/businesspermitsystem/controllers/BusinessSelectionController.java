@@ -19,11 +19,11 @@ public class BusinessSelectionController {
 
     @FXML
     public void initialize() {
-        // Load existing businesses
+        // Will load the existing businesses and inserts them into a combobox
         List<BusinessModel> businesses = businessDAO.getAllBusinesses();
         cmbBusinesses.getItems().addAll(businesses);
 
-        // Show them as text
+        //display them as readable text(ie show the business name instead of the Object itself)
         cmbBusinesses.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
             protected void updateItem(BusinessModel item, boolean empty) {
