@@ -1,5 +1,7 @@
 package businesspermitsystem.models;
 
+import java.time.LocalDate;
+
 /**
  * The model for the inspection schedule from the data base
  */
@@ -19,46 +21,64 @@ public class InspectionScheduleModel {
     /**
      * The date of the inspection
      */
-    private int inspection_date;
+    private LocalDate inspectionDate;
     /**
      * Status of the given inspection (e.g. Scheduled, In Progress, Complete, Failed)
      */
-    private int status;
-    public InspectionScheduleModel(int scheduleID, int businessID, int inspectorID, int inspection_date, int status) {
+    private String status; 
+
+    /**
+     * Default constructor for use by DAOs when loading data.
+     */
+    public InspectionScheduleModel() {
+    }
+
+
+    public InspectionScheduleModel(int scheduleID, int businessID, int inspectorID, LocalDate inspectionDate, String status) {
         this.scheduleID = scheduleID;
         this.businessID = businessID;
         this.inspectorID = inspectorID;
-        this.inspection_date = inspection_date;
+        this.inspectionDate = inspectionDate;
         this.status = status;
     }
+
     public int getScheduleID() {
         return scheduleID;
     }
+
     public void setScheduleID(int scheduleID) {
         this.scheduleID = scheduleID;
     }
+
     public int getBusinessID() {
         return businessID;
     }
+
     public void setBusinessID(int businessID) {
         this.businessID = businessID;
     }
+
     public int getInspectorID() {
         return inspectorID;
     }
+
     public void setInspectorID(int inspectorID) {
         this.inspectorID = inspectorID;
     }
-    public int getInspection_date() {
-        return inspection_date;
+
+    public LocalDate getInspectionDate() {
+        return inspectionDate;
     }
-    public void setInspection_date(int inspection_date) {
-        this.inspection_date = inspection_date;
+
+    public void setInspectionDate(LocalDate inspectionDate) {
+        this.inspectionDate = inspectionDate;
     }
-    public int getStatus() {
+
+    public String getStatus() {
         return status;
     }
-    public void setStatus(int status) {
+
+    public void setStatus(String status) {
         this.status = status;
     }
 }

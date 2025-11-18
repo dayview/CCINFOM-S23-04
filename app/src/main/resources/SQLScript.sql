@@ -5,6 +5,9 @@
 -- Password: <depending on user settings>
 USE `business_database`;
 
+DROP TABLE IF EXISTS `inspection_result`;
+DROP TABLE IF EXISTS `inspection_schedule`;
+
 DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
@@ -12,8 +15,6 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `municipality`;
 
-DROP TABLE IF EXISTS `inspection_result`;
-DROP TABLE IF EXISTS `inspection_schedule`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,

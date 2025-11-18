@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -8,17 +10,28 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.ScheduleInspectionController">
    <children>
       <Label text="Create Schedule Of Inspection" />
-      <Label layoutX="10.0" layoutY="10.0" text="Choose Business To Be Inspected" />
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Label text="Business ID" />
-            <ChoiceBox prefWidth="150.0" />
+            <ChoiceBox fx:id="businessIDChoiceBox" prefWidth="150.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="145.0" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="businessStatusLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Active/Inactive" HBox.hgrow="ALWAYS" />
+            <Label fx:id="businessMunicipalityLabel" alignment="CENTER" layoutX="43.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="Municipality Name" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label text="Status" />
-            <Label fx:id="businessStatusLabel" text="Active/Inactive" />
+            <ChoiceBox fx:id="inspectorIDChoiceBox" prefWidth="150.0" />
+            <DatePicker fx:id="inspectionDatePicker" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#confirmButtonPressed" text="Confirm" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" />
          </children>
       </HBox>
    </children>
