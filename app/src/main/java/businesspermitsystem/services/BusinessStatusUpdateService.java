@@ -14,7 +14,7 @@ public class BusinessStatusUpdateService {
     private final BusinessDAO businessDAO;
     private final OwnerDAO ownerDAO;
     private final PermitDAO permitDAO;
-    private final NotificationLogDAO notificationLogDAO;
+    // private final NotificationLogDAO notificationLogDAO;
     // private final AuditLogDAO auditLogDAO;
 
     /**
@@ -24,7 +24,7 @@ public class BusinessStatusUpdateService {
         this.businessDAO = new BusinessDAO();
         this.ownerDAO = new OwnerDAO();
         this.permitDAO = new PermitDAO();
-        this.notificationLogDAO = new NotificationLogDAO();
+        // this.notificationLogDAO = new NotificationLogDAO();
         // this.auditLogDAO = new AuditLogDAO();
     }
 
@@ -96,12 +96,12 @@ public class BusinessStatusUpdateService {
                 String subject = "Business Status Update: " + business.getBusinessName();
                 String message = buildNotificationMessage(business.getBusinessName(), oldStatus, newStatus, effectiveDate, reason);
 
-                NotificationLogModel notification = new NotificationLogModel(businessId, owner.getOwnerID(), notificationChannel, Timestamp.valueOf(LocalDateTime.now()), subject, message);
+                // NotificationLogModel notification = new NotificationLogModel(businessId, owner.getOwnerID(), notificationChannel, Timestamp.valueOf(LocalDateTime.now()), subject, message);
 
-                boolean notificationLogged = notificationLogDAO.addNotificationLog(notification);
-                if (!notificationLogged) {
-                    System.err.println("Warning: Failed to log notification for owner " + owner.getOwnerID());
-                }
+                // boolean notificationLogged = notificationLogDAO.addNotificationLog(notification);
+                // if (!notificationLogged) {
+                    // System.err.println("Warning: Failed to log notification for owner " + owner.getOwnerID());
+                // }
             }
 
             String changeSummary = buildAuditChangeSummary(oldStatus, newStatus, effectiveDate, reason, supportDocRef);
