@@ -5,6 +5,7 @@
 -- Password: <depending on user settings>
 USE `business_database`;
 
+DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
@@ -85,6 +86,26 @@ CREATE TABLE business_owner (
     PRIMARY KEY(owner_id, business_id),
     FOREIGN KEY(owner_id) REFERENCES owner(owner_id),
     FOREIGN KEY(business_id) REFERENCES business(business_id)
+);
+
+CREATE TABLE permit_application (
+    application_id INT NOT NULL AUTO_INCREMENT,
+
+    business_id INT NOT NULL,
+    permit_type_id INT NOT NULL,
+
+    application_date DATE NOT NULL,
+    approval_date DATE,
+    expiration_date DATE,
+    status VARCHAR(30) NOT NULL DEFAULT 'Pending',
+    base_fee DECIMAL(10,2) NOT NULL,
+    surcharge DECIMAL(10,2) DEFAULT 0.00,
+    total_fee DECIMAL(10,2) NOT NULL,
+    remarks TEXT,
+    PRIMARY KEY (application_id),
+
+    FOREIGN KEY (business_id) REFERENCES business(business_id),
+    FOREIGN KEY (permit_type_id) REFERENCES permit_type(permit_type_id)
 );
 
 
