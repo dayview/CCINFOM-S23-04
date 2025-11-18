@@ -14,8 +14,8 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `municipality`;
 
-DROP TABLE IF EXISTS `inspector_resultt`;
-DROP TABLE IF EXISTS `inspector_schedule`;
+DROP TABLE IF EXISTS `inspection_result`;
+DROP TABLE IF EXISTS `inspection_schedule`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -83,18 +83,21 @@ CREATE TABLE `permit_type` (
 
 CREATE TABLE `inspection_result` (
 `inspection_id` INT NOT NULL AUTO_INCREMENT,
-`inspector_id` INT NOT NULL,
 `schedule_id` INT NOT NULL,
 `result` VARCHAR(35),
-`remarks` TEXT
+`remarks` TEXT,
+PRIMARY KEY (`inspection_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `inspection_schedule` (
-`schedule_id` INT NOT NULL AUTO_INCREMENT
+`schedule_id` INT NOT NULL AUTO_INCREMENT,
 `inspector_id` INT NOT NULL,
 `business_id` INT NOT NULL,
 `inspection_date` DATE,
 `status` VARCHAR(20),
+PRIMARY KEY (`schedule_id`),
+FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`),
+FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality` 
