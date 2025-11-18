@@ -42,6 +42,12 @@ public class MainController {
 
     // OWNERS BUTTONS
 
+    @FXML private Button addOwnerButton;
+
+    @FXML private Button updateOwnerButton;
+
+    @FXML private Button deleteOwnerButton;
+
     // PERMIT TYPE AND FEE SCHEDULE BUTTONS
 
     // INSPECTORS BUTTONS
@@ -85,7 +91,6 @@ public class MainController {
 
     @FXML
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
-
     }
 
     @FXML
@@ -95,7 +100,9 @@ public class MainController {
 
     @FXML
     private void inspectionScheduleButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
 
     @FXML
@@ -127,6 +134,26 @@ public class MainController {
 
 
     // OWNERS ACTIONS
+    @FXML
+    private void addOwnerButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addOwnerButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/AddOwnerView.fxml", "Add Owner");
+    }
+
+    @FXML
+    private void updateOwnerButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addOwnerButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/UpdateOwnerView.fxml", "Update Owner");
+    }
+
+    @FXML
+    private void deleteOwnerButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addOwnerButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/DeleteOwnerView.fxml", "Delete Owner");
+    }    
 
     // PERMIT TYPE AND FEE SCHEDULE ACTIONS
 
