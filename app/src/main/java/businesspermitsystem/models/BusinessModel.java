@@ -269,6 +269,4 @@ public class BusinessModel {
     public void setOwnerCount(int ownerCount) { this.ownerCount = ownerCount; }
 
 
-
-
 }

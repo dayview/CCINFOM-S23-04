@@ -109,7 +109,9 @@ public class MainController {
 
     @FXML
     private void inspectionScheduleButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
 
     @FXML
