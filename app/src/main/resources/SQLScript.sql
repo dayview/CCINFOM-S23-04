@@ -3,11 +3,9 @@
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
 -- Password: <depending on user settings>
-
-CREATE DATABASE `business_database`;
-
 USE `business_database`;
 
+DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
 DROP TABLE IF EXISTS `inspector`;
@@ -40,6 +38,9 @@ CREATE TABLE `business` (
   `tax_id` VARCHAR(50) UNIQUE,
   `start_date` DATE,
   `status` VARCHAR(50) NOT NULL DEFAULT '',
+  `status_effective_date` DATE,
+  `status_reason` VARCHAR(500),
+  `support_doc_ref` VARCHAR(255),
   `municipality_id` INT,
   FOREIGN KEY (municipality_id) REFERENCES municipality(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -49,7 +50,7 @@ CREATE TABLE `owner` (
   `last_name` VARCHAR(35) NOT NULL DEFAULT '',
   `first_name` VARCHAR(35) NOT NULL DEFAULT '',
   `middle_name` VARCHAR(35) DEFAULT '',
-  `contact_no` VARCHAR(15) NOT NULL, 
+  `contact_no` VARCHAR(15) NOT NULL,
   `email` VARCHAR(35) NOT NULL,
   `gov_id_type` VARCHAR(35) NOT NULL,
   `gov_id_no` VARCHAR(35) NOT NULL,
@@ -59,7 +60,7 @@ CREATE TABLE `owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `inspector` (
-  `inspector_id` INT NOT NULL AUTO_INCREMENT, 
+  `inspector_id` INT NOT NULL AUTO_INCREMENT,
   `last_name` VARCHAR(35) NOT NULL DEFAULT '',
   `first_name`VARCHAR(35) NOT NULL DEFAULT '',
   `middle_name`VARCHAR(35) NOT NULL DEFAULT '',
@@ -81,6 +82,14 @@ CREATE TABLE `permit_type` (
   PRIMARY KEY (`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE business_owner (
+    owner_id INT NOT NULL,
+    business_id INT NOT NULL,
+    PRIMARY KEY(owner_id, business_id),
+    FOREIGN KEY(owner_id) REFERENCES owner(owner_id),
+    FOREIGN KEY(business_id) REFERENCES business(business_id)
+);
+
 CREATE TABLE `inspection_result` (
 `inspection_id` INT NOT NULL AUTO_INCREMENT,
 `schedule_id` INT NOT NULL,
@@ -100,7 +109,7 @@ FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`),
 FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `municipality` 
+INSERT INTO `municipality`
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
 VALUES
 ('Santa Rosa', 'Laguna', 'Region IV-A (CALABARZON)', 'First Class City', '049-530-0017', 'City Hall, J.P. Rizal Blvd.', NULL, '4026'),
@@ -115,7 +124,7 @@ VALUES
 ('Laoang', 'Northern Samar', 'Region VIII (Eastern Visayas)', 'Second Class Municipality', '055-251-9302', 'Municipal Hall, Barangay Geracdo', 'Geracdo', '6410');
 
 
-INSERT INTO `business` 
+INSERT INTO `business`
 (`business_name`, `trade_name`, `business_type`, `tax_id`, `start_date`, `status`, `street_address`, `barangay`, `municipality_id`)
 VALUES
 ('SR Transport Logistics Corp.', 'SR Logistics', 'Transportation', 'TIN-400-001', '2020-01-15', 'Active', 'Lot 10, Industrial Park Ave.', 'Barangay Don Jose', 1),
