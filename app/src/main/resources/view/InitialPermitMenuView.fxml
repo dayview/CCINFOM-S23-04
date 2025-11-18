@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.InitialPermitMenuController"
+      alignment="CENTER"
+      spacing="20"
+      style="-fx-padding: 30">
+
+    <children>
+
+        <Label text="Initial Permit Processing"
+               style="-fx-font-size: 20; -fx-font-weight: bold;" />
+
+        <Button fx:id="applyPermitButton"
+                text="Apply for New Permit"
+                prefWidth="250"
+                onAction="#handleApply" />
+
+        <Button fx:id="paymentListButton"
+                text="Pay Existing Applications"
+                prefWidth="250"
+                onAction="#handlePaymentList" />
+
+        <Button fx:id="scheduleInspectorButton"
+                text="Schedule Inspector"
+                prefWidth="250"
+                onAction="#handleScheduleInspector" />
+
+        <Button fx:id="recordInspectionButton"
+                text="Record Inspection Result"
+                prefWidth="250"
+                onAction="#handleRecordInspection" />
+
+        <Button fx:id="updatePermitStatusButton"
+                text="Update Permit Status"
+                prefWidth="250"
+                onAction="#handleUpdateStatus" />
+
+        <Button fx:id="backButton"
+                text="Back"
+                prefWidth="250"
+                onAction="#handleBack" />
+
+    </children>
+</VBox>
