@@ -18,7 +18,7 @@
     <children>
 
         <!-- TITLE -->
-        <Label text="Initial Permit Issuance – Step 1"
+        <Label text="Initial Permit Issuance"
                style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
         <!-- BUSINESS DROPDOWN -->

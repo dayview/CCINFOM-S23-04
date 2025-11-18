@@ -1,16 +1,16 @@
 package businesspermitsystem.db;
 
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermitTypeDAO {
+public class InitialPermitTypeDAO {
 
     private Connection connection;
 
-    public PermitTypeDAO() {
+    public InitialPermitTypeDAO() {
         this.connection = DatabaseConnector.connection;
 
         if (this.connection == null) {
@@ -19,15 +19,15 @@ public class PermitTypeDAO {
     }
 
     // Retrieve all permit types
-    public List<PermitTypeModel> getAllPermitTypes() {
-        List<PermitTypeModel> permitTypes = new ArrayList<>();
+    public List<InitialPermitTypeModel> getAllPermitTypes() {
+        List<InitialPermitTypeModel> permitTypes = new ArrayList<>();
         String query = "SELECT * FROM permit_type";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                PermitTypeModel permitType = new PermitTypeModel(
+                InitialPermitTypeModel permitType = new InitialPermitTypeModel(
                         rs.getInt("permit_type_id"),
                         rs.getString("permit_name"),
                         rs.getBigDecimal("base_fee"),
@@ -47,7 +47,7 @@ public class PermitTypeDAO {
     }
 
     // Retrieve a single permit type by ID
-    public PermitTypeModel getPermitTypeByID(int permitTypeID) {
+    public InitialPermitTypeModel getPermitTypeByID(int permitTypeID) {
         String query = "SELECT * FROM permit_type WHERE permit_type_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -55,7 +55,7 @@ public class PermitTypeDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new PermitTypeModel(
+                    return new InitialPermitTypeModel(
                             rs.getInt("permit_type_id"),
                             rs.getString("permit_name"),
                             rs.getBigDecimal("base_fee"),
@@ -75,7 +75,7 @@ public class PermitTypeDAO {
     }
 
     // Add a new permit type
-    public boolean addPermitType(PermitTypeModel permitType) {
+    public boolean addPermitType(InitialPermitTypeModel permitType) {
         String query = "INSERT INTO permit_type " +
                 "(permit_name, base_fee, surcharge_rule, validity_months, document_requirements) " +
                 "VALUES (?, ?, ?, ?, ?)";
@@ -98,7 +98,7 @@ public class PermitTypeDAO {
     }
 
     // Update a permit type
-    public boolean updatePermitType(PermitTypeModel permitType) {
+    public boolean updatePermitType(InitialPermitTypeModel permitType) {
         String query = "UPDATE permit_type SET permit_name = ?, base_fee = ?, surcharge_rule = ?, " +
                 "validity_months = ?, document_requirements = ? WHERE permit_type_id = ?";
 

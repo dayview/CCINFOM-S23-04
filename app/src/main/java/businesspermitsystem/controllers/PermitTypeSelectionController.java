@@ -1,8 +1,8 @@
 package businesspermitsystem.controllers;
 
-import businesspermitsystem.db.PermitTypeDAO;
+import businesspermitsystem.db.InitialPermitTypeDAO;
 import businesspermitsystem.models.BusinessModel;
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.utils.SceneManager;
 import businesspermitsystem.utils.SessionStorage;
 
@@ -15,14 +15,14 @@ import java.util.List;
 
 public class PermitTypeSelectionController {
 
-    @FXML private ComboBox<PermitTypeModel> permitTypeComboBox;
+    @FXML private ComboBox<InitialPermitTypeModel> permitTypeComboBox;
     @FXML private Label baseFeeLabel;
     @FXML private Label validityLabel;
     @FXML private Label requirementsLabel;
     @FXML private Button continueButton;
     @FXML private Button backButton;
 
-    private final PermitTypeDAO permitTypeDAO = new PermitTypeDAO();
+    private final InitialPermitTypeDAO permitTypeDAO = new InitialPermitTypeDAO();
 
     private BusinessModel selectedBusiness;
 
@@ -39,7 +39,7 @@ public class PermitTypeSelectionController {
     }
 
     private void loadPermitTypes() {
-        List<PermitTypeModel> permitTypes = permitTypeDAO.getAllPermitTypes();
+        List<InitialPermitTypeModel> permitTypes = permitTypeDAO.getAllPermitTypes();
         permitTypeComboBox.setItems(FXCollections.observableArrayList(permitTypes));
     }
 
@@ -71,7 +71,7 @@ public class PermitTypeSelectionController {
 
     @FXML
     private void handleContinue() {
-        PermitTypeModel selectedPermit = permitTypeComboBox.getValue();
+        InitialPermitTypeModel selectedPermit = permitTypeComboBox.getValue();
 
         if (selectedPermit == null) {
             return;

@@ -1,10 +1,13 @@
 package businesspermitsystem.db;
 
+import businesspermitsystem.controllers.InspectorScheduleController;
 import businesspermitsystem.models.PermitApplicationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PermitApplicationDAO {
 
@@ -233,5 +236,53 @@ public class PermitApplicationDAO {
 
         return list;
     }
+
+    /**
+     * Returns a map of application_id -> business_name
+     * for all applications that are already paid and ready for inspection.
+     *
+     * This avoids modifying the PermitApplicationModel.
+     */
+    public List<InspectorScheduleController.ApplicationEntry> getPaidApplicationsForScheduling() {
+
+        List<InspectorScheduleController.ApplicationEntry> list = new ArrayList<>();
+
+        String sql = """
+        SELECT pa.application_id,
+               pa.business_id,
+               b.municipality_id,
+               b.business_name
+        FROM permit_application pa
+        JOIN business b ON pa.business_id = b.business_id
+        WHERE pa.status = 'Paid'
+          AND pa.business_id NOT IN (
+                SELECT business_id
+                FROM inspection_schedule
+          )
+        ORDER BY pa.application_id ASC
+    """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int appId = rs.getInt("application_id");
+                int bizId = rs.getInt("business_id");
+                int muniId = rs.getInt("municipality_id");
+                String businessName = rs.getString("business_name");
+
+                list.add(new InspectorScheduleController.ApplicationEntry(
+                        appId, bizId, muniId, businessName
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching paid applications for scheduling: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
 }

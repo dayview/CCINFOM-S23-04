@@ -3,7 +3,7 @@ package businesspermitsystem.controllers;
 import businesspermitsystem.db.PermitApplicationDAO;
 import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.PermitApplicationModel;
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.utils.SceneManager;
 import businesspermitsystem.utils.SessionStorage;
 
@@ -29,7 +29,7 @@ public class PermitApplicationController {
     @FXML private Button backButton;
 
     private BusinessModel selectedBusiness;
-    private PermitTypeModel selectedPermit;
+    private InitialPermitTypeModel selectedPermit;
 
     private final PermitApplicationDAO applicationDAO = new PermitApplicationDAO();
 

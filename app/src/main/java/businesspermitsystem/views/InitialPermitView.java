@@ -4,7 +4,7 @@ import businesspermitsystem.models.PermitModel;
 import java.util.Date;
 import java.util.List;
 
-public class PermitView {
+public class InitialPermitView {
     public void displayPermitList(List<PermitModel> permitModels) {
         System.out.println("Permits:");
         for (PermitModel permit : permitModels) {
@@ -30,7 +30,7 @@ public class PermitView {
 
     public PermitModel getInputForNewPermit() {
         // Placeholder returning dummy Permit at the moment
-        return new PermitModel(0, 0, 0, "issued", new Date(), "");
+        return new PermitModel(0, 0, 0, "issued", (java.sql.Date) new Date(), "");
     }
 
     public PermitModel getInputForUpdatePermit(PermitModel permitModel) {

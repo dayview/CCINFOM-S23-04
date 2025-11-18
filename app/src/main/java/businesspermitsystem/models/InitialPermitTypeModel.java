@@ -2,7 +2,7 @@ package businesspermitsystem.models;
 
 import java.math.BigDecimal;
 
-public class PermitTypeModel {
+public class InitialPermitTypeModel {
 
     private int permitTypeId;
     private String permitName;
@@ -11,8 +11,8 @@ public class PermitTypeModel {
     private int validityMonths;
     private String documentRequirements;
 
-    public PermitTypeModel(int permitTypeId, String permitName, BigDecimal baseFee,
-                           String surchargeRule, int validityMonths, String documentRequirements) {
+    public InitialPermitTypeModel(int permitTypeId, String permitName, BigDecimal baseFee,
+                                  String surchargeRule, int validityMonths, String documentRequirements) {
         this.permitTypeId = permitTypeId;
         this.permitName = permitName;
         this.baseFee = baseFee;

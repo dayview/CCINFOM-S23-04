@@ -14,14 +14,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * Controller for the Initial Permit workflow (Step 1):
+ * Selecting a business with exactly one owner.
+ *
+ * Loads eligible businesses, displays their owners,
+ * and forwards the user to the permit type selection screen.
+ */
 public class InitialPermitController {
 
-    @FXML private TextField searchField;
     @FXML private ComboBox<BusinessModel> businessComboBox;
     @FXML private Label ownerListLabel;
     @FXML private Button nextButton;
@@ -32,6 +37,9 @@ public class InitialPermitController {
 
     private FilteredList<BusinessModel> filteredList;
 
+    /**
+     * Initializes the controller by loading businesses and preparing UI listeners.
+     */
     @FXML
     public void initialize() {
         // Loads the businesses that have 1 owner only
@@ -39,11 +47,13 @@ public class InitialPermitController {
         filteredList = new FilteredList<>(FXCollections.observableArrayList(businesses), p -> true);
         businessComboBox.setItems(filteredList);
 
-
         setupSelectionListener();
     }
 
-
+    /**
+     * Sets up a listener that displays the list of owners
+     * when a business is selected from the dropdown.
+     */
     private void setupSelectionListener() {
         businessComboBox.valueProperty().addListener((obs, oldVal, business) -> {
             if (business == null) {
@@ -52,7 +62,7 @@ public class InitialPermitController {
                 return;
             }
 
-            // Loads all the owners for a specific business
+            // Loads all owners for the selected business
             List<OwnerModel> owners = ownerDAO.getOwnersByBusinessId(business.getBusinessId());
 
             StringBuilder sb = new StringBuilder();
@@ -65,13 +75,24 @@ public class InitialPermitController {
         });
     }
 
+    /**
+     * Returns the user back to the Initial Permit Menu.
+     *
+     * @param event the button click event
+     */
     @FXML
     private void handleCancel(ActionEvent event) {
         Stage currentStage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/MainView.fxml", "Main Menu");
+        sceneManager.switchScene("/view/InitialPermitMenuView.fxml", "Main Menu");
     }
 
+    /**
+     * Saves the selected business to SessionStorage
+     * and proceeds to the permit type selection view.
+     *
+     * @param event the button click event
+     */
     @FXML
     private void handleNext(ActionEvent event) {
         BusinessModel selectedBusiness = businessComboBox.getValue();
@@ -80,9 +101,9 @@ public class InitialPermitController {
             return;
         }
 
-        // stores it in the session storage for later reference
+        // Store business for later steps
         SessionStorage.setSelectedBusiness(selectedBusiness);
-        
+
         Stage currentStage = (Stage) nextButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/PermitTypeSelectionView.fxml", "Select Permit Type");

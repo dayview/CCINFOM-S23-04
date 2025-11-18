@@ -2,14 +2,14 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.models.PermitModel;
 import businesspermitsystem.db.PermitDAO;
-import businesspermitsystem.views.PermitView;
+import businesspermitsystem.views.InitialPermitView;
 import java.util.List;
 
 public class PermitController {
     private PermitDAO permitDAO;
-    private PermitView permitView;
+    private InitialPermitView permitView;
 
-    public PermitController(PermitDAO service, PermitView view) {
+    public PermitController(PermitDAO service, InitialPermitView view) {
         this.permitDAO = service;
         this.permitView = view;
     }
