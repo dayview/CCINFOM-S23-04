@@ -3,19 +3,25 @@
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
 -- Password: <depending on user settings>
-CREATE DATABASE `business_database`;
 
+CREATE DATABASE IF NOT EXISTS `business_database`;
 USE `business_database`;
 
+
+
 DROP TABLE IF EXISTS `inspection_result`;
-DROP TABLE IF EXISTS `inspection_handle`;
+DROP TABLE IF EXISTS `inspection_schedule`;
+
+DROP TABLE IF EXISTS `payment`;
 DROP TABLE IF EXISTS `permit_application`;
+
 DROP TABLE IF EXISTS `business_owner`;
+
 DROP TABLE IF EXISTS `permit`;
-DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
+DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `municipality`;
 
 CREATE TABLE `municipality` (
@@ -123,6 +129,23 @@ CREATE TABLE `permit_application` (
     FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
     FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE payment (
+    payment_id INT NOT NULL AUTO_INCREMENT,
+    application_id INT NOT NULL,
+    business_id INT NOT NULL,
+    permit_type_id INT NOT NULL,
+    municipality_id INT NOT NULL,
+    payment_date DATE NOT NULL,
+    amount_paid DECIMAL(10,2) NOT NULL,
+    mode_of_payment VARCHAR(50),
+    or_number VARCHAR(50),
+    PRIMARY KEY (payment_id),
+    FOREIGN KEY (application_id) REFERENCES permit_application(application_id),
+    FOREIGN KEY (business_id) REFERENCES business(business_id),
+    FOREIGN KEY (permit_type_id) REFERENCES permit_type(permit_type_id),
+    FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
+);
 
 CREATE TABLE `inspection_result` (
   `inspection_id` INT NOT NULL AUTO_INCREMENT,
