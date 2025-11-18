@@ -15,7 +15,6 @@
     <children>
         <Label text="Business Permit System" style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
-        <!-- Transaction Section -->
         <Label text="Transactions" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="newBusinessRegistrationButton"
@@ -38,7 +37,6 @@
                 onAction="#businessStatusUpdateButtonPressed"
                 prefWidth="400" />
 
-        <!-- Business Section -->
         <Label text="Business" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addBusinessButton"
@@ -56,7 +54,6 @@
                 onAction="#removeBusinessButtonPressed"
                 prefWidth="400" />
 
-        <!-- Owner Section -->
         <Label text="Owner" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addOwnerButton"
@@ -74,7 +71,6 @@
                 onAction="#deleteOwnerButtonPressed"
                 prefWidth="400" />
 
-        <!-- Inspector Section -->
         <Label text="Inspector" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addInspectorButton"
@@ -92,7 +88,6 @@
                 onAction="#deleteInspectorButtonPressed"
                 prefWidth="400" />
 
-        <!-- Municipality Section -->
         <Label text="Municipality" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addMunicipalityButton"
