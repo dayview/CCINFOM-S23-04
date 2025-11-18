@@ -3,6 +3,7 @@ package businesspermitsystem.controllers;
 import businesspermitsystem.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -107,8 +108,11 @@ public class MainController {
 
     @FXML
     private void businessStatusUpdateButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) businessStatusUpdateButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/BusinessStatusUpdate.fxml", "Business Status Update Transaction");
     }
+
     // BUSINESS ACTIONS
     @FXML
     private void addBusinessButtonPressed(ActionEvent event) {
@@ -130,8 +134,6 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/UpdateBusinessView.fxml", "Update Business");
     }
-
-
 
     // OWNERS ACTIONS
     @FXML
@@ -220,4 +222,5 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/deleteMunicipalityView.fxml", "Delete Municipality");
     }
+
 }

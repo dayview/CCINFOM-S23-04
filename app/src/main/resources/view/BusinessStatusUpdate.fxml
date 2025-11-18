@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.BusinessStatusUpdateController"
+      spacing="15"
+      style="-fx-background-color: #f4f4f4; -fx-padding: 20;">
+
+    <Label text="Business Status Update Transaction"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <padding>
+            <Insets bottom="10"/>
+        </padding>
+    </Label>
+
+    <Separator/>
+
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="Search Business"
+               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Business ID:" minWidth="120"/>
+            <TextField fx:id="businessIdField"
+                       promptText="Enter business ID"
+                       prefWidth="200"/>
+            <Button fx:id="searchButton"
+                    text="Search"
+                    onAction="#onSearchButtonClick"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="Current Business Information"
+               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+        <GridPane hgap="10" vgap="8">
+            <columnConstraints>
+                <ColumnConstraints minWidth="150" halignment="RIGHT"/>
+                <ColumnConstraints minWidth="300"/>
+            </columnConstraints>
+
+            <Label text="Business Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="businessNameLabel" text="-" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-font-weight: bold;"/>
+
+            <Label text="Trade Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="tradeNameLabel" text="-" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Current Status:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="currentStatusLabel" text="-" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+
+            <Label text="Owner(s):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="ownersLabel" text="-" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        </GridPane>
+    </VBox>
+
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="Update Status" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+        <GridPane hgap="10" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints minWidth="150" halignment="RIGHT"/>
+                <ColumnConstraints minWidth="300"/>
+            </columnConstraints>
+
+            <Label text="New Status:*" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="statusComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250" promptText="Select new status">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Active"/>
+                        <String fx:value="Suspended"/>
+                        <String fx:value="Closed"/>
+                        <String fx:value="Pending"/>
+                        <String fx:value="Revoked"/>
+                        <String fx:value="Merged"/>
+                        <String fx:value="Retired"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Effective Date:*" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="effectiveDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="250"/>
+
+            <Label text="Reason:*" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="TOP">
+                <padding><Insets top="5"/></padding>
+            </Label>
+
+            <TextArea fx:id="reasonTextArea" GridPane.rowIndex="2" GridPane.columnIndex="1" prefHeight="80" promptText="Enter justification for status change"/>
+
+            <Label text="Support Document:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="supportDocField" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Reference number or file path"/>
+
+            <Label text="Notification Channel:*" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="channelComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="250" value="email">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="email"/>
+                        <String fx:value="SMS"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Changed By:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="changedByField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Staff username"/>
+        </GridPane>
+
+        <Label text="* Required fields" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px;"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="updateButton"
+                text="Update Status"
+                onAction="#onUpdateButtonClick"
+                prefWidth="150"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+        <Button fx:id="cancelButton"
+                text="Cancel"
+                onAction="#onCancel"
+                prefWidth="150"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px;"/>
+    </HBox>
+</VBox>

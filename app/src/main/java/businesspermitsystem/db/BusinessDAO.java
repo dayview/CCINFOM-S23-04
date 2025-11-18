@@ -3,6 +3,8 @@ package businesspermitsystem.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +109,7 @@ public class BusinessDAO {
 
     public BusinessModel getBusinessByName(String businessName) {
         String sql = "SELECT * FROM business WHERE business_name = ?";
-        try (PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);) {
+        try (PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql)) {
             statement.setString(1, businessName);
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
@@ -208,5 +210,134 @@ public class BusinessDAO {
         return list;
     }
 
+    /**
+     * Retrieves all businesses from the database.
+     * Used for listing and compliance reports.
+     *
+     * @return List of all BusinessModel objects
+     */
+    public List<BusinessModel> getAllBusinessesForListing() throws SQLException {
+        List<BusinessModel> businesses = new ArrayList<>();
+        String sql = "SELECT * FROM business ORDER BY business_name";
+        Statement statement = DatabaseConnector.connection.createStatement();
+        ResultSet result = statement.executeQuery(sql);
 
+        while (result.next()) {
+            BusinessModel business = new BusinessModel();
+            business.setBusinessId(result.getInt("business_id"));
+            business.setBusinessName(result.getString("business_name"));
+            business.setTradeName(result.getString("trade_name"));
+            business.setStreetAddress(result.getString("street_address"));
+            business.setBarangay(result.getString("barangay"));
+            business.setBusinessType(result.getString("business_type"));
+            business.setTaxId(result.getString("tax_id"));
+            business.setStartDate(result.getDate("start_date").toLocalDate());
+            business.setStatus(result.getString("status"));
+            business.setMunicipalityId(result.getInt("municipality_id"));
+
+            if (result.getDate("status_effective_date") != null) {
+                business.setStatusEffectiveDate(result.getDate("status_effective_date").toLocalDate());
+            }
+            business.setStatusReason(result.getString("status_reason"));
+            business.setSupportDocRef(result.getString("support_doc_ref"));
+
+            businesses.add(business);
+        }
+        return businesses;
+    }
+
+    /**
+     * Retrieves businesses filtered by status.
+     * Used for compliance reports and status-based queries.
+     *
+     * @param status the business status to filter by (Active, Suspended, Closed, etc.)
+     * @return List of BusinessModel objects with matching status
+     */
+    public List<BusinessModel> getBusinessesByStatus(String status) throws SQLException {
+        List<BusinessModel> businesses = new ArrayList<>();
+        String sql = "SELECT * FROM business WHERE status = ? ORDER BY business_name";
+        PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
+        statement.setString(1, status);
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            BusinessModel business = new BusinessModel();
+            business.setBusinessId(result.getInt("business_id"));
+            business.setBusinessName(result.getString("business_name"));
+            business.setTradeName(result.getString("trade_name"));
+            business.setStreetAddress(result.getString("street_address"));
+            business.setBarangay(result.getString("barangay"));
+            business.setBusinessType(result.getString("business_type"));
+            business.setTaxId(result.getString("tax_id"));
+            business.setStartDate(result.getDate("start_date").toLocalDate());
+            business.setStatus(result.getString("status"));
+            business.setMunicipalityId(result.getInt("municipality_id"));
+
+            if (result.getDate("status_effective_date") != null) {
+                business.setStatusEffectiveDate(result.getDate("status_effective_date").toLocalDate());
+            }
+            business.setStatusReason(result.getString("status_reason"));
+            business.setSupportDocRef(result.getString("support_doc_ref"));
+
+            businesses.add(business);
+        }
+        return businesses;
+    }
+
+    public List<BusinessModel> getBusinessesByMunicipality(int municipalityId) throws SQLException {
+        List<BusinessModel> businesses = new ArrayList<>();
+        String sql = "SELECT * FROM business WHERE municipality_id = ? ORDER BY business_name";
+        PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
+        statement.setInt(1, municipalityId);
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            BusinessModel business = new BusinessModel();
+            business.setBusinessId(result.getInt("business_id"));
+            business.setBusinessName(result.getString("business_name"));
+            business.setTradeName(result.getString("trade_name"));
+            business.setStreetAddress(result.getString("street_address"));
+            business.setBarangay(result.getString("barangay"));
+            business.setBusinessType(result.getString("business_type"));
+            business.setTaxId(result.getString("tax_id"));
+            business.setStartDate(result.getDate("start_date").toLocalDate());
+            business.setStatus(result.getString("status"));
+            business.setMunicipalityId(result.getInt("municipality_id"));
+
+            if (result.getDate("status_effective_date") != null) {
+                business.setStatusEffectiveDate(result.getDate("status_effective_date").toLocalDate());
+            }
+            business.setStatusReason(result.getString("status_reason"));
+            business.setSupportDocRef(result.getString("support_doc_ref"));
+
+            businesses.add(business);
+        }
+        return businesses;
+    }
+
+    /**
+     * Updates ONLY the status-related fields of a business.
+     * This is the key method for Business Status Update Transaction.
+     *
+     * @param businessId the business to update
+     * @param newStatus the new status value
+     * @param effectiveDate when the status change takes effect
+     * @param reason justification for the status change
+     * @param supportDocRef reference to the supporting documents
+     * @return true if successful, false otherwise
+     */
+    public boolean updateBusinessStatus(int businessId, String newStatus, LocalDate effectiveDate,
+                                        String reason, String supportDocRef) throws SQLException {
+        String sql = "UPDATE business SET status = ?, status_effective_date = ?, status_reason = ?, " +
+                "support_doc_ref = ? WHERE business_id = ?";
+        PreparedStatement statement = DatabaseConnector.connection.prepareStatement(sql);
+        statement.setString(1, newStatus);
+        statement.setDate(2, java.sql.Date.valueOf(effectiveDate));
+        statement.setString(3, reason);
+        statement.setString(4, supportDocRef);
+        statement.setInt(5, businessId);
+
+        int rowsUpdated = statement.executeUpdate();
+        return rowsUpdated > 0;
+    }
 }
