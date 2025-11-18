@@ -21,13 +21,6 @@
         <Label text="Initial Permit Issuance – Step 1"
                style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
-        <!-- SEARCH FIELD -->
-        <HBox spacing="10">
-            <Label text="Search Business:" prefWidth="150" />
-            <TextField fx:id="searchField" prefWidth="300"
-                       promptText="Type business name..." />
-        </HBox>
-
         <!-- BUSINESS DROPDOWN -->
         <HBox spacing="10">
             <Label text="Select Business:" prefWidth="150" />

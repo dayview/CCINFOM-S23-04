@@ -39,23 +39,10 @@ public class InitialPermitController {
         filteredList = new FilteredList<>(FXCollections.observableArrayList(businesses), p -> true);
         businessComboBox.setItems(filteredList);
 
-        setupSearch();
+
         setupSelectionListener();
     }
 
-    private void setupSearch() {
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-            filteredList.setPredicate(b -> {
-                if (newVal == null || newVal.isBlank()) return true;
-
-                String filter = newVal.toLowerCase();
-
-                return b.getBusinessName().toLowerCase().contains(filter) ||
-                        (b.getTradeName() != null &&
-                                b.getTradeName().toLowerCase().contains(filter));
-            });
-        });
-    }
 
     private void setupSelectionListener() {
         businessComboBox.valueProperty().addListener((obs, oldVal, business) -> {

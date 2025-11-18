@@ -36,29 +36,28 @@ public class PermitApplicationController {
     @FXML
     public void initialize() {
 
-        // Load session data
+        // Load saved session data
         selectedBusiness = SessionStorage.getSelectedBusiness();
         selectedPermit = SessionStorage.getSelectedPermitType();
 
         if (selectedBusiness == null || selectedPermit == null) {
-            System.err.println("ERROR: Step 3 was opened without session data!");
+            System.err.println("ERROR: Step 3 loaded without stored session data!");
             return;
         }
 
-        // displays the label
+        // Fill labels
         businessNameLabel.setText(selectedBusiness.getBusinessName());
         permitTypeLabel.setText(selectedPermit.getPermitName());
 
-        // displays the base fee
+        // Base fee from permit type
         baseFeeField.setText(selectedPermit.getBaseFee().toString());
 
-        // sets default values
         surchargeField.setText("0.00");
-        totalFeeField.setText(baseFeeField.getText());
+        totalFeeField.setText(selectedPermit.getBaseFee().toString());
 
         applicationDatePicker.setValue(LocalDate.now());
 
-        // the recalculates based on the choice
+        // recalculates based on the surcharges applicable based on user input
         surchargeField.textProperty().addListener((obs, oldVal, newVal) -> computeTotal());
     }
 
@@ -87,16 +86,15 @@ public class PermitApplicationController {
 
         app.setBusinessId(selectedBusiness.getBusinessId());
         app.setPermitTypeId(selectedPermit.getPermitTypeId());
-
         app.setApplicationDate(applicationDatePicker.getValue());
-        app.setApprovalDate(null);  // since initial does not have approved status
 
-        // Expiration date (application date + validity)
+        // These fields will only be assigned AFTER inspection or approval
+        app.setApprovalDate(null);
         app.setExpirationDate(
                 applicationDatePicker.getValue().plusMonths(selectedPermit.getValidityMonths())
         );
 
-        app.setStatus("Pending");
+        app.setStatus("For Payment");  // Correct workflow stage
 
         app.setBaseFee(selectedPermit.getBaseFee());
         app.setSurcharge(new BigDecimal(surchargeField.getText()));
@@ -104,14 +102,24 @@ public class PermitApplicationController {
 
         app.setRemarks(remarksArea.getText());
 
-        boolean saved = applicationDAO.addPermitApplication(app);
+        // returns application
+        int newId = applicationDAO.addPermitApplication(app);
 
-        if (saved) {
+        if (newId > 0) {
+
+            // store new generated application ID
+            app.setApplicationId(newId);
+
+            // save to be used later in payment
+            SessionStorage.setSelectedApplication(app);
+
             showAlert("Success", "Permit application submitted successfully!", Alert.AlertType.INFORMATION);
 
+            //go to the payment area
             Stage stage = (Stage) submitButton.getScene().getWindow();
             SceneManager sceneManager = new SceneManager(stage);
-            sceneManager.switchScene("/view/MainView.fxml", "Main Menu");
+
+            sceneManager.switchScene("/view/PaymentView.fxml", "Record Payment");
 
         } else {
             showAlert("Error", "Failed to save permit application.", Alert.AlertType.ERROR);

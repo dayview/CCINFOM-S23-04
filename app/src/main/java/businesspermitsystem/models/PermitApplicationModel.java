@@ -6,7 +6,7 @@ import java.time.LocalDate;
 /**
  * Represents a permit application filed by a business.
  * Stores information about selected permit type, fee computation,
- * dates, and overall application status.
+ * dates, inspection results, payment status, and issuance details.
  */
 public class PermitApplicationModel {
 
@@ -15,10 +15,13 @@ public class PermitApplicationModel {
     private int permitTypeId;
 
     private LocalDate applicationDate;
-    private LocalDate approvalDate;
+    private LocalDate approvalDate;     // When inspection passes
+    private LocalDate issueDate;        // When permit is officially issued
     private LocalDate expirationDate;
 
-    private String status; // Pending, Approved, Rejected
+    private String permitNo;
+    private String status;
+    private String finalStatus;         // Approved / Denied
 
     private BigDecimal baseFee;
     private BigDecimal surcharge;
@@ -29,10 +32,10 @@ public class PermitApplicationModel {
     // Default constructor
     public PermitApplicationModel() {}
 
-    // Full-argument constructor
-    public PermitApplicationModel(int applicationId, int businessId, int permitTypeId,
-                                  LocalDate applicationDate, LocalDate approvalDate, LocalDate expirationDate,
-                                  String status, BigDecimal baseFee, BigDecimal surcharge,
+    // Full constructor (updated)
+    public PermitApplicationModel(int applicationId, int businessId, int permitTypeId, LocalDate applicationDate, LocalDate approvalDate,
+                                  LocalDate issueDate, LocalDate expirationDate, String permitNo, String status, String finalStatus,
+                                  BigDecimal baseFee, BigDecimal surcharge,
                                   BigDecimal totalFee, String remarks) {
 
         this.applicationId = applicationId;
@@ -40,101 +43,75 @@ public class PermitApplicationModel {
         this.permitTypeId = permitTypeId;
         this.applicationDate = applicationDate;
         this.approvalDate = approvalDate;
+        this.issueDate = issueDate;
         this.expirationDate = expirationDate;
+        this.permitNo = permitNo;
         this.status = status;
+        this.finalStatus = finalStatus;
         this.baseFee = baseFee;
         this.surcharge = surcharge;
         this.totalFee = totalFee;
         this.remarks = remarks;
     }
 
-    // Getters
-    public int getApplicationId() {
-        return applicationId;
-    }
 
-    public int getBusinessId() {
-        return businessId;
-    }
+    // GETTERS
 
-    public int getPermitTypeId() {
-        return permitTypeId;
-    }
+    public int getApplicationId() { return applicationId; }
 
-    public LocalDate getApplicationDate() {
-        return applicationDate;
-    }
+    public int getBusinessId() { return businessId; }
 
-    public LocalDate getApprovalDate() {
-        return approvalDate;
-    }
+    public int getPermitTypeId() { return permitTypeId; }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
+    public LocalDate getApplicationDate() { return applicationDate; }
 
-    public String getStatus() {
-        return status;
-    }
+    public LocalDate getApprovalDate() { return approvalDate; }
 
-    public BigDecimal getBaseFee() {
-        return baseFee;
-    }
+    public LocalDate getIssueDate() { return issueDate; }
 
-    public BigDecimal getSurcharge() {
-        return surcharge;
-    }
+    public LocalDate getExpirationDate() { return expirationDate; }
 
-    public BigDecimal getTotalFee() {
-        return totalFee;
-    }
+    public String getPermitNo() { return permitNo; }
 
-    public String getRemarks() {
-        return remarks;
-    }
+    public String getStatus() { return status; }
 
-    // Setters
-    public void setApplicationId(int applicationId) {
-        this.applicationId = applicationId;
-    }
+    public String getFinalStatus() { return finalStatus; }
 
-    public void setBusinessId(int businessId) {
-        this.businessId = businessId;
-    }
+    public BigDecimal getBaseFee() { return baseFee; }
 
-    public void setPermitTypeId(int permitTypeId) {
-        this.permitTypeId = permitTypeId;
-    }
+    public BigDecimal getSurcharge() { return surcharge; }
 
-    public void setApplicationDate(LocalDate applicationDate) {
-        this.applicationDate = applicationDate;
-    }
+    public BigDecimal getTotalFee() { return totalFee; }
 
-    public void setApprovalDate(LocalDate approvalDate) {
-        this.approvalDate = approvalDate;
-    }
+    public String getRemarks() { return remarks; }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
+    // SETTERS
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public void setApplicationId(int applicationId) { this.applicationId = applicationId; }
 
-    public void setBaseFee(BigDecimal baseFee) {
-        this.baseFee = baseFee;
-    }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
 
-    public void setSurcharge(BigDecimal surcharge) {
-        this.surcharge = surcharge;
-    }
+    public void setPermitTypeId(int permitTypeId) { this.permitTypeId = permitTypeId; }
 
-    public void setTotalFee(BigDecimal totalFee) {
-        this.totalFee = totalFee;
-    }
+    public void setApplicationDate(LocalDate applicationDate) { this.applicationDate = applicationDate; }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
+    public void setApprovalDate(LocalDate approvalDate) { this.approvalDate = approvalDate; }
+
+    public void setIssueDate(LocalDate issueDate) { this.issueDate = issueDate; }
+
+    public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
+
+    public void setPermitNo(String permitNo) { this.permitNo = permitNo; }
+
+    public void setStatus(String status) { this.status = status; }
+
+    public void setFinalStatus(String finalStatus) { this.finalStatus = finalStatus; }
+
+    public void setBaseFee(BigDecimal baseFee) { this.baseFee = baseFee; }
+
+    public void setSurcharge(BigDecimal surcharge) { this.surcharge = surcharge; }
+
+    public void setTotalFee(BigDecimal totalFee) { this.totalFee = totalFee; }
+
+    public void setRemarks(String remarks) { this.remarks = remarks; }
 }
