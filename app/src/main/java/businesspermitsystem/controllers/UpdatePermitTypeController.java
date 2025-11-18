@@ -15,37 +15,48 @@ import javafx.stage.Stage;
 import java.util.List;
 
 /**
- * Controller for adding a new Permit Type record.
- * Links to FeeSchedule and validates permit type data.
+ * Controller for updating existing Permit Type records.
+ * Searches by ID, loads data, and saves modifications.
  */
-public class AddPermitTypeController {
+public class UpdatePermitTypeController {
 
+    @FXML private TextField permitTypeIdField;
     @FXML private TextField permitNameField;
     @FXML private ComboBox<String> feeScheduleComboBox;
     @FXML private TextField validityMonthsField;
     @FXML private TextArea documentRequirementsArea;
-    @FXML private Button saveButton;
+    @FXML private Button searchButton;
+    @FXML private Button updateButton;
     @FXML private Button cancelButton;
 
     private PermitTypeDAO permitTypeDAO;
     private FeeScheduleDAO feeScheduleDAO;
+    private PermitTypeModel currentPermitType;
     private List<FeeScheduleModel> feeSchedules;
 
     /**
-     * Initialize controller - load fee schedules into ComboBox.
+     * Initialize controller - set up DAOs and validation.
      */
     @FXML
     public void initialize() {
         permitTypeDAO = new PermitTypeDAO();
         feeScheduleDAO = new FeeScheduleDAO();
 
+        setFieldsDisabled(true);
+
+        loadFeeSchedules();
+
+        permitTypeIdField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                permitTypeIdField.setText(oldVal);
+            }
+        });
+
         validityMonthsField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 validityMonthsField.setText(oldVal);
             }
         });
-
-        loadFeeSchedules();
     }
 
     /**
@@ -63,10 +74,56 @@ public class AddPermitTypeController {
     }
 
     /**
-     * Handles Save button click - validates and creates new PermitType.
+     * Handles Search button - loads Permit Type by ID.
      */
     @FXML
-    private void onSave() {
+    private void onSearch() {
+        if (permitTypeIdField.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please enter a Permit Type ID.");
+            return;
+        }
+
+        try {
+            int permitTypeId = Integer.parseInt(permitTypeIdField.getText().trim());
+            currentPermitType = permitTypeDAO.getPermitTypeByID(permitTypeId);
+
+            if (currentPermitType != null) {
+                loadPermitTypeData();
+                setFieldsDisabled(false);
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit Type found!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Not Found", "Permit Type ID not found.");
+                clearFields();
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid numeric ID.");
+        }
+    }
+
+    /**
+     * Loads the current permit type data into the form fields.
+     */
+    private void loadPermitTypeData() {
+        permitNameField.setText(currentPermitType.getName());
+        validityMonthsField.setText(String.valueOf(currentPermitType.getValidityMonths()));
+        documentRequirementsArea.setText(currentPermitType.getDocumentRequirements());
+
+        FeeScheduleModel currentFee = currentPermitType.getFeeSchedule();
+        if (currentFee != null) {
+            for (int i = 0; i < feeSchedules.size(); i++) {
+                if (feeSchedules.get(i).getID() == currentFee.getID()) {
+                    feeScheduleComboBox.getSelectionModel().select(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles Update button - saves modifications to database.
+     */
+    @FXML
+    private void onUpdate() {
         if (!validateInput()) {
             return;
         }
@@ -79,35 +136,37 @@ public class AddPermitTypeController {
             int selectedIndex = feeScheduleComboBox.getSelectionModel().getSelectedIndex();
             FeeScheduleModel selectedFeeSchedule = feeSchedules.get(selectedIndex);
 
-            PermitTypeModel permitType = new PermitTypeModel(
-                    0,
+            PermitTypeModel updatedPermitType = new PermitTypeModel(
+                    currentPermitType.getID(),
                     permitName,
                     selectedFeeSchedule,
                     documentRequirements,
                     validityMonths
             );
 
-            boolean success = permitTypeDAO.addPermitType(permitType);
+            boolean success = permitTypeDAO.updatePermitType(updatedPermitType);
 
             if (success) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit Type added successfully!");
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit Type updated successfully!");
                 closeWindow();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to save Permit Type to database.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update Permit Type.");
             }
-
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter valid numeric values.");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save Permit Type: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to update: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Validates all input fields before saving.
+     * Validates all input fields before updating.
      */
     private boolean validateInput() {
+        if (currentPermitType == null) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please search and load a Permit Type first.");
+            return false;
+        }
+
         if (permitNameField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Permit Name is required.");
             return false;
@@ -127,7 +186,30 @@ public class AddPermitTypeController {
     }
 
     /**
-     * Handles Cancel button click - closes the window.
+     * Enables or disables input fields.
+     */
+    private void setFieldsDisabled(boolean disabled) {
+        permitNameField.setDisable(disabled);
+        feeScheduleComboBox.setDisable(disabled);
+        validityMonthsField.setDisable(disabled);
+        documentRequirementsArea.setDisable(disabled);
+        updateButton.setDisable(disabled);
+    }
+
+    /**
+     * Clears all input fields.
+     */
+    private void clearFields() {
+        permitNameField.clear();
+        feeScheduleComboBox.getSelectionModel().clearSelection();
+        validityMonthsField.clear();
+        documentRequirementsArea.clear();
+        currentPermitType = null;
+        setFieldsDisabled(true);
+    }
+
+    /**
+     * Handles Cancel button - closes the window.
      */
     @FXML
     private void onCancel() {

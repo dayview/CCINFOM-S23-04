@@ -19,40 +19,49 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Controller for adding a new Permit record.
- * Links Business to PermitType and sets permit status.
+ * Controller for updating existing Permit records.
+ * Searches by ID, loads data, and saves modifications.
  */
-public class AddPermitController {
+public class UpdatePermitController {
 
+    @FXML private TextField permitIdField;
     @FXML private TextField businessIdField;
     @FXML private ComboBox<String> permitTypeComboBox;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private DatePicker statusEffectiveDatePicker;
     @FXML private TextArea noteArea;
-    @FXML private Button saveButton;
+    @FXML private Button searchButton;
+    @FXML private Button updateButton;
     @FXML private Button cancelButton;
 
     private PermitDAO permitDAO;
     private PermitTypeDAO permitTypeDAO;
+    private PermitModel currentPermit;
     private List<PermitTypeModel> permitTypes;
 
     /**
-     * Initialize controller - set default date and load permit types.
+     * Initialize controller - set up DAOs and validation.
      */
     @FXML
     public void initialize() {
         permitDAO = new PermitDAO();
         permitTypeDAO = new PermitTypeDAO();
 
-        statusEffectiveDatePicker.setValue(LocalDate.now());
+        setFieldsDisabled(true);
+
+        loadPermitTypes();
+
+        permitIdField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                permitIdField.setText(oldVal);
+            }
+        });
 
         businessIdField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 businessIdField.setText(oldVal);
             }
         });
-
-        loadPermitTypes();
     }
 
     /**
@@ -70,10 +79,62 @@ public class AddPermitController {
     }
 
     /**
-     * Handles Save button click - validates and creates new Permit.
+     * Handles Search button - loads Permit by ID.
      */
     @FXML
-    private void onSave() {
+    private void onSearch() {
+        if (permitIdField.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please enter a Permit ID.");
+            return;
+        }
+
+        try {
+            int permitId = Integer.parseInt(permitIdField.getText().trim());
+            currentPermit = permitDAO.getPermitByID(permitId);
+
+            if (currentPermit != null) {
+                loadPermitData();
+                setFieldsDisabled(false);
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit found!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Not Found", "Permit ID not found.");
+                clearFields();
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid numeric ID.");
+        }
+    }
+
+    /**
+     * Loads the current permit data into the form fields.
+     */
+    private void loadPermitData() {
+        businessIdField.setText(String.valueOf(currentPermit.getBusinessID()));
+        statusComboBox.setValue(currentPermit.getStatus());
+        noteArea.setText(currentPermit.getNote());
+
+        if (currentPermit.getStatusEffectiveDate() != null) {
+            LocalDate localDate = currentPermit.getStatusEffectiveDate()
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            statusEffectiveDatePicker.setValue(localDate);
+        }
+
+        int currentPermitTypeId = currentPermit.getPermitTypeID();
+        for (int i = 0; i < permitTypes.size(); i++) {
+            if (permitTypes.get(i).getID() == currentPermitTypeId) {
+                permitTypeComboBox.getSelectionModel().select(i);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Handles Update button - saves modifications to database.
+     */
+    @FXML
+    private void onUpdate() {
         if (!validateInput()) {
             return;
         }
@@ -90,8 +151,8 @@ public class AddPermitController {
 
             Date effectiveDateUtil = Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            PermitModel permit = new PermitModel(
-                    0,
+            PermitModel updatedPermit = new PermitModel(
+                    currentPermit.getPermitID(),
                     businessId,
                     permitTypeId,
                     status,
@@ -99,27 +160,29 @@ public class AddPermitController {
                     note
             );
 
-            boolean success = permitDAO.addPermit(permit);
+            boolean success = permitDAO.updatePermit(updatedPermit);
 
             if (success) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit added successfully!");
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Permit updated successfully!");
                 closeWindow();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to save Permit to database.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update Permit.");
             }
-
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid Business ID.");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save Permit: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to update: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Validates all input fields before saving.
+     * Validates all input fields before updating.
      */
     private boolean validateInput() {
+        if (currentPermit == null) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please search and load a Permit first.");
+            return false;
+        }
+
         if (businessIdField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Business ID is required.");
             return false;
@@ -144,7 +207,32 @@ public class AddPermitController {
     }
 
     /**
-     * Handles Cancel button click - closes the window.
+     * Enables or disables input fields.
+     */
+    private void setFieldsDisabled(boolean disabled) {
+        businessIdField.setDisable(disabled);
+        permitTypeComboBox.setDisable(disabled);
+        statusComboBox.setDisable(disabled);
+        statusEffectiveDatePicker.setDisable(disabled);
+        noteArea.setDisable(disabled);
+        updateButton.setDisable(disabled);
+    }
+
+    /**
+     * Clears all input fields.
+     */
+    private void clearFields() {
+        businessIdField.clear();
+        permitTypeComboBox.getSelectionModel().clearSelection();
+        statusComboBox.getSelectionModel().clearSelection();
+        statusEffectiveDatePicker.setValue(null);
+        noteArea.clear();
+        currentPermit = null;
+        setFieldsDisabled(true);
+    }
+
+    /**
+     * Handles Cancel button - closes the window.
      */
     @FXML
     private void onCancel() {
@@ -159,7 +247,6 @@ public class AddPermitController {
         SceneManager sceneManager = new SceneManager(stage);
         sceneManager.switchScene("/view/MainView.fxml", "Business Permit System");
     }
-
     /**
      * Shows an alert dialog.
      */

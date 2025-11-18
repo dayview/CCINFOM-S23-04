@@ -2,6 +2,7 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.db.FeeScheduleDAO;
 import businesspermitsystem.models.FeeScheduleModel;
+import businesspermitsystem.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -115,11 +116,12 @@ public class AddFeeScheduleController {
     }
 
     /**
-     * Closes the current window.
+     * Navigates back to the Main Menu
      */
     private void closeWindow() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
+        SceneManager sceneManager = new SceneManager(stage);
+        sceneManager.switchScene("/view/MainView.fxml", "Business Permit System");
     }
 
     /**
