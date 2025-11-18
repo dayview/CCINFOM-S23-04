@@ -18,7 +18,7 @@ public class InspectionScheduleController {
     private void createScheduleButtonPressed() {
         Stage currentStage = (Stage) createScheduleButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/CreateScheduleView.fxml", "Create Schedule");
+        sceneManager.switchScene("/view/ScheduleInspectionView.fxml", "Schedule An Inspection");
     }
     @FXML
     private void reportFindingsButtonPressed() {
