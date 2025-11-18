@@ -118,8 +118,7 @@ public class PermitApplicationController {
             //go to the payment area
             Stage stage = (Stage) submitButton.getScene().getWindow();
             SceneManager sceneManager = new SceneManager(stage);
-
-            sceneManager.switchScene("/view/PaymentView.fxml", "Record Payment");
+            sceneManager.switchScene("/view/InitialPermitMenuView.fxml", "Initial Permit");
 
         } else {
             showAlert("Error", "Failed to save permit application.", Alert.AlertType.ERROR);

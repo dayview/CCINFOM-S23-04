@@ -16,7 +16,7 @@
 
     <children>
 
-        <Label text="Select Permit Type - Step 2"
+        <Label text="Select Permit Type"
                style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
         <!-- Permit Type ComboBox -->

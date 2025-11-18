@@ -1,6 +1,7 @@
 package businesspermitsystem.db;
 
 import businesspermitsystem.models.PaymentModel;
+import businesspermitsystem.models.PermitApplicationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -123,4 +124,43 @@ public class PaymentDAO {
 
         return payment;
     }
+
+    public List<PermitApplicationModel> getApplicationsForPayment() {
+        List<PermitApplicationModel> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM permit_application WHERE status = 'For Payment'";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                PermitApplicationModel app = new PermitApplicationModel();
+
+                app.setApplicationId(rs.getInt("application_id"));
+                app.setBusinessId(rs.getInt("business_id"));
+                app.setPermitTypeId(rs.getInt("permit_type_id"));
+                app.setApplicationDate(rs.getDate("application_date").toLocalDate());
+
+                if (rs.getDate("approval_date") != null)
+                    app.setApprovalDate(rs.getDate("approval_date").toLocalDate());
+
+                if (rs.getDate("expiration_date") != null)
+                    app.setExpirationDate(rs.getDate("expiration_date").toLocalDate());
+
+                app.setStatus(rs.getString("status"));
+                app.setBaseFee(rs.getBigDecimal("base_fee"));
+                app.setSurcharge(rs.getBigDecimal("surcharge"));
+                app.setTotalFee(rs.getBigDecimal("total_fee"));
+                app.setRemarks(rs.getString("remarks"));
+
+                list.add(app);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }

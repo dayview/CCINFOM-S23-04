@@ -98,7 +98,7 @@ public class MainController {
     private void initialPermitIssuanceButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) initialPermitIssuanceButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/InitialPermitIssuanceView.fxml",
+        sceneManager.switchScene("/view/InitialPermitMenuView.fxml",
                 "Initial Permit Issuance");
     }
 

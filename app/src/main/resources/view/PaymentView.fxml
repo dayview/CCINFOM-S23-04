@@ -14,7 +14,7 @@
     <children>
 
         <!-- TITLE -->
-        <Label text="Payment Processing - Step 4"
+        <Label text="Payment Processing"
                style="-fx-font-size: 20; -fx-font-weight: bold;" />
 
         <!-- BUSINESS -->
