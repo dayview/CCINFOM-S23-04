@@ -90,15 +90,16 @@ public class MainController {
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) newBusinessRegistrationButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/BusinessSelectionView.fxml", "New Business Registration and Others");
+        sceneManager.switchScene("/view/BusinessSelectionView.fxml",
+                "New Business Registration and Others");
     }
 
-
     @FXML
-    private void initialPermitIssuanceButtonPressed(ActionEvent event){
+    private void initialPermitIssuanceButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) initialPermitIssuanceButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/InitialPermitIssuanceView.fxml", "Initital Permit Issuance");
+        sceneManager.switchScene("/view/InitialPermitIssuanceView.fxml",
+                "Initial Permit Issuance");
     }
 
     @FXML
