@@ -3,21 +3,20 @@
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
 -- Password: <depending on user settings>
+CREATE DATABASE `business_database`;
+
 USE `business_database`;
 
-DROP TABLE IF EXISTS payment;
-DROP TABLE IF EXISTS inspection_schedule;
-DROP TABLE IF EXISTS permit_application;
-DROP TABLE IF EXISTS business_owner;
-
-DROP TABLE IF EXISTS business;
-DROP TABLE IF EXISTS owner;
-DROP TABLE IF EXISTS inspector;
-DROP TABLE IF EXISTS inspection_result;
-DROP TABLE IF EXISTS inspection_handle;
-DROP TABLE IF EXISTS permit_type;
-
-DROP TABLE IF EXISTS municipality;
+DROP TABLE IF EXISTS `inspection_result`;
+DROP TABLE IF EXISTS `inspection_handle`;
+DROP TABLE IF EXISTS `permit_application`;
+DROP TABLE IF EXISTS `business_owner`;
+DROP TABLE IF EXISTS `permit`;
+DROP TABLE IF EXISTS `business`;
+DROP TABLE IF EXISTS `owner`;
+DROP TABLE IF EXISTS `inspector`;
+DROP TABLE IF EXISTS `permit_type`;
+DROP TABLE IF EXISTS `municipality`;
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -86,6 +85,20 @@ CREATE TABLE `permit_type` (
   PRIMARY KEY (`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `permit` (
+  `permit_id` INT NOT NULL AUTO_INCREMENT,
+  `business_id` INT NOT NULL,
+  `permit_type_id` INT NOT NULL,
+  `status` VARCHAR(50) NOT NULL,
+  `status_effective_date` DATE,
+  `note` VARCHAR(500),
+  `validity_start` DATE,
+  `validity_end` DATE,
+  PRIMARY KEY (`permit_id`),
+  FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+  FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `business_owner` (
     `owner_id` INT NOT NULL,
     `business_id` INT NOT NULL,
@@ -129,23 +142,6 @@ CREATE TABLE `inspection_schedule` (
   FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`),
   FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE payment (
-    payment_id INT NOT NULL AUTO_INCREMENT,
-    application_id INT NOT NULL,
-    business_id INT NOT NULL,
-    permit_type_id INT NOT NULL,
-    municipality_id INT NOT NULL,
-    payment_date DATE NOT NULL,
-    amount_paid DECIMAL(10,2) NOT NULL,
-    mode_of_payment VARCHAR(50),
-    or_number VARCHAR(50),
-    PRIMARY KEY (payment_id),
-    FOREIGN KEY (application_id) REFERENCES permit_application(application_id),
-    FOREIGN KEY (business_id) REFERENCES business(business_id),
-    FOREIGN KEY (permit_type_id) REFERENCES permit_type(permit_type_id),
-    FOREIGN KEY (municipality_id) REFERENCES municipality(municipality_id)
-);
 
 INSERT INTO `municipality`
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
@@ -216,3 +212,18 @@ VALUES
 ('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
 ('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
 ('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+
+INSERT INTO `permit`
+(`business_id`, `permit_type_id`, `status`, `status_effective_date`, `validity_start`, `validity_end`, `note`)
+VALUES
+(1, 1, 'Active', '2024-01-15', '2024-01-15', '2025-01-14', 'Initial Mayor Permit issuance'),
+(2, 1, 'Active', '2024-05-20', '2024-05-20', '2025-05-19', 'Renewed on time'),
+(3, 2, 'Pending', '2024-11-01', NULL, NULL, 'Awaiting sanitary inspection'),
+(4, 1, 'Active', '2024-08-10', '2024-08-10', '2025-08-09', 'Resort permit'),
+(5, 1, 'Suspended', '2024-03-25', '2024-03-25', '2024-03-24', 'Business inactive'),
+(6, 1, 'Active', '2024-09-12', '2024-09-12', '2025-09-11', 'Digital agency permit'),
+(7, 1, 'Active', '2024-07-07', '2024-07-07', '2025-07-06', 'Hardware store permit'),
+(8, 1, 'Active', '2024-02-28', '2024-02-28', '2025-02-27', 'Export business permit'),
+(9, 1, 'Pending', '2024-01-05', NULL, NULL, 'New business application'),
+(10, 1, 'Revoked', '2024-06-19', '2024-06-19', '2024-06-18', 'Business closed');
+
