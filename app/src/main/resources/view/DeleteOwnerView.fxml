@@ -44,7 +44,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="lastNameField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="lastNameField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- First Name -->
@@ -54,7 +54,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="firstNameField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="firstNameField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Middle Name -->
@@ -64,7 +64,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="middleNameField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="middleNameField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Contact Number -->
@@ -74,7 +74,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="contactNoField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="contactNoField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Email -->
@@ -84,7 +84,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="emailField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="emailField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Government ID -->
@@ -94,7 +94,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <ComboBox fx:id="govIdTypeComboBox" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <ComboBox fx:id="govIdTypeComboBox" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- ID Number -->
@@ -104,7 +104,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="govIdNoField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="govIdNoField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- TIN -->
@@ -114,7 +114,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="tinField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="tinField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Home Address -->
@@ -124,7 +124,7 @@
                      <Font name="Arial Black" size="14.0" />
                   </font>
                </Label>
-               <TextField fx:id="homeAddressField" prefWidth="380" editable="false" style="-fx-opacity: 1.0;" />
+               <TextField fx:id="homeAddressField" editable="false" prefWidth="380" style="-fx-opacity: 1.0;" />
             </HBox>
 
             <!-- Buttons -->
