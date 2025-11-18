@@ -22,7 +22,7 @@ public class PermitTypeDAO {
 
     public List<PermitTypeModel> getAllPermitTypes() {
         List<PermitTypeModel> permitTypes = new ArrayList<>();
-        String query = "SELECT * FROM PermitType";
+        String query = "SELECT * FROM permit_type";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -48,7 +48,7 @@ public class PermitTypeDAO {
     }
 
     public PermitTypeModel getPermitTypeByID(int permitTypeID) {
-        String query = "SELECT * FROM PermitType WHERE permit_type_id = ?";
+        String query = "SELECT * FROM permit_type WHERE permit_type_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permitTypeID);
@@ -75,7 +75,7 @@ public class PermitTypeDAO {
     }
 
     public boolean addPermitType(PermitTypeModel permitType) {
-        String query = "INSERT INTO PermitType (permit_name, fee_schedule_id, document_requirements, validity_months) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO permit_type (permit_name, fee_schedule_id, document_requirements, validity_months) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, permitType.getName());
@@ -93,7 +93,7 @@ public class PermitTypeDAO {
     }
 
     public boolean updatePermitType(PermitTypeModel permitType) {
-        String query = "UPDATE PermitType SET permit_name = ?, fee_schedule_id = ?, document_requirements = ?, validity_months = ? WHERE permit_type_id = ?";
+        String query = "UPDATE permit_type SET permit_name = ?, fee_schedule_id = ?, document_requirements = ?, validity_months = ? WHERE permit_type_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, permitType.getName());
@@ -112,7 +112,7 @@ public class PermitTypeDAO {
     }
 
     public boolean deletePermitType(int permitTypeID) {
-        String query = "DELETE FROM PermitType WHERE permit_type_id = ?";
+        String query = "DELETE FROM permit_type WHERE permit_type_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permitTypeID);
