@@ -3,12 +3,15 @@
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
 -- Password: <depending on user settings>
+CREATE DATABASE `business_database`;
+
 USE `business_database`;
 
 DROP TABLE IF EXISTS `inspection_result`;
 DROP TABLE IF EXISTS `inspection_handle`;
 DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
+DROP TABLE IF EXISTS `permit`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
 DROP TABLE IF EXISTS `inspector`;
