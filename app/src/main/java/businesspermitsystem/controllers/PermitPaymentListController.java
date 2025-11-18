@@ -2,10 +2,10 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.db.BusinessDAO;
 import businesspermitsystem.db.PermitApplicationDAO;
-import businesspermitsystem.db.PermitTypeDAO;
+import businesspermitsystem.db.InitialPermitTypeDAO;
 import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.PermitApplicationModel;
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.utils.SceneManager;
 import businesspermitsystem.utils.SessionStorage;
 import javafx.fxml.FXML;
@@ -28,7 +28,7 @@ public class PermitPaymentListController {
 
     private final PermitApplicationDAO applicationDAO = new PermitApplicationDAO();
     private final BusinessDAO businessDAO = new BusinessDAO();
-    private final PermitTypeDAO permitTypeDAO = new PermitTypeDAO();
+    private final InitialPermitTypeDAO permitTypeDAO = new InitialPermitTypeDAO();
 
     @FXML
     public void initialize() {
@@ -48,7 +48,7 @@ public class PermitPaymentListController {
 
         // permit type name (lookup)
         colPermit.setCellValueFactory(cell -> {
-            PermitTypeModel t = permitTypeDAO.getPermitTypeByID(cell.getValue().getPermitTypeId());
+            InitialPermitTypeModel t = permitTypeDAO.getPermitTypeByID(cell.getValue().getPermitTypeId());
             return new javafx.beans.property.SimpleStringProperty(t.getPermitName());
         });
 
@@ -69,7 +69,7 @@ public class PermitPaymentListController {
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
-                    PermitTypeModel permitType = permitTypeDAO.getPermitTypeByID(app.getPermitTypeId());
+                    InitialPermitTypeModel permitType = permitTypeDAO.getPermitTypeByID(app.getPermitTypeId());
 
                     SessionStorage.setSelectedBusiness(business);
                     SessionStorage.setSelectedPermitType(permitType);

@@ -5,7 +5,7 @@ import businesspermitsystem.db.PermitApplicationDAO;
 import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.PaymentModel;
 import businesspermitsystem.models.PermitApplicationModel;
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.utils.SceneManager;
 import businesspermitsystem.utils.SessionStorage;
 
@@ -13,9 +13,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Controller responsible for recording payments for permit applications.
+ * Loads session data, displays business and fee details, and saves payments.
+ */
 public class PaymentController {
 
     @FXML private Label businessNameLabel;
@@ -33,13 +36,15 @@ public class PaymentController {
     private final PermitApplicationDAO applicationDAO = new PermitApplicationDAO();
 
     private BusinessModel business;
-    private PermitTypeModel permitType;
+    private InitialPermitTypeModel permitType;
     private PermitApplicationModel application;
 
+    /**
+     * Initializes the payment screen by loading business, permit type,
+     * and application details stored in the session.
+     */
     @FXML
     public void initialize() {
-
-        //load the current session details
 
         business = SessionStorage.getSelectedBusiness();
         permitType = SessionStorage.getSelectedPermitType();
@@ -60,11 +65,17 @@ public class PaymentController {
         paymentModeComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Validates the user input and records a new payment.
+     * Also updates the related permit application status to "Paid".
+     */
     @FXML
     private void handleSubmitPayment() {
 
         if (orNumberField.getText().isEmpty()) {
-            showAlert("Missing OR Number", "Please enter the Official Receipt number.", Alert.AlertType.WARNING);
+            showAlert("Missing OR Number",
+                    "Please enter the Official Receipt number.",
+                    Alert.AlertType.WARNING);
             return;
         }
 
@@ -83,29 +94,37 @@ public class PaymentController {
 
         if (saved) {
 
-            //udpates the status to paid
-
             application.setStatus("Paid");
             applicationDAO.updatePermitApplication(application);
 
-            showAlert("Success", "Payment successfully recorded!", Alert.AlertType.INFORMATION);
+            showAlert("Success",
+                    "Payment successfully recorded!",
+                    Alert.AlertType.INFORMATION);
 
             Stage stage = (Stage) submitPaymentButton.getScene().getWindow();
-            SceneManager sceneManager = new SceneManager(stage);
-            sceneManager.switchScene("/view/MainView.fxml", "Main Menu");
+            new SceneManager(stage).switchScene("/view/MainView.fxml", "Main Menu");
 
         } else {
             showAlert("ERROR", "Payment failed to save.", Alert.AlertType.ERROR);
         }
     }
 
+    /**
+     * Returns the user to the main menu without saving any changes.
+     */
     @FXML
     private void handleCancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
-        SceneManager sceneManager = new SceneManager(stage);
-        sceneManager.switchScene("/view/MainView.fxml", "Main Menu");
+        new SceneManager(stage).switchScene("/view/MainView.fxml", "Main Menu");
     }
 
+    /**
+     * Displays an alert message.
+     *
+     * @param title alert window title
+     * @param msg   message to display
+     * @param type  alert type (information, warning, error)
+     */
     private void showAlert(String title, String msg, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(title);

@@ -2,7 +2,7 @@ package businesspermitsystem.utils;
 
 import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.OwnerModel;
-import businesspermitsystem.models.PermitTypeModel;
+import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.models.PermitApplicationModel;
 
 /**
@@ -26,7 +26,7 @@ public class SessionStorage {
     private static OwnerModel selectedOwner;
 
     /** The permit type selected during the permit application workflow. */
-    private static PermitTypeModel selectedPermitType;
+    private static InitialPermitTypeModel selectedPermitType;
 
     /** The permit application selected or created in the workflow. */
     private static PermitApplicationModel selectedApplication;
@@ -72,7 +72,7 @@ public class SessionStorage {
      *
      * @param permitType the permit type chosen by the user
      */
-    public static void setSelectedPermitType(PermitTypeModel permitType) {
+    public static void setSelectedPermitType(InitialPermitTypeModel permitType) {
         selectedPermitType = permitType;
     }
 
@@ -81,7 +81,7 @@ public class SessionStorage {
      *
      * @return the selected permit type, or null if none stored
      */
-    public static PermitTypeModel getSelectedPermitType() {
+    public static InitialPermitTypeModel getSelectedPermitType() {
         return selectedPermitType;
     }
 
