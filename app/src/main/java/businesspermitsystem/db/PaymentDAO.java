@@ -1,40 +1,76 @@
 package businesspermitsystem.db;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.ArrayList; 
-
 import businesspermitsystem.models.PaymentModel;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Data Access Object for Payment entity.
+ * Handles database operations for payment records.
+ */
 public class PaymentDAO {
-    
-    private  Connection connection;
+    private Connection connection;
 
     public PaymentDAO() {
         this.connection = DatabaseConnector.connection;
-
         if (this.connection == null) {
-            System.err.println("Warning: Database connection not established. Call DatabaseConnector.getConnection() first.");
+            System.err.println("Warning: Database connection not established.");
         }
     }
 
-    public PaymentModel getPaymentByID(int paymentID) {
+    /**
+     * Adds a new payment record and returns the generated payment ID.
+     * 
+     * @param payment the payment model to insert
+     * @return the generated payment ID, or -1 if failed
+     */
+    public int addPaymentGetID(PaymentModel payment) {
+        String query = "INSERT INTO payment (renewal_id, amount, payment_method, payment_date) VALUES (?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, payment.getRenewalId());
+            pstmt.setDouble(2, payment.getAmount());
+            pstmt.setString(3, payment.getPaymentMethod());
+            pstmt.setTimestamp(4, new Timestamp(payment.getPaymentDate().getTime()));
+            
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error adding payment: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * Retrieves a payment by its ID.
+     * 
+     * @param paymentId the payment ID
+     * @return the payment model or null if not found
+     */
+    public PaymentModel getPaymentByID(int paymentId) {
         String query = "SELECT * FROM payment WHERE payment_id = ?";
         
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, paymentID);
-
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, paymentId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
                     return new PaymentModel(
-                        result.getInt("payment_id"),
-                        result.getInt("renewal_id"),
-                        result.getDouble("amount"),
-                        result.getString("method"),
-                        result.getDate("payment_date")
+                        rs.getInt("payment_id"),
+                        rs.getInt("renewal_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("payment_method"),
+                        rs.getTimestamp("payment_date")
                     );
                 }
             }
@@ -45,46 +81,30 @@ public class PaymentDAO {
         return null;
     }
 
-    public PaymentModel getPaymentByRenewal(int renewalID) {
+    /**
+     * Retrieves all payments for a specific renewal.
+     * 
+     * @param renewalId the renewal ID
+     * @return list of payments for the renewal
+     */
+    public List<PaymentModel> getPaymentsByRenewalID(int renewalId) {
+        List<PaymentModel> payments = new ArrayList<>();
         String query = "SELECT * FROM payment WHERE renewal_id = ?";
         
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, renewalID);
-
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
-                    return new PaymentModel(
-                        result.getInt("payment_id"),
-                        result.getInt("renewal_id"),
-                        result.getDouble("amount"),
-                        result.getString("method"),
-                        result.getDate("payment_date")
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, renewalId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    PaymentModel payment = new PaymentModel(
+                        rs.getInt("payment_id"),
+                        rs.getInt("renewal_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("payment_method"),
+                        rs.getTimestamp("payment_date")
                     );
+                    payments.add(payment);
                 }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error retrieving payment: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public ArrayList<PaymentModel> getAllPayment() {
-        ArrayList<PaymentModel> payments = new ArrayList<>();
-        String query = "SELECT * FROM payment";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet result = statement.executeQuery();
-
-            while (result.next()) {
-                PaymentModel payment = new PaymentModel(
-                        result.getInt("payment_id"),
-                        result.getInt("renewal_id"),
-                        result.getDouble("amount"),
-                        result.getString("method"),
-                        result.getDate("payment_date")
-                );
-                payments.add(payment);
             }
         } catch (SQLException e) {
             System.err.println("Error retrieving payments: " + e.getMessage());
@@ -93,65 +113,53 @@ public class PaymentDAO {
         return payments;
     }
 
-    public boolean addPayment(PaymentModel payment) {
-        String query = "INSERT INTO payment (renewal_id, amount, method, payment_date) VALUES (?, ?, ?, ?)";
+    /**
+     * Retrieves all payment records.
+     * 
+     * @return list of all payments
+     */
+    public List<PaymentModel> getAllPayments() {
+        List<PaymentModel> payments = new ArrayList<>();
+        String query = "SELECT * FROM payment ORDER BY payment_date DESC";
         
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, payment.getRenewalID());
-            statement.setDouble(2, payment.getAmount());
-            statement.setString(3, payment.getMethod());
-            statement.setDate(4, new java.sql.Date(payment.getPaymentDate().getTime()));
-
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            System.err.println("Error adding payment: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public int addPaymentGetID(PaymentModel payment) {
-    String query = "INSERT INTO payment (renewal_id, amount, method, payment_date) VALUES (?, ?, ?, ?)";
-    
-    try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setInt(1, payment.getRenewalID());
-        statement.setDouble(2, payment.getAmount());
-        statement.setString(3, payment.getMethod());
-        statement.setDate(4, new java.sql.Date(payment.getPaymentDate().getTime()));
-
-        int rowsAffected = statement.executeUpdate();
-        
-        if (rowsAffected > 0) {
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                }
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            
+            while (rs.next()) {
+                PaymentModel payment = new PaymentModel(
+                    rs.getInt("payment_id"),
+                    rs.getInt("renewal_id"),
+                    rs.getDouble("amount"),
+                    rs.getString("payment_method"),
+                    rs.getTimestamp("payment_date")
+                );
+                payments.add(payment);
             }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving all payments: " + e.getMessage());
+            e.printStackTrace();
         }
-        return -1;
-
-    } catch (SQLException e) {
-        System.err.println("Error adding payment: " + e.getMessage());
-        e.printStackTrace();
-        return -1;
+        return payments;
     }
-}
 
+    /**
+     * Updates an existing payment record.
+     * 
+     * @param payment the payment model with updated data
+     * @return true if successful, false otherwise
+     */
     public boolean updatePayment(PaymentModel payment) {
-        String query = "UPDATE payment SET renewal_id = ?, amount = ?, method = ?, payment_date = ? WHERE payment_id = ?";
+        String query = "UPDATE payment SET renewal_id = ?, amount = ?, payment_method = ?, payment_date = ? WHERE payment_id = ?";
         
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, payment.getRenewalID());
-            statement.setDouble(2, payment.getAmount());
-            statement.setString(3, payment.getMethod());
-            statement.setDate(4, new java.sql.Date(payment.getPaymentDate().getTime()));
-            statement.setInt(5, payment.getPaymentID());
-
-            int rowsAffected = statement.executeUpdate();
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, payment.getRenewalId());
+            pstmt.setDouble(2, payment.getAmount());
+            pstmt.setString(3, payment.getPaymentMethod());
+            pstmt.setTimestamp(4, new Timestamp(payment.getPaymentDate().getTime()));
+            pstmt.setInt(5, payment.getPaymentId());
+            
+            int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
-
         } catch (SQLException e) {
             System.err.println("Error updating payment: " + e.getMessage());
             e.printStackTrace();
@@ -159,20 +167,24 @@ public class PaymentDAO {
         }
     }
 
-    public boolean deletePayment(int paymentID) {
+    /**
+     * Deletes a payment record.
+     * 
+     * @param paymentId the payment ID to delete
+     * @return true if successful, false otherwise
+     */
+    public boolean deletePayment(int paymentId) {
         String query = "DELETE FROM payment WHERE payment_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, paymentID);
-
-            int rowsAffected = statement.executeUpdate();
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, paymentId);
+            
+            int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
-
         } catch (SQLException e) {
             System.err.println("Error deleting payment: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-    
 }

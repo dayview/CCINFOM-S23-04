@@ -11,6 +11,7 @@ public class RenewalMenuController {
     @FXML private Button RecordPaymentButton;
     @FXML private Button ScheduleInspectionButton;
     @FXML private Button FinalizeRenewalButton;
+    @FXML private Button BackToMainButton;
 
     @FXML 
     private void applyRenewalButtonPressed(ActionEvent event) {
@@ -38,5 +39,12 @@ public class RenewalMenuController {
         Stage currentStage = (Stage) FinalizeRenewalButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/FinalizeRenewalView.fxml", "Finalize Renewal");
+    }
+
+    @FXML
+    private void backToMainPressed(ActionEvent event) {
+        Stage currentStage = (Stage) BackToMainButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/MainView.fxml", "Business Permit System");
     }
 }

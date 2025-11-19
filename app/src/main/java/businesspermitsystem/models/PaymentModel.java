@@ -2,35 +2,41 @@ package businesspermitsystem.models;
 
 import java.util.Date;
 
+/**
+ * Model class representing a payment record for a renewal application.
+ */
 public class PaymentModel {
-    private int paymentID;
-    private int renewalID;
+    private int paymentId;
+    private int renewalId;
     private double amount;
-    private String method;
-    private Date paymentDate; 
+    private String paymentMethod;
+    private Date paymentDate;
 
-    public PaymentModel(int paymentID, int renewalID, double amount, String method, Date paymentDate) {
-        this.paymentID = paymentID;
-        this.renewalID = renewalID;
+    /**
+     * Constructor for creating a new payment.
+     */
+    public PaymentModel(int paymentId, int renewalId, double amount, String paymentMethod, Date paymentDate) {
+        this.paymentId = paymentId;
+        this.renewalId = renewalId;
         this.amount = amount;
-        this.method = method;
+        this.paymentMethod = paymentMethod;
         this.paymentDate = paymentDate;
     }
 
-    public int getPaymentID() {
-        return paymentID;
+    public int getPaymentId() {
+        return paymentId;
     }
 
-    public void setPaymentID(int paymentID) {
-        this.paymentID = paymentID;
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
     }
 
-    public int getRenewalID() {
-        return renewalID;
+    public int getRenewalId() {
+        return renewalId;
     }
 
-    public void setRenewalID(int renewalID) {
-        this.renewalID = renewalID;
+    public void setRenewalId(int renewalId) {
+        this.renewalId = renewalId;
     }
 
     public double getAmount() {
@@ -41,12 +47,12 @@ public class PaymentModel {
         this.amount = amount;
     }
 
-    public String getMethod() {
-        return method;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Date getPaymentDate() {
