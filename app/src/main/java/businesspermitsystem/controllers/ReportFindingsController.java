@@ -8,6 +8,7 @@ import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.InspectionResultModel;
 import businesspermitsystem.models.InspectionScheduleModel;
 import businesspermitsystem.models.PermitModel;
+import businesspermitsystem.utils.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -376,8 +377,9 @@ public class ReportFindingsController {
 
     @FXML
     private void cancelButtonPressed() {
-        Stage stage = (Stage) reportButton.getScene().getWindow();
-        stage.close();
+        Stage currentStage = (Stage) reportButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
     
     private void showAlert(AlertType type, String title, String message) {
