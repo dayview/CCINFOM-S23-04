@@ -28,6 +28,8 @@ public class AddPermitController {
     @FXML private ComboBox<String> permitTypeComboBox;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private DatePicker statusEffectiveDatePicker;
+    @FXML private DatePicker validityStartPicker;
+    @FXML private DatePicker validityEndPicker;
     @FXML private TextArea noteArea;
     @FXML private Button saveButton;
     @FXML private Button cancelButton;
@@ -89,14 +91,27 @@ public class AddPermitController {
             int permitTypeId = selectedPermitType.getID();
 
             Date effectiveDateUtil = Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            
+            // Convert validity dates
+            Date validityStart = null;
+            if (validityStartPicker.getValue() != null) {
+                validityStart = Date.from(validityStartPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            }
+            
+            Date validityEnd = null;
+            if (validityEndPicker.getValue() != null) {
+                validityEnd = Date.from(validityEndPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            }
 
             PermitModel permit = new PermitModel(
                     0,
                     businessId,
                     permitTypeId,
                     status,
-                    (java.sql.Date) effectiveDateUtil,
-                    note
+                    effectiveDateUtil,
+                    note,
+                    validityStart,
+                    validityEnd
             );
 
             boolean success = permitDAO.addPermit(permit);
@@ -138,6 +153,14 @@ public class AddPermitController {
         if (statusEffectiveDatePicker.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Status Effective Date is required.");
             return false;
+        }
+
+        // Validate validity dates if both are provided
+        if (validityStartPicker.getValue() != null && validityEndPicker.getValue() != null) {
+            if (validityEndPicker.getValue().isBefore(validityStartPicker.getValue())) {
+                showAlert(Alert.AlertType.WARNING, "Validation Error", "Validity End Date cannot be before Validity Start Date.");
+                return false;
+            }
         }
 
         return true;

@@ -29,6 +29,8 @@ public class UpdatePermitController {
     @FXML private ComboBox<String> permitTypeComboBox;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private DatePicker statusEffectiveDatePicker;
+    @FXML private DatePicker validityStartPicker;
+    @FXML private DatePicker validityEndPicker;
     @FXML private TextArea noteArea;
     @FXML private Button searchButton;
     @FXML private Button updateButton;
@@ -121,6 +123,22 @@ public class UpdatePermitController {
             statusEffectiveDatePicker.setValue(localDate);
         }
 
+        if (currentPermit.getValidityStart() != null) {
+            LocalDate validityStartLocal = currentPermit.getValidityStart()
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            validityStartPicker.setValue(validityStartLocal);
+        }
+
+        if (currentPermit.getValidityEnd() != null) {
+            LocalDate validityEndLocal = currentPermit.getValidityEnd()
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            validityEndPicker.setValue(validityEndLocal);
+        }
+
         int currentPermitTypeId = currentPermit.getPermitTypeID();
         for (int i = 0; i < permitTypes.size(); i++) {
             if (permitTypes.get(i).getID() == currentPermitTypeId) {
@@ -151,13 +169,26 @@ public class UpdatePermitController {
 
             Date effectiveDateUtil = Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
+            // Convert validity dates
+            Date validityStart = null;
+            if (validityStartPicker.getValue() != null) {
+                validityStart = Date.from(validityStartPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            }
+
+            Date validityEnd = null;
+            if (validityEndPicker.getValue() != null) {
+                validityEnd = Date.from(validityEndPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            }
+
             PermitModel updatedPermit = new PermitModel(
                     currentPermit.getPermitID(),
                     businessId,
                     permitTypeId,
                     status,
-                    (java.sql.Date) effectiveDateUtil,
-                    note
+                    effectiveDateUtil,
+                    note,
+                    validityStart,
+                    validityEnd
             );
 
             boolean success = permitDAO.updatePermit(updatedPermit);
@@ -203,6 +234,14 @@ public class UpdatePermitController {
             return false;
         }
 
+        // Validate validity dates if both are provided
+        if (validityStartPicker.getValue() != null && validityEndPicker.getValue() != null) {
+            if (validityEndPicker.getValue().isBefore(validityStartPicker.getValue())) {
+                showAlert(Alert.AlertType.WARNING, "Validation Error", "Validity End Date cannot be before Validity Start Date.");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -214,6 +253,8 @@ public class UpdatePermitController {
         permitTypeComboBox.setDisable(disabled);
         statusComboBox.setDisable(disabled);
         statusEffectiveDatePicker.setDisable(disabled);
+        validityStartPicker.setDisable(disabled);
+        validityEndPicker.setDisable(disabled);
         noteArea.setDisable(disabled);
         updateButton.setDisable(disabled);
     }
@@ -226,6 +267,8 @@ public class UpdatePermitController {
         permitTypeComboBox.getSelectionModel().clearSelection();
         statusComboBox.getSelectionModel().clearSelection();
         statusEffectiveDatePicker.setValue(null);
+        validityStartPicker.setValue(null);
+        validityEndPicker.setValue(null);
         noteArea.clear();
         currentPermit = null;
         setFieldsDisabled(true);
@@ -247,6 +290,7 @@ public class UpdatePermitController {
         SceneManager sceneManager = new SceneManager(stage);
         sceneManager.switchScene("/view/MainView.fxml", "Business Permit System");
     }
+
     /**
      * Shows an alert dialog.
      */

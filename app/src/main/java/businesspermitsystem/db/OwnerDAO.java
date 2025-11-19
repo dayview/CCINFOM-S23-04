@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import businesspermitsystem.models.OwnerModel;
 
@@ -143,43 +142,4 @@ public class OwnerDAO {
             return false;
         }
     }
-
-    public List<OwnerModel> getOwnersByBusinessId(int businessId) {
-        List<OwnerModel> owners = new ArrayList<>();
-
-        String sql =
-                "SELECT o.owner_id, o.first_name, o.last_name, o.middle_name, o.contact_no, " +
-                        "o.email, o.gov_id_type, o.gov_id_no, o.tin, o.home_address " +
-                        "FROM owner o " +
-                        "JOIN business_owner bo ON o.owner_id = bo.owner_id " +
-                        "WHERE bo.business_id = ?";
-
-        try (PreparedStatement stmt = DatabaseConnector.connection.prepareStatement(sql)) {
-            stmt.setInt(1, businessId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    OwnerModel owner = new OwnerModel();
-
-                    owner.setOwnerID(rs.getInt("owner_id"));
-                    owner.setFirstName(rs.getString("first_name"));
-                    owner.setLastName(rs.getString("last_name"));
-                    owner.setMiddleName(rs.getString("middle_name"));
-                    owner.setContactNo(rs.getString("contact_no"));
-                    owner.setEmail(rs.getString("email"));
-                    owner.setGovID_type(rs.getString("gov_id_type"));
-                    owner.setGovID_no(rs.getString("gov_id_no"));
-                    owner.setTin(rs.getString("tin"));
-                    owner.setHomeAddress(rs.getString("home_address"));
-
-                    owners.add(owner);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return owners;
-    }
-
 }

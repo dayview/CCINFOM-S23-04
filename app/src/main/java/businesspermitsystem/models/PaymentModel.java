@@ -1,39 +1,28 @@
 package businesspermitsystem.models;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
+/**
+ * Model class representing a payment record for a renewal application.
+ */
 public class PaymentModel {
-
     private int paymentId;
-    private int applicationId;
-    private int businessId;
-    private int permitTypeId;
-    private int municipalityId;
+    private int renewalId;
+    private double amount;
+    private String paymentMethod;
+    private Date paymentDate;
 
-    private LocalDate paymentDate;
-    private BigDecimal amountPaid;
-    private String modeOfPayment;
-    private String orNumber;
-
-    // default contructor
-    public PaymentModel() {}
-
-
-    public PaymentModel(int paymentId, int applicationId, int businessId, int permitTypeId, int municipalityId, LocalDate paymentDate, BigDecimal amountPaid, String modeOfPayment, String orNumber) {
-
+    /**
+     * Constructor for creating a new payment.
+     */
+    public PaymentModel(int paymentId, int renewalId, double amount, String paymentMethod, Date paymentDate) {
         this.paymentId = paymentId;
-        this.applicationId = applicationId;
-        this.businessId = businessId;
-        this.permitTypeId = permitTypeId;
-        this.municipalityId = municipalityId;
+        this.renewalId = renewalId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
         this.paymentDate = paymentDate;
-        this.amountPaid = amountPaid;
-        this.modeOfPayment = modeOfPayment;
-        this.orNumber = orNumber;
     }
 
-    // Getters & Setters
     public int getPaymentId() {
         return paymentId;
     }
@@ -42,67 +31,35 @@ public class PaymentModel {
         this.paymentId = paymentId;
     }
 
-    public int getApplicationId() {
-        return applicationId;
+    public int getRenewalId() {
+        return renewalId;
     }
 
-    public void setApplicationId(int applicationId) {
-        this.applicationId = applicationId;
+    public void setRenewalId(int renewalId) {
+        this.renewalId = renewalId;
     }
 
-    public int getBusinessId() {
-        return businessId;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setBusinessId(int businessId) {
-        this.businessId = businessId;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
-    public int getPermitTypeId() {
-        return permitTypeId;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setPermitTypeId(int permitTypeId) {
-        this.permitTypeId = permitTypeId;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
-    public int getMunicipalityId() {
-        return municipalityId;
-    }
-
-    public void setMunicipalityId(int municipalityId) {
-        this.municipalityId = municipalityId;
-    }
-
-    public LocalDate getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(LocalDate paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
-    }
-
-    public BigDecimal getAmountPaid() {
-        return amountPaid;
-    }
-
-    public void setAmountPaid(BigDecimal amountPaid) {
-        this.amountPaid = amountPaid;
-    }
-
-    public String getModeOfPayment() {
-        return modeOfPayment;
-    }
-
-    public void setModeOfPayment(String modeOfPayment) {
-        this.modeOfPayment = modeOfPayment;
-    }
-
-    public String getOrNumber() {
-        return orNumber;
-    }
-
-    public void setOrNumber(String orNumber) {
-        this.orNumber = orNumber;
     }
 }

@@ -15,11 +15,6 @@ public class OwnerModel {
     private String tin;
     private String homeAddress;
 
-    public OwnerModel(){
-
-    }
-
-
     public OwnerModel (int ownerID, String lastName, String firstName, String middleName, String contactNo, String email, 
                     String govID_type, String govID_no, String tin, String homeAddress) {
         this.ownerID = ownerID;
@@ -113,9 +108,4 @@ public class OwnerModel {
     public void setHomeAddress(String homeAddress) {
         this.homeAddress = homeAddress;
     }
-
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
 }
