@@ -22,7 +22,7 @@ public class PermitDAO {
      */
     public List<PermitModel> getAllPermits() {
         List<PermitModel> permits = new ArrayList<>();
-        String query = "SELECT * FROM Permit";
+        String query = "SELECT * FROM permit";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -34,7 +34,9 @@ public class PermitDAO {
                         rs.getInt("permit_type_id"),
                         rs.getString("status"),
                         rs.getDate("status_effective_date"),
-                        rs.getString("note")
+                        rs.getString("note"),
+                        rs.getDate("validity_start"),
+                        rs.getDate("validity_end")
                 );
                 permits.add(permit);
             }
@@ -51,7 +53,7 @@ public class PermitDAO {
      * @return PermitModel or null if not found
      */
     public PermitModel getPermitByID(int permitID) {
-        String query = "SELECT * FROM Permit WHERE permit_id = ?";
+        String query = "SELECT * FROM permit WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permitID);
@@ -64,7 +66,9 @@ public class PermitDAO {
                             rs.getInt("permit_type_id"),
                             rs.getString("status"),
                             rs.getDate("status_effective_date"),
-                            rs.getString("note")
+                            rs.getString("note"),
+                            rs.getDate("validity_start"),
+                            rs.getDate("validity_end")
                     );
                 }
             }
@@ -82,7 +86,7 @@ public class PermitDAO {
      */
     public List<PermitModel> getPermitsByBusinessID(int businessID) {
         List<PermitModel> permits = new ArrayList<>();
-        String query = "SELECT * FROM Permit WHERE business_id = ?";
+        String query = "SELECT * FROM permit WHERE business_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, businessID);
@@ -95,7 +99,9 @@ public class PermitDAO {
                         rs.getInt("permit_type_id"),
                         rs.getString("status"),
                         rs.getDate("status_effective_date"),
-                        rs.getString("note")
+                        rs.getString("note"),
+                        rs.getDate("validity_start"),
+                        rs.getDate("validity_end")
                     );
                     permits.add(permit);
                 }
@@ -113,7 +119,7 @@ public class PermitDAO {
      * @return true if successful, false otherwise
      */
     public boolean addPermit(PermitModel permit) {
-        String query = "INSERT INTO Permit (business_id, permit_type_id, status, status_effective_date, note) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO permit (business_id, permit_type_id, status, status_effective_date, note, validity_start, validity_end) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permit.getBusinessID());
@@ -121,6 +127,18 @@ public class PermitDAO {
             pstmt.setString(3, permit.getStatus());
             pstmt.setDate(4, new java.sql.Date(permit.getStatusEffectiveDate().getTime()));
             pstmt.setString(5, permit.getNote());
+            
+            if (permit.getValidityStart() != null) {
+                pstmt.setDate(6, new java.sql.Date(permit.getValidityStart().getTime()));
+            } else {
+                pstmt.setNull(6, Types.DATE);
+            }
+            
+            if (permit.getValidityEnd() != null) {
+                pstmt.setDate(7, new java.sql.Date(permit.getValidityEnd().getTime()));
+            } else {
+                pstmt.setNull(7, Types.DATE);
+            }
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -137,7 +155,7 @@ public class PermitDAO {
      * @return true if successful, false otherwise
      */
     public boolean updatePermit(PermitModel permit) {
-        String query = "UPDATE Permit SET business_id = ?, permit_type_id = ?, status = ?, status_effective_date = ?, note = ? WHERE permit_id = ?";
+        String query = "UPDATE permit SET business_id = ?, permit_type_id = ?, status = ?, status_effective_date = ?, note = ?, validity_start = ?, validity_end = ? WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permit.getBusinessID());
@@ -145,7 +163,20 @@ public class PermitDAO {
             pstmt.setString(3, permit.getStatus());
             pstmt.setDate(4, new java.sql.Date(permit.getStatusEffectiveDate().getTime()));
             pstmt.setString(5, permit.getNote());
-            pstmt.setInt(6, permit.getPermitID());
+            
+            if (permit.getValidityStart() != null) {
+                pstmt.setDate(6, new java.sql.Date(permit.getValidityStart().getTime()));
+            } else {
+                pstmt.setNull(6, Types.DATE);
+            }
+            
+            if (permit.getValidityEnd() != null) {
+                pstmt.setDate(7, new java.sql.Date(permit.getValidityEnd().getTime()));
+            } else {
+                pstmt.setNull(7, Types.DATE);
+            }
+            
+            pstmt.setInt(8, permit.getPermitID());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -162,7 +193,7 @@ public class PermitDAO {
      * @return true if successful, false otherwise
      */
     public boolean deletePermit(int permitID) {
-        String query = "DELETE FROM Permit WHERE permit_id = ?";
+        String query = "DELETE FROM permit WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, permitID);
@@ -177,7 +208,7 @@ public class PermitDAO {
     }
 
     public boolean updatePermitStatus(int permitID, String newStatus, java.util.Date effectiveDate, String note) {
-        String query = "UPDATE Permit SET status = ?, status_effective_date = ?, note = ? WHERE permit_id = ?";
+        String query = "UPDATE permit SET status = ?, status_effective_date = ?, note = ? WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, newStatus);
@@ -198,8 +229,6 @@ public class PermitDAO {
      * Updates status for ALL permits belonging to a business (bulk update).
      * Used when a business status changes - all its permits must follow.
      *
-     * Example: Business gets suspended and all its permits get suspended (or archived) too.
-     *
      * @param businessID the business whose permits should be updated
      * @param newStatus the new status for all permits
      * @param effectiveDate when the status change takes effect
@@ -207,7 +236,7 @@ public class PermitDAO {
      * @return number of permits updated
      */
     public int updatePermitsByBusinessID(int businessID, String newStatus, java.util.Date effectiveDate, String note) {
-        String query = "UPDATE Permit SET status = ?, status_effective_date = ?, note = ? WHERE business_id = ?";
+        String query = "UPDATE permit SET status = ?, status_effective_date = ?, note = ? WHERE business_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, newStatus);
@@ -226,34 +255,96 @@ public class PermitDAO {
     }
 
     /**
-     * Retrieves all permits whose status effective date falls within the specified year.
-     * This method is crucial for the Permits Issued Report.
-     * * @param year the year to filter the permits by
-     * @return List of PermitModel objects issued in that year
+     * Updates validity dates for a specific permit
+     * @param permitID the permit's unique identifier
+     * @param validityStart new start date
+     * @param validityEnd new end date
+     * @return true if successful, false otherwise
      */
-    public List<PermitModel> getPermitDataForYear(int year) {
-        List<PermitModel> permits = new ArrayList<>();
-        String query = "SELECT * FROM Permit WHERE YEAR(status_effective_date) = ? AND status != 'pending'"; 
+    public boolean updatePermitValidity(int permitID, java.util.Date validityStart, java.util.Date validityEnd) {
+        String query = "UPDATE permit SET validity_start = ?, validity_end = ? WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            if (validityStart != null) {
+                pstmt.setDate(1, new java.sql.Date(validityStart.getTime()));
+            } else {
+                pstmt.setNull(1, Types.DATE);
+            }
             
-            pstmt.setInt(1, year); 
+            if (validityEnd != null) {
+                pstmt.setDate(2, new java.sql.Date(validityEnd.getTime()));
+            } else {
+                pstmt.setNull(2, Types.DATE);
+            }
+            
+            pstmt.setInt(3, permitID);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    PermitModel permit = new PermitModel(
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating permit validity: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves all active permits (where validity_end is in the future or null)
+     * @return List of active PermitModel objects
+     */
+    public List<PermitModel> getActivePermits() {
+        List<PermitModel> permits = new ArrayList<>();
+        String query = "SELECT * FROM permit WHERE validity_end IS NULL OR validity_end >= CURDATE()";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                PermitModel permit = new PermitModel(
                         rs.getInt("permit_id"),
                         rs.getInt("business_id"),
                         rs.getInt("permit_type_id"),
                         rs.getString("status"),
                         rs.getDate("status_effective_date"),
-                        rs.getString("note")
-                    );
-                    permits.add(permit);
-                }
+                        rs.getString("note"),
+                        rs.getDate("validity_start"),
+                        rs.getDate("validity_end")
+                );
+                permits.add(permit);
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving permits for year " + year + ": " + e.getMessage());
+            System.err.println("Error retrieving active permits: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return permits;
+    }
+
+    /**
+     * Retrieves all expired permits (where validity_end is in the past)
+     * @return List of expired PermitModel objects
+     */
+    public List<PermitModel> getExpiredPermits() {
+        List<PermitModel> permits = new ArrayList<>();
+        String query = "SELECT * FROM permit WHERE validity_end < CURDATE()";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                PermitModel permit = new PermitModel(
+                        rs.getInt("permit_id"),
+                        rs.getInt("business_id"),
+                        rs.getInt("permit_type_id"),
+                        rs.getString("status"),
+                        rs.getDate("status_effective_date"),
+                        rs.getString("note"),
+                        rs.getDate("validity_start"),
+                        rs.getDate("validity_end")
+                );
+                permits.add(permit);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving expired permits: " + e.getMessage());
             e.printStackTrace();
         }
         return permits;

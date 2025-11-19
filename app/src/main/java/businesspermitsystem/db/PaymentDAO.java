@@ -1,189 +1,190 @@
 package businesspermitsystem.db;
 
 import businesspermitsystem.models.PaymentModel;
-import businesspermitsystem.models.PermitApplicationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Payment entity.
+ * Handles database operations for payment records.
+ */
 public class PaymentDAO {
-
-    private final Connection connection;
+    private Connection connection;
 
     public PaymentDAO() {
         this.connection = DatabaseConnector.connection;
-
         if (this.connection == null) {
-            System.err.println("ERROR: Database connection not established.");
+            System.err.println("Warning: Database connection not established.");
         }
     }
 
-    // INSERT payment
-    public boolean addPayment(PaymentModel payment) {
-
-        String sql = """
-            INSERT INTO payment (application_id, business_id, permit_type_id, municipality_id, payment_date, amount_paid, mode_of_payment, or_number)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setInt(1, payment.getApplicationId());
-            stmt.setInt(2, payment.getBusinessId());
-            stmt.setInt(3, payment.getPermitTypeId());
-            stmt.setInt(4, payment.getMunicipalityId());
-            stmt.setDate(5, Date.valueOf(payment.getPaymentDate()));
-            stmt.setBigDecimal(6, payment.getAmountPaid());
-            stmt.setString(7, payment.getModeOfPayment());
-            stmt.setString(8, payment.getOrNumber());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            System.err.println("Error inserting payment: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // GET payment by ID
-    public PaymentModel getPaymentById(int paymentId) {
-        String sql = "SELECT * FROM payment WHERE payment_id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, paymentId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return extractPayment(rs);
+    /**
+     * Adds a new payment record and returns the generated payment ID.
+     * 
+     * @param payment the payment model to insert
+     * @return the generated payment ID, or -1 if failed
+     */
+    public int addPaymentGetID(PaymentModel payment) {
+        String query = "INSERT INTO payment (renewal_id, amount, payment_method, payment_date) VALUES (?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, payment.getRenewalId());
+            pstmt.setDouble(2, payment.getAmount());
+            pstmt.setString(3, payment.getPaymentMethod());
+            pstmt.setTimestamp(4, new Timestamp(payment.getPaymentDate().getTime()));
+            
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
                 }
             }
+        } catch (SQLException e) {
+            System.err.println("Error adding payment: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
+    /**
+     * Retrieves a payment by its ID.
+     * 
+     * @param paymentId the payment ID
+     * @return the payment model or null if not found
+     */
+    public PaymentModel getPaymentByID(int paymentId) {
+        String query = "SELECT * FROM payment WHERE payment_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, paymentId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new PaymentModel(
+                        rs.getInt("payment_id"),
+                        rs.getInt("renewal_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("payment_method"),
+                        rs.getTimestamp("payment_date")
+                    );
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error retrieving payment: " + e.getMessage());
             e.printStackTrace();
         }
-
         return null;
     }
 
-    // GET all payments for an application
-    public List<PaymentModel> getPaymentsByApplicationId(int applicationId) {
-
-        List<PaymentModel> list = new ArrayList<>();
-        String sql = "SELECT * FROM payment WHERE application_id = ? ORDER BY payment_date DESC";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, applicationId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
+    /**
+     * Retrieves all payments for a specific renewal.
+     * 
+     * @param renewalId the renewal ID
+     * @return list of payments for the renewal
+     */
+    public List<PaymentModel> getPaymentsByRenewalID(int renewalId) {
+        List<PaymentModel> payments = new ArrayList<>();
+        String query = "SELECT * FROM payment WHERE renewal_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, renewalId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    list.add(extractPayment(rs));
+                    PaymentModel payment = new PaymentModel(
+                        rs.getInt("payment_id"),
+                        rs.getInt("renewal_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("payment_method"),
+                        rs.getTimestamp("payment_date")
+                    );
+                    payments.add(payment);
                 }
             }
-
         } catch (SQLException e) {
             System.err.println("Error retrieving payments: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return list;
+        return payments;
     }
 
-    // DELETE payment
+    /**
+     * Retrieves all payment records.
+     * 
+     * @return list of all payments
+     */
+    public List<PaymentModel> getAllPayments() {
+        List<PaymentModel> payments = new ArrayList<>();
+        String query = "SELECT * FROM payment ORDER BY payment_date DESC";
+        
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            
+            while (rs.next()) {
+                PaymentModel payment = new PaymentModel(
+                    rs.getInt("payment_id"),
+                    rs.getInt("renewal_id"),
+                    rs.getDouble("amount"),
+                    rs.getString("payment_method"),
+                    rs.getTimestamp("payment_date")
+                );
+                payments.add(payment);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving all payments: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return payments;
+    }
+
+    /**
+     * Updates an existing payment record.
+     * 
+     * @param payment the payment model with updated data
+     * @return true if successful, false otherwise
+     */
+    public boolean updatePayment(PaymentModel payment) {
+        String query = "UPDATE payment SET renewal_id = ?, amount = ?, payment_method = ?, payment_date = ? WHERE payment_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, payment.getRenewalId());
+            pstmt.setDouble(2, payment.getAmount());
+            pstmt.setString(3, payment.getPaymentMethod());
+            pstmt.setTimestamp(4, new Timestamp(payment.getPaymentDate().getTime()));
+            pstmt.setInt(5, payment.getPaymentId());
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating payment: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Deletes a payment record.
+     * 
+     * @param paymentId the payment ID to delete
+     * @return true if successful, false otherwise
+     */
     public boolean deletePayment(int paymentId) {
-        String sql = "DELETE FROM payment WHERE payment_id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, paymentId);
-            return stmt.executeUpdate() > 0;
-
+        String query = "DELETE FROM payment WHERE payment_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, paymentId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             System.err.println("Error deleting payment: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
-
-    // Helper method to build model from ResultSet
-    private PaymentModel extractPayment(ResultSet rs) throws SQLException {
-        PaymentModel payment = new PaymentModel();
-
-        payment.setPaymentId(rs.getInt("payment_id"));
-        payment.setApplicationId(rs.getInt("application_id"));
-        payment.setBusinessId(rs.getInt("business_id"));
-        payment.setPermitTypeId(rs.getInt("permit_type_id"));
-        payment.setMunicipalityId(rs.getInt("municipality_id"));
-        payment.setPaymentDate(rs.getDate("payment_date").toLocalDate());
-        payment.setAmountPaid(rs.getBigDecimal("amount_paid"));
-        payment.setModeOfPayment(rs.getString("mode_of_payment"));
-        payment.setOrNumber(rs.getString("or_number"));
-
-        return payment;
-    }
-
-    public List<PermitApplicationModel> getApplicationsForPayment() {
-        List<PermitApplicationModel> list = new ArrayList<>();
-
-        String sql = """
-        SELECT pa.application_id,
-               pa.business_id,
-               pa.permit_type_id,
-               pa.application_date,
-               pa.approval_date,
-               pa.expiration_date,
-               pa.status,
-               pa.base_fee,
-               pa.surcharge,
-               pa.total_fee,
-               pa.remarks,
-               pt.permit_name,
-               fs.base_fee AS fs_base_fee,
-               fs.surcharge_rule
-        FROM permit_application pa
-        JOIN permit_type pt ON pa.permit_type_id = pt.permit_type_id
-        JOIN fee_schedule fs ON pt.fee_schedule_id = fs.fee_schedule_id
-        WHERE pa.status = 'For Payment'
-    """;
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                PermitApplicationModel app = new PermitApplicationModel();
-
-                app.setApplicationId(rs.getInt("application_id"));
-                app.setBusinessId(rs.getInt("business_id"));
-                app.setPermitTypeId(rs.getInt("permit_type_id"));
-                app.setApplicationDate(rs.getDate("application_date").toLocalDate());
-
-                if (rs.getDate("approval_date") != null)
-                    app.setApprovalDate(rs.getDate("approval_date").toLocalDate());
-
-                if (rs.getDate("expiration_date") != null)
-                    app.setExpirationDate(rs.getDate("expiration_date").toLocalDate());
-
-                app.setStatus(rs.getString("status"));
-                app.setBaseFee(rs.getBigDecimal("base_fee"));
-                app.setSurcharge(rs.getBigDecimal("surcharge"));
-                app.setTotalFee(rs.getBigDecimal("total_fee"));
-                app.setRemarks(rs.getString("remarks"));
-
-                // Extra fields for UI display
-                app.setPermitName(rs.getString("permit_name"));
-
-                list.add(app);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-
 }
