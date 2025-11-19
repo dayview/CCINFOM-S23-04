@@ -39,24 +39,35 @@ public class FinalizeRenewalController {
             
             List<BusinessModel> businesses = service.getAllBusinesses();
             for (BusinessModel b : businesses) {
-                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessID());
+                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessId());
                 for (PermitRenewalApplicationModel r : list) {
                     if ("paid".equals(r.getStatus()) && service.isInspectionScheduled(r.getRenewalID())) {
                         renewalComboBox.getItems().add(r.getRenewalID() + " - Business " + r.getBusinessID());
                     }
                 }
             }
+            
+            if (renewalComboBox.getItems().isEmpty()) {
+                showInfo("No renewals with scheduled inspections found.");
+            }
         } catch (Exception e) {
             showError("Failed to load renewals: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void loadSchedules() {
-        scheduleComboBox.getItems().clear();
-        scheduleComboBox.getItems().addAll(
-            "1 - Schedule 2024-01-15",
-            "2 - Schedule 2024-01-20"
-        );
+        try {
+            scheduleComboBox.getItems().clear();
+            // This should load actual schedules from database
+            // Placeholder for now
+            scheduleComboBox.getItems().addAll(
+                "1 - Scheduled Inspection",
+                "2 - Recent Inspection"
+            );
+        } catch (Exception e) {
+            showError("Failed to load schedules: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -77,17 +88,37 @@ public class FinalizeRenewalController {
                 return;
             }
             
+            if (remarksArea.getText().trim().isEmpty()) {
+                showWarning("Please enter remarks about the inspection");
+                return;
+            }
+            
             int renewalId = getId(renewalComboBox.getValue());
             int scheduleId = getId(scheduleComboBox.getValue());
             String result = resultComboBox.getValue();
-            String remarks = remarksArea.getText();
+            String remarks = remarksArea.getText().trim();
+            
+            // Confirm finalization
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Confirm Finalization");
+            confirmAlert.setHeaderText("Finalize Renewal");
+            confirmAlert.setContentText(String.format(
+                "Are you sure you want to finalize this renewal?\n\n" +
+                "Renewal ID: %d\nResult: %s\n\n" +
+                "This action cannot be undone.",
+                renewalId, result
+            ));
+            
+            if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+                return;
+            }
             
             boolean success = service.finalizeRenewal(renewalId, scheduleId, result, remarks);
             
             if (success) {
                 String msg = "PASS".equals(result) ? 
-                    "Renewal approved! Permit renewed." : 
-                    "Renewal denied. Permit suspended.";
+                    "Renewal approved! Permit has been renewed successfully." : 
+                    "Renewal denied. Permit has been suspended.";
                 showInfo(msg);
                 clearFields();
                 loadRenewals();
@@ -97,6 +128,7 @@ public class FinalizeRenewalController {
             
         } catch (Exception e) {
             showError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -104,12 +136,13 @@ public class FinalizeRenewalController {
     private void onCancel(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sm = new SceneManager(stage);
-        sm.switchScene("/view/MainView.fxml", "Main Menu");
+        sm.switchScene("/view/RenewalMenuView.fxml", "Permit Renewal Transaction");
     }
 
     private void clearFields() {
         renewalComboBox.setValue(null);
         scheduleComboBox.setValue(null);
+        scheduleComboBox.getItems().clear();
         resultComboBox.setValue(null);
         remarksArea.clear();
     }
@@ -136,7 +169,7 @@ public class FinalizeRenewalController {
 
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
+        alert.setTitle("Information");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

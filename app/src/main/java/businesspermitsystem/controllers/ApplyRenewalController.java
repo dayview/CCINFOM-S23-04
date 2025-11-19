@@ -49,11 +49,16 @@ public class ApplyRenewalController {
             
             for (BusinessModel b : businesses) {
                 if ("Active".equals(b.getStatus())) {
-                    businessComboBox.getItems().add(b.getBusinessID() + " - " + b.getBusinessName());
+                    businessComboBox.getItems().add(b.getBusinessId() + " - " + b.getBusinessName());
                 }
+            }
+            
+            if (businessComboBox.getItems().isEmpty()) {
+                showInfo("No active businesses found.");
             }
         } catch (Exception e) {
             showError("Failed to load businesses: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -63,11 +68,18 @@ public class ApplyRenewalController {
             permits = service.getPermitsByBusiness(businessId);
             permitComboBox.getItems().clear();
             
+            if (permits == null || permits.isEmpty()) {
+                showWarning("No permits found for this business");
+                return;
+            }
+            
             for (PermitModel p : permits) {
-                permitComboBox.getItems().add(p.getPermitID() + " - Permit #" + p.getPermitNo());
+                String status = p.getStatus() != null ? p.getStatus() : "unknown";
+                permitComboBox.getItems().add(p.getPermitID() + " - Status: " + status);
             }
         } catch (Exception e) {
             showError("Failed to load permits: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -83,8 +95,12 @@ public class ApplyRenewalController {
                 }
             }
             
-            if (permit == null) return;
+            if (permit == null) {
+                showError("Selected permit not found");
+                return;
+            }
             
+            // Base renewal fee - should come from permit type
             double renewalFee = 5000.0;
             double surcharge = service.calculateSurcharge(permit, null);
             double total = renewalFee + surcharge;
@@ -93,18 +109,23 @@ public class ApplyRenewalController {
             surchargeLabel.setText(String.format("₱%.2f", surcharge));
             totalAmountLabel.setText(String.format("₱%.2f", total));
             
+            String expiryInfo = permit.getStatusEffectiveDate() != null ? 
+                permit.getStatusEffectiveDate().toString() : "N/A";
+            
             String details = String.format(
-                "Business ID: %d\nPermit ID: %d\nPermit No: %s\nExpiry: %s\n\nFee: ₱%.2f\nSurcharge: ₱%.2f\nTotal: ₱%.2f",
+                "Business ID: %d\nPermit ID: %d\nCurrent Status: %s\nExpiry: %s\n\n" +
+                "Renewal Fee: ₱%.2f\nSurcharge: ₱%.2f\nTotal Amount: ₱%.2f",
                 permit.getBusinessID(),
                 permit.getPermitID(),
-                permit.getPermitNo(),
-                permit.getStatusEffectiveDate(),
+                permit.getStatus(),
+                expiryInfo,
                 renewalFee, surcharge, total
             );
             detailsArea.setText(details);
             
         } catch (Exception e) {
             showError("Failed to calculate fees: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -127,14 +148,17 @@ public class ApplyRenewalController {
             int renewalId = service.applyForRenewal(businessId, permitId);
             
             if (renewalId > 0) {
-                showInfo("Renewal application created!\nRenewal ID: " + renewalId);
+                showInfo("Renewal application created successfully!\nRenewal ID: " + renewalId + 
+                        "\n\nNext step: Record Payment");
                 clearFields();
+                loadBusinesses();
             } else {
                 showError("Failed to create renewal application");
             }
             
         } catch (Exception e) {
             showError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -142,12 +166,13 @@ public class ApplyRenewalController {
     private void onCancel(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sm = new SceneManager(stage);
-        sm.switchScene("/view/MainView.fxml", "Main Menu");
+        sm.switchScene("/view/RenewalMenuView.fxml", "Permit Renewal Transaction");
     }
 
     private void clearFields() {
         businessComboBox.setValue(null);
         permitComboBox.setValue(null);
+        permitComboBox.getItems().clear();
         renewalFeeLabel.setText("₱0.00");
         surchargeLabel.setText("₱0.00");
         totalAmountLabel.setText("₱0.00");
@@ -176,7 +201,7 @@ public class ApplyRenewalController {
 
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
+        alert.setTitle("Information");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

@@ -95,7 +95,9 @@ public class MainController {
 
     @FXML
     private void permitRenewalButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) permitRenewalButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/RenewalMenuView.fxml", "Permit Renewal Transaction");
     }
 
     @FXML

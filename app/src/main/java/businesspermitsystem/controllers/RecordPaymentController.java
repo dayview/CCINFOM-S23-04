@@ -42,7 +42,7 @@ public class RecordPaymentController {
             
             List<BusinessModel> businesses = service.getAllBusinesses();
             for (BusinessModel b : businesses) {
-                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessID());
+                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessId());
                 for (PermitRenewalApplicationModel r : list) {
                     if ("pending".equals(r.getStatus())) {
                         renewals.add(r);
@@ -50,8 +50,13 @@ public class RecordPaymentController {
                     }
                 }
             }
+            
+            if (renewalComboBox.getItems().isEmpty()) {
+                showInfo("No pending renewals found. Please apply for renewal first.");
+            }
         } catch (Exception e) {
             showError("Failed to load renewals: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -67,7 +72,7 @@ public class RecordPaymentController {
                 }
             }
         } catch (Exception e) {
-            showError("Error: " + e.getMessage());
+            showError("Error displaying amount: " + e.getMessage());
         }
     }
 
@@ -93,10 +98,25 @@ public class RecordPaymentController {
             double amount = Double.parseDouble(paymentField.getText());
             String method = methodComboBox.getValue();
             
+            // Find the renewal to check amount due
+            PermitRenewalApplicationModel renewal = null;
+            for (PermitRenewalApplicationModel r : renewals) {
+                if (r.getRenewalID() == renewalId) {
+                    renewal = r;
+                    break;
+                }
+            }
+            
+            if (renewal != null && amount < renewal.getTotalAmount()) {
+                showWarning(String.format("Payment amount (₱%.2f) is less than amount due (₱%.2f)", 
+                    amount, renewal.getTotalAmount()));
+                return;
+            }
+            
             boolean success = service.recordPayment(renewalId, amount, method);
             
             if (success) {
-                showInfo("Payment recorded for Renewal ID: " + renewalId);
+                showInfo(String.format("Payment of ₱%.2f recorded for Renewal ID: %d", amount, renewalId));
                 clearFields();
                 loadRenewals();
             } else {
@@ -104,9 +124,10 @@ public class RecordPaymentController {
             }
             
         } catch (NumberFormatException e) {
-            showError("Invalid amount format");
+            showError("Invalid amount format. Please enter a valid number.");
         } catch (Exception e) {
             showError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -114,7 +135,7 @@ public class RecordPaymentController {
     private void onCancel(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sm = new SceneManager(stage);
-        sm.switchScene("/view/MainView.fxml", "Main Menu");
+        sm.switchScene("/view/RenewalMenuView.fxml", "Permit Renewal Transaction");
     }
 
     private void clearFields() {
@@ -146,7 +167,7 @@ public class RecordPaymentController {
 
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
+        alert.setTitle("Information");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

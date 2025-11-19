@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="653.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="653.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.RenewalMenuController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#046a38" height="129.0" stroke="#046a38" strokeType="INSIDE" width="653.0">
          <effect>
@@ -30,7 +30,7 @@
             <Font name="Arial Black" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="RecordPaymentButton" layoutX="64.0" layoutY="327.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="254.0" style="-fx-background-color: #046a38;" text="Record Payment" textFill="WHITE">
+      <Button fx:id="RecordPaymentButton" layoutX="64.0" layoutY="327.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="254.0" style="-fx-background-color: #046a38;" text="Record Payment" textFill="WHITE" >
          <font>
             <Font name="Arial Black" size="17.0" />
          </font>

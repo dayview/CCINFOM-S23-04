@@ -10,11 +10,10 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ScheduleInspectionController {
+public class RenewalScheduleInspectionController {
 
     @FXML private ComboBox<String> renewalComboBox;
     @FXML private ComboBox<String> inspectorComboBox;
@@ -36,7 +35,7 @@ public class ScheduleInspectionController {
             
             List<BusinessModel> businesses = service.getAllBusinesses();
             for (BusinessModel b : businesses) {
-                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessID());
+                List<PermitRenewalApplicationModel> list = service.getRenewalsByBusiness(b.getBusinessId());
                 for (PermitRenewalApplicationModel r : list) {
                     if ("paid".equals(r.getStatus())) {
                         renewalComboBox.getItems().add(r.getRenewalID() + " - Business " + r.getBusinessID());
@@ -49,12 +48,17 @@ public class ScheduleInspectionController {
     }
 
     private void loadInspectors() {
-        inspectorComboBox.getItems().clear();
-        inspectorComboBox.getItems().addAll(
-            "1 - Juan Dela Cruz",
-            "2 - Maria Santos",
-            "3 - Pedro Reyes"
-        );
+        try {
+            inspectorComboBox.getItems().clear();
+            // This should load from database - placeholder values for now
+            inspectorComboBox.getItems().addAll(
+                "1 - Juan Dela Cruz",
+                "2 - Maria Santos",
+                "3 - Pedro Reyes"
+            );
+        } catch (Exception e) {
+            showError("Failed to load inspectors: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -75,15 +79,20 @@ public class ScheduleInspectionController {
                 return;
             }
             
+            LocalDate selectedDate = datePicker.getValue();
+            if (selectedDate.isBefore(LocalDate.now())) {
+                showWarning("Cannot schedule inspection in the past");
+                return;
+            }
+            
             int renewalId = getId(renewalComboBox.getValue());
             int inspectorId = getId(inspectorComboBox.getValue());
-            LocalDate localDate = datePicker.getValue();
-            Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date date = Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
             
             boolean success = service.scheduleInspection(renewalId, inspectorId, date);
             
             if (success) {
-                showInfo("Inspection scheduled for Renewal ID: " + renewalId);
+                showInfo("Inspection scheduled for Renewal ID: " + renewalId + " on " + selectedDate);
                 clearFields();
                 loadRenewals();
             } else {
@@ -92,6 +101,7 @@ public class ScheduleInspectionController {
             
         } catch (Exception e) {
             showError("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -99,7 +109,7 @@ public class ScheduleInspectionController {
     private void onCancel(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sm = new SceneManager(stage);
-        sm.switchScene("/view/MainView.fxml", "Main Menu");
+        sm.switchScene("/view/RenewalMenuView.fxml", "Permit Renewal Transaction");
     }
 
     private void clearFields() {
