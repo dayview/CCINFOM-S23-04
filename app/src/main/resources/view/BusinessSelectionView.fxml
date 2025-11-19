@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="businesspermitsystem.controllers.BusinessSelectionController"
+      alignment="CENTER"
+      spacing="15"
+      prefWidth="500"
+      prefHeight="400"
+      style="-fx-padding: 20;">
+
+    <children>
+
+        <Label text="Business Registration"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+        <Button text="Register New Business"
+                onAction="#handleNewBusiness"
+                prefWidth="250" />
+
+        <Label text="OR Select Existing Business"
+               style="-fx-font-size: 16px;" />
+
+        <ComboBox fx:id="cmbBusinesses"
+                  prefWidth="300"
+                  promptText="Select a Business" />
+
+        <Button text="Next"
+                onAction="#handleNextBusiness"
+                prefWidth="150" />
+
+    </children>
+
+</VBox>

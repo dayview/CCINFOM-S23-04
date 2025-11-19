@@ -170,19 +170,39 @@ public class BusinessDAO {
         List<BusinessModel> list = new ArrayList<>();
 
         String sql =
-                "SELECT b.business_id, b.business_name, b.trade_name, b.street_address, b.barangay, " +
-                        "b.business_type, b.tax_id, b.start_date, b.status, b.municipality_id, " +
-                        "COUNT(bo.owner_id) AS owner_count " +
-                        "FROM business b " +
-                        "JOIN business_owner bo ON b.business_id = bo.business_id " +
-                        "GROUP BY b.business_id " +
-                        "ORDER BY b.business_name ASC";
+                "SELECT \n" +
+                        "    b.business_id, \n" +
+                        "    b.business_name, \n" +
+                        "    b.trade_name, \n" +
+                        "    b.street_address, \n" +
+                        "    b.barangay, \n" +
+                        "    b.business_type, \n" +
+                        "    b.tax_id, \n" +
+                        "    b.start_date, \n" +
+                        "    b.status, \n" +
+                        "    b.municipality_id,\n" +
+                        "    COUNT(bo.owner_id) AS owner_count\n" +
+                        "FROM business b\n" +
+                        "JOIN business_owner bo ON b.business_id = bo.business_id\n" +
+                        "GROUP BY \n" +
+                        "    b.business_id, \n" +
+                        "    b.business_name, \n" +
+                        "    b.trade_name, \n" +
+                        "    b.street_address, \n" +
+                        "    b.barangay, \n" +
+                        "    b.business_type, \n" +
+                        "    b.tax_id, \n" +
+                        "    b.start_date, \n" +
+                        "    b.status, \n" +
+                        "    b.municipality_id\n" +
+                        "ORDER BY b.business_name ASC;";
 
         try (PreparedStatement stmt = DatabaseConnector.connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 BusinessModel businessModel = new BusinessModel();
+
                 businessModel.setBusinessId(rs.getInt("business_id"));
                 businessModel.setBusinessName(rs.getString("business_name"));
                 businessModel.setTradeName(rs.getString("trade_name"));
@@ -191,13 +211,14 @@ public class BusinessDAO {
                 businessModel.setBusinessType(rs.getString("business_type"));
                 businessModel.setTaxId(rs.getString("tax_id"));
 
-                if (rs.getDate("start_date") != null)
+                if (rs.getDate("start_date") != null) {
                     businessModel.setStartDate(rs.getDate("start_date").toLocalDate());
+                }
 
                 businessModel.setStatus(rs.getString("status"));
                 businessModel.setMunicipalityId(rs.getInt("municipality_id"));
 
-                // NEW FIELD
+                // NEW FIELD (not within the business table calculated independently)
                 businessModel.setOwnerCount(rs.getInt("owner_count"));
 
                 list.add(businessModel);

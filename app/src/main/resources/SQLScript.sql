@@ -2,15 +2,16 @@
 -- Common Login Credentials:
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
--- Password: <depending on user settings>
-CREATE DATABASE `business_database`;
+-- Password: <depends on your local settings>
 
+CREATE DATABASE IF NOT EXISTS `business_database`;
 USE `business_database`;
 
 DROP TABLE IF EXISTS `audit_log`;
 DROP TABLE IF EXISTS `notification_log`;
 DROP TABLE IF EXISTS `inspection_result`;
 DROP TABLE IF EXISTS `inspection_schedule`;
+DROP TABLE IF EXISTS `payment`;
 DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `permit`;
@@ -20,6 +21,7 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `fee_schedule`;
 DROP TABLE IF EXISTS `municipality`;
+
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -68,10 +70,10 @@ CREATE TABLE `owner` (
 CREATE TABLE `inspector` (
   `inspector_id` INT NOT NULL AUTO_INCREMENT,
   `last_name` VARCHAR(35) NOT NULL DEFAULT '',
-  `first_name`VARCHAR(35) NOT NULL DEFAULT '',
-  `middle_name`VARCHAR(35) NOT NULL DEFAULT '',
-  `designation`VARCHAR(35) NOT NULL DEFAULT '',
-  `license_number`VARCHAR(35) NOT NULL DEFAULT '',
+  `first_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `middle_name` VARCHAR(35) NOT NULL DEFAULT '',
+  `designation` VARCHAR(35) NOT NULL DEFAULT '',
+  `license_number` VARCHAR(35) NOT NULL DEFAULT '',
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `municipality_id` INT NOT NULL,
   PRIMARY KEY (`inspector_id`),
@@ -95,7 +97,6 @@ CREATE TABLE `permit_type` (
     `validity_months` INT NOT NULL,
     PRIMARY KEY (`permit_type_id`),
     FOREIGN KEY (`fee_schedule_id`) REFERENCES `fee_schedule`(`fee_schedule_id`)
-        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `permit` (
@@ -137,13 +138,22 @@ CREATE TABLE `permit_application` (
     FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `inspection_result` (
-  `inspection_id` INT NOT NULL AUTO_INCREMENT,
-  `schedule_id` INT NOT NULL,
-  `result` VARCHAR(35),
-  `remarks` TEXT,
-  PRIMARY KEY (`inspection_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `payment` (
+    `payment_id` INT NOT NULL AUTO_INCREMENT,
+    `application_id` INT NOT NULL,
+    `business_id` INT NOT NULL,
+    `permit_type_id` INT NOT NULL,
+    `municipality_id` INT NOT NULL,
+    `payment_date` DATE NOT NULL,
+    `amount_paid` DECIMAL(10,2) NOT NULL,
+    `mode_of_payment` VARCHAR(50),
+    `or_number` VARCHAR(50),
+    PRIMARY KEY (`payment_id`),
+    FOREIGN KEY (`application_id`) REFERENCES `permit_application`(`application_id`),
+    FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+    FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`),
+    FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
+);
 
 CREATE TABLE `inspection_schedule` (
   `schedule_id` INT NOT NULL AUTO_INCREMENT,
@@ -156,11 +166,19 @@ CREATE TABLE `inspection_schedule` (
   FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `inspection_result` (
+  `inspection_id` INT NOT NULL AUTO_INCREMENT,
+  `schedule_id` INT NOT NULL,
+  `result` VARCHAR(35),
+  `remarks` TEXT,
+  PRIMARY KEY (`inspection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `notification_log` (
     `notice_id` INT NOT NULL AUTO_INCREMENT,
     `business_id` INT NOT NULL,
     `owner_id` INT NOT NULL,
-    `channel` VARCHAR(20) NOT NULL, -- 'SMS' or 'Email'
+    `channel` VARCHAR(20) NOT NULL,
     `sent_date_time` DATETIME NOT NULL,
     `subject` VARCHAR(255),
     `message_preview` TEXT,
@@ -168,24 +186,18 @@ CREATE TABLE `notification_log` (
     FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`owner_id`) REFERENCES `owner`(`owner_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE,
-    INDEX `idx_business_notifications` (`business_id`),
-    INDEX `idx_owner_notifications` (`owner_id`),
-    INDEX `idx_notification_date` (`sent_date_time`)
+        ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `audit_log` (
     `audit_id` INT NOT NULL AUTO_INCREMENT,
-    `entity` VARCHAR(50) NOT NULL,  -- 'Business', 'Permit', 'Payment', etc.
+    `entity` VARCHAR(50) NOT NULL,
     `entity_id` INT NOT NULL,
-    `action` VARCHAR(20) NOT NULL,  -- 'CREATE', 'UPDATE', 'DELETE'
+    `action` VARCHAR(20) NOT NULL,
     `changed_by_user` VARCHAR(100),
     `change_datetime` DATETIME NOT NULL,
-    `change_summary` TEXT,  -- JSON format of changes
-    PRIMARY KEY (`audit_id`),
-    INDEX `idx_entity_audit` (`entity`, `entity_id`),
-    INDEX `idx_user_audit` (`changed_by_user`),
-    INDEX `idx_audit_date` (`change_datetime`)
+    `change_summary` TEXT,
+    PRIMARY KEY (`audit_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality`

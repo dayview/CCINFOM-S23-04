@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.RecordInspectorResultController"
+      alignment="TOP_CENTER"
+      prefHeight="600.0" prefWidth="600.0"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <children>
+
+        <!-- TITLE -->
+        <Label text="Record Inspection Result"
+               style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <!-- Scheduled Inspections Dropdown -->
+        <HBox spacing="10">
+            <Label text="Select Schedule:" prefWidth="150" />
+            <ComboBox fx:id="scheduleComboBox" prefWidth="300" />
+        </HBox>
+
+        <!-- Result -->
+        <HBox spacing="10">
+            <Label text="Result:" prefWidth="150" />
+            <ComboBox fx:id="resultComboBox" prefWidth="300" />
+        </HBox>
+
+        <!-- Remarks -->
+        <HBox spacing="10" alignment="TOP_LEFT">
+            <Label text="Remarks:" prefWidth="150" />
+            <TextArea fx:id="remarksArea"
+                      prefWidth="300"
+                      prefHeight="120"
+                      wrapText="true" />
+        </HBox>
+
+        <!-- Buttons -->
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+            <Button fx:id="saveButton"
+                    text="Save Result"
+                    prefWidth="150"
+                    onAction="#handleSave" />
+
+            <Button fx:id="cancelButton"
+                    text="Cancel"
+                    prefWidth="150"
+                    onAction="#handleCancel" />
+        </HBox>
+
+    </children>
+</VBox>

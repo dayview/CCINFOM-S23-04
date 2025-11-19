@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.PermitPaymentListController"
+      spacing="15"
+      alignment="CENTER"
+      style="-fx-padding: 20;">
+
+    <children>
+
+        <Label text="Applications For Payment"
+               style="-fx-font-size: 20; -fx-font-weight: bold;" />
+
+        <TableView fx:id="paymentTable" prefHeight="400" prefWidth="600">
+
+            <columns>
+                <TableColumn fx:id="colAppId" text="Application ID" prefWidth="120" />
+                <TableColumn fx:id="colBusiness" text="Business Name" prefWidth="180" />
+                <TableColumn fx:id="colPermit" text="Permit Type" prefWidth="180" />
+                <TableColumn fx:id="colFee" text="Total Fee" prefWidth="100" />
+                <TableColumn fx:id="colAction" text="Action" prefWidth="120" />
+            </columns>
+
+        </TableView>
+
+        <Button fx:id="backButton"
+                text="Back"
+                prefWidth="200"
+                onAction="#handleBack" />
+
+    </children>
+
+</VBox>

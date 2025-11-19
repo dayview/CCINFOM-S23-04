@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.PermitTypeSelectionController"
+      alignment="TOP_CENTER"
+      prefHeight="600.0" prefWidth="600.0"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <children>
+
+        <Label text="Select Permit Type"
+               style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <!-- Permit Type ComboBox -->
+        <HBox spacing="10">
+            <Label text="Permit Type:" prefWidth="150" />
+            <ComboBox fx:id="permitTypeComboBox"
+                      prefWidth="300" />
+        </HBox>
+
+        <!-- Base Fee -->
+        <HBox spacing="10">
+            <Label text="Base Fee:" prefWidth="150" />
+            <Label fx:id="baseFeeLabel" prefWidth="300" />
+        </HBox>
+
+        <!-- Validity -->
+        <HBox spacing="10">
+            <Label text="Validity (Months):" prefWidth="150" />
+            <Label fx:id="validityLabel" prefWidth="300" />
+        </HBox>
+
+        <!-- Document Requirements -->
+        <HBox spacing="10">
+            <Label text="Requirements:" prefWidth="150" />
+            <Label fx:id="requirementsLabel"
+                   wrapText="true"
+                   prefWidth="300" />
+        </HBox>
+
+        <!-- BUTTONS -->
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+            <Button fx:id="backButton"
+                    text="← Back"
+                    prefWidth="100"
+                    onAction="#handleBack" />
+
+            <Button fx:id="continueButton"
+                    text="Continue →"
+                    prefWidth="150"
+                    disable="true"
+                    onAction="#handleContinue" />
+        </HBox>
+
+    </children>
+</VBox>
