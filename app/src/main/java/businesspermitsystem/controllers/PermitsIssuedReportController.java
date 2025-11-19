@@ -54,7 +54,7 @@ public class PermitsIssuedReportController {
     }
     
     /**
-     * Loads necessary master data (Permit Types and Municipalities) into memory caches.
+     * Loads necessary  data (Permit Types and Municipalities) into the variables.
      */
     private void loadCaches() {
         try {
@@ -111,7 +111,7 @@ public class PermitsIssuedReportController {
     private String buildReportContent(int year, List<PermitModel> permits) throws SQLException {
         StringBuilder report = new StringBuilder();
         
-        // --- Header ---
+        //  Header 
         report.append("==================================================================\n");
         report.append(String.format("PERMITS ISSUED REPORT - FY %d\n", year));
         report.append("==================================================================\n\n");
@@ -124,10 +124,10 @@ public class PermitsIssuedReportController {
             return report.toString();
         }
 
-        // --- Section 1: Permit Distribution  ---
+        // Permit Distribution 
         report.append("--- I. PERMIT DISTRIBUTION ANALYSIS ---\n\n");
 
-        // Aggregation 1.1: By Status
+        //  By Status
         Map<String, Long> statusDistribution = permits.stream()
             .collect(Collectors.groupingBy(PermitModel::getStatus, Collectors.counting()));
             
@@ -138,7 +138,7 @@ public class PermitsIssuedReportController {
         report.append("\n");
 
 
-        // Aggregation 1.2: By Permit Type
+        //  By Permit Type
         Map<String, Long> typeDistribution = permits.stream()
             .collect(Collectors.groupingBy(
                 permit -> {
