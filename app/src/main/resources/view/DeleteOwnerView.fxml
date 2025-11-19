@@ -5,21 +5,15 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="plainBG" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="597.0" prefWidth="635.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.DeleteOwnerController">
    <children>
-      <Rectangle fx:id="topHeader" arcHeight="5.0" arcWidth="5.0" fill="#046a38" height="108.0" stroke="#046a38" strokeType="INSIDE" width="635.0">
-         <effect>
-            <DropShadow />
-         </effect></Rectangle>
-      <Text fx:id="headerText" fill="WHITE" layoutX="164.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Owner">
+      <Text fx:id="headerText" layoutX="164.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete Owner">
          <font>
             <Font name="System Bold" size="45.0" />
          </font>
@@ -29,7 +23,7 @@
          <children>
             <!-- Owner ID Selection -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Owner ID:" textFill="#046a38">
+               <Label prefWidth="150" text="Owner ID:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -39,7 +33,7 @@
 
             <!-- Last Name -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Last Name:" textFill="#046a38">
+               <Label prefWidth="150" text="Last Name:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -49,7 +43,7 @@
 
             <!-- First Name -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="First Name:" textFill="#046a38">
+               <Label prefWidth="150" text="First Name:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -59,7 +53,7 @@
 
             <!-- Middle Name -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Middle Name:" textFill="#046a38">
+               <Label prefWidth="150" text="Middle Name:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -69,7 +63,7 @@
 
             <!-- Contact Number -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Contact Number:" textFill="#046a38">
+               <Label prefWidth="150" text="Contact Number:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -79,7 +73,7 @@
 
             <!-- Email -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Email:" textFill="#046a38">
+               <Label prefWidth="150" text="Email:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -89,7 +83,7 @@
 
             <!-- Government ID -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Government ID:" textFill="#046a38">
+               <Label prefWidth="150" text="Government ID:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -99,7 +93,7 @@
 
             <!-- ID Number -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="ID Number:" textFill="#046a38">
+               <Label prefWidth="150" text="ID Number:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -109,7 +103,7 @@
 
             <!-- TIN -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="TIN:" textFill="#046a38">
+               <Label prefWidth="150" text="TIN:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -119,7 +113,7 @@
 
             <!-- Home Address -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Home Address:" textFill="#046a38">
+               <Label prefWidth="150" text="Home Address:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.*?> 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="plainBG" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="635.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.RenewalScheduleInspectionController">
    <children>
-      <Rectangle fx:id="topHeader" arcHeight="5.0" arcWidth="5.0" fill="#046a38" height="108.0" stroke="#046a38" strokeType="INSIDE" width="635.0" />
-      <Text fx:id="headerText" fill="WHITE" layoutX="100.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule Inspection">
+      <Text fx:id="headerText" layoutX="105.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule Inspection">
          <font>
             <Font name="System Bold" size="45.0" />
          </font>
@@ -18,7 +22,7 @@
          <children>
             <!-- Renewal Selection -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Renewal ID:" textFill="#046a38">
+               <Label prefWidth="150" text="Renewal ID:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -28,7 +32,7 @@
 
             <!-- Inspector Selection -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Inspector:" textFill="#046a38">
+               <Label prefWidth="150" text="Inspector:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -38,7 +42,7 @@
 
             <!-- Date -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-               <Label prefWidth="150" text="Inspection Date:" textFill="#046a38">
+               <Label prefWidth="150" text="Inspection Date:">
                   <font>
                      <Font name="Arial Black" size="14.0" />
                   </font>
@@ -51,27 +55,27 @@
             
             <!-- Instructions -->
             <VBox spacing="5" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-background-radius: 5;">
-               <Label text="Instructions:" textFill="#046a38">
+               <Label text="Instructions:">
                   <font>
                      <Font name="Arial Bold" size="12.0" />
                   </font>
                </Label>
-               <Label text="1. Select a paid renewal that needs inspection" wrapText="true" prefWidth="500">
+               <Label prefWidth="500" text="1. Select a paid renewal that needs inspection" wrapText="true">
                   <font>
                      <Font size="11.0" />
                   </font>
                </Label>
-               <Label text="2. Assign an inspector" wrapText="true" prefWidth="500">
+               <Label prefWidth="500" text="2. Assign an inspector" wrapText="true">
                   <font>
                      <Font size="11.0" />
                   </font>
                </Label>
-               <Label text="3. Choose an inspection date" wrapText="true" prefWidth="500">
+               <Label prefWidth="500" text="3. Choose an inspection date" wrapText="true">
                   <font>
                      <Font size="11.0" />
                   </font>
                </Label>
-               <Label text="4. Click Schedule to confirm" wrapText="true" prefWidth="500">
+               <Label prefWidth="500" text="4. Click Schedule to confirm" wrapText="true">
                   <font>
                      <Font size="11.0" />
                   </font>

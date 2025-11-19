@@ -3,6 +3,7 @@ package businesspermitsystem.controllers;
 import businesspermitsystem.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -10,80 +11,53 @@ import javafx.stage.Stage;
  * 
  */
 public class MainController {
+
     // TRANSACTIONS BUTTONS
-
-    /**
-     * 
-     */
     @FXML private Button newBusinessRegistrationButton;
-
-    /**
-     * 
-     */
     @FXML private Button permitRenewalButton;
-
-    /**
-     * 
-     */
     @FXML private Button inspectionScheduleButton;
-
-    /**
-     * 
-     */
     @FXML private Button businessStatusUpdateButton;
 
     // BUSINESS BUTTONS
-
     @FXML private Button addBusinessButton;
-
     @FXML private Button removeBusinessButton;
-
     @FXML private Button updateBusinessButton;
 
     // OWNERS BUTTONS
-
     @FXML private Button addOwnerButton;
-
     @FXML private Button updateOwnerButton;
-
     @FXML private Button deleteOwnerButton;
 
-    // PERMIT TYPE AND FEE SCHEDULE BUTTONS
+    // FEE SCHEDULE BUTTONS
+    @FXML private Button addFeeScheduleButton;
+    @FXML private Button updateFeeScheduleButton;
+    @FXML private Button deleteFeeScheduleButton;
+
+    // PERMIT TYPE BUTTONS
+    @FXML private Button addPermitTypeButton;
+    @FXML private Button updatePermitTypeButton;
+    @FXML private Button deletePermitTypeButton;
+
+    // PERMIT BUTTONS
+    @FXML private Button addPermitButton;
+    @FXML private Button updatePermitButton;
+    @FXML private Button deletePermitButton;
 
     // INSPECTORS BUTTONS
-
-    /**
-     * 
-     */
     @FXML private Button addInspectorButton;
-
-    /**
-     * 
-     */
     @FXML private Button updateInspectorButton;
-
-    /**
-     * 
-     */
     @FXML private Button deleteInspectorButton;
 
     // MUNICIPALITY BUTTONS
-
-    /**
-     * 
-     */
     @FXML private Button addMunicipalityButton;
-
-    /**
-     * 
-     */
     @FXML private Button updateMunicipalityButton;
-
-    /**
-     * 
-     */
     @FXML private Button deleteMunicipalityButton;
-    
+
+    // REPORTS BUTTONS
+    @FXML private Button generatePaymentsCollectedButton;
+    @FXML private Button generateInspectionResultsButton;
+    @FXML private Button generatePermitsIssuedButton;
+    @FXML private Button generateComprehensiveComplianceButton;
 
     // ------------------------------------------------------------------------------------------------
 
@@ -91,6 +65,7 @@ public class MainController {
 
     @FXML
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
+        // TODO: Implement navigation to New Business Registration View
     }
 
     @FXML
@@ -102,13 +77,18 @@ public class MainController {
 
     @FXML
     private void inspectionScheduleButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) addBusinessButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
 
     @FXML
     private void businessStatusUpdateButtonPressed(ActionEvent event) {
-
+        Stage currentStage = (Stage) businessStatusUpdateButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/BusinessStatusUpdate.fxml", "Business Status Update Transaction");
     }
+
     // BUSINESS ACTIONS
     @FXML
     private void addBusinessButtonPressed(ActionEvent event) {
@@ -130,8 +110,6 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/UpdateBusinessView.fxml", "Update Business");
     }
-
-
 
     // OWNERS ACTIONS
     @FXML
@@ -155,7 +133,71 @@ public class MainController {
         sceneManager.switchScene("/view/DeleteOwnerView.fxml", "Delete Owner");
     }    
 
-    // PERMIT TYPE AND FEE SCHEDULE ACTIONS
+    // FEE SCHEDULE ACTIONS
+    @FXML
+    private void addFeeScheduleButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addFeeScheduleButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/AddFeeSchedule.fxml", "Add Fee Schedule");
+    }
+
+    @FXML
+    private void updateFeeScheduleButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) updateFeeScheduleButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/UpdateFeeSchedule.fxml", "Update Fee Schedule");
+    }
+
+    @FXML
+    private void deleteFeeScheduleButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) deleteFeeScheduleButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/DeleteFeeSchedule.fxml", "Delete Fee Schedule");
+    }
+
+    // PERMIT TYPE ACTIONS
+    @FXML
+    private void addPermitTypeButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addPermitTypeButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/AddPermitType.fxml", "Add Permit Type");
+    }
+
+    @FXML
+    private void updatePermitTypeButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) updatePermitTypeButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/UpdatePermitType.fxml", "Update Permit Type");
+    }
+
+    @FXML
+    private void deletePermitTypeButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) deletePermitTypeButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/DeletePermitType.fxml", "Delete Permit Type");
+    }
+
+    // PERMIT ACTIONS
+    @FXML
+    private void addPermitButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) addPermitButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/AddPermit.fxml", "Add Permit");
+    }
+
+    @FXML
+    private void updatePermitButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) updatePermitButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/UpdatePermit.fxml", "Update Permit");
+    }
+
+    @FXML
+    private void deletePermitButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) deletePermitButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/DeletePermit.fxml", "Delete Permit");
+    }
 
     // INSPECTORS ACTIONS
 
@@ -220,4 +262,37 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/deleteMunicipalityView.fxml", "Delete Municipality");
     }
+
+    // REPORTS ACTIONS
+    @FXML
+    private void generatePaymentsCollectedButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generatePaymentsCollectedButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        // TODO: Create PaymentsCollectedReportView.fxml
+        sceneManager.switchScene("/view/PaymentsCollectedReportView.fxml", "Payments Collected Report");
+    }
+
+    @FXML
+    private void generateInspectionResultsButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generateInspectionResultsButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        // TODO: Create InspectionResultsReportView.fxml", "Inspection Results Report");
+        sceneManager.switchScene("/view/InspectionResultsView.fxml", "Inspection Results Report");
+    }
+
+    @FXML
+    private void generatePermitsIssuedButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generatePermitsIssuedButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/PermitsIssuedReportView.fxml", "Permits Issued Report");
+    }
+
+    @FXML
+    private void generateComprehensiveComplianceButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generateComprehensiveComplianceButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/ComprehensiveComplianceView.fxml", "Comprehensive Compliance Report");
+    }
+
+
 }
