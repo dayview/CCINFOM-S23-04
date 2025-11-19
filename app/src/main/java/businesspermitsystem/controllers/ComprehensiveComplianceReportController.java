@@ -2,6 +2,8 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.db.*;
 import businesspermitsystem.models.*;
+import businesspermitsystem.utils.ReportExporter;
+import businesspermitsystem.utils.ReportFormat;
 import businesspermitsystem.utils.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,19 +11,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller for Comprehensive Compliance Report.
- * Simplified version without payment data (to be added later).
+ * Enhanced with PDF/TXT export using ReportExporter pattern.
  */
 public class ComprehensiveComplianceReportController {
 
@@ -30,6 +27,9 @@ public class ComprehensiveComplianceReportController {
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private Button generateButton;
+
+    // --- Export Controls ---
+    @FXML private ChoiceBox<ReportFormat> exportFormatChoiceBox;
     @FXML private Button exportButton;
     @FXML private Button backButton;
 
@@ -52,6 +52,9 @@ public class ComprehensiveComplianceReportController {
     private ObservableList<ComplianceReportModel> reportData;
     private MunicipalityDAO municipalityDAO;
 
+    // --- Report Content Storage ---
+    private String currentReportContent = "";
+
     /**
      * Initialize the controller
      */
@@ -60,12 +63,22 @@ public class ComprehensiveComplianceReportController {
         municipalityDAO = new MunicipalityDAO();
         setupTableColumns();
         loadFilterOptions();
-
         endDatePicker.setValue(LocalDate.now());
         startDatePicker.setValue(LocalDate.now().minusMonths(12));
-
         reportData = FXCollections.observableArrayList();
         complianceTable.setItems(reportData);
+
+        // --- Setup Export Controls ---
+        setupExportControls();
+    }
+
+    /**
+     * Setup export format options
+     */
+    private void setupExportControls() {
+        exportFormatChoiceBox.setItems(FXCollections.observableArrayList(ReportFormat.values()));
+        exportFormatChoiceBox.getSelectionModel().select(ReportFormat.PDF);
+        exportButton.setDisable(true); // Disabled until report is generated
     }
 
     /**
@@ -116,8 +129,8 @@ public class ComprehensiveComplianceReportController {
             e.printStackTrace();
             System.err.println("Failed to load municipalities: " + e.getMessage());
         }
-        municipalityComboBox.setValue("All");
 
+        municipalityComboBox.setValue("All");
         statusComboBox.getItems().addAll("All", "Active", "Suspended", "Closed", "Pending", "Revoked");
         statusComboBox.setValue("All");
     }
@@ -129,7 +142,6 @@ public class ComprehensiveComplianceReportController {
     private void generateReport(ActionEvent event) {
         try {
             reportData.clear();
-
             String municipality = municipalityComboBox.getValue();
             String status = statusComboBox.getValue();
             LocalDate startDate = startDatePicker.getValue();
@@ -140,12 +152,10 @@ public class ComprehensiveComplianceReportController {
 
             try (Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(query)) {
-
                 while (rs.next()) {
                     int activePermits = rs.getInt("active_permits");
                     int expiredPermits = rs.getInt("expired_permits");
                     String businessStatus = rs.getString("status");
-
                     String compliance = determineCompliance(businessStatus, activePermits, expiredPermits);
 
                     ComplianceReportModel data = new ComplianceReportModel(
@@ -163,6 +173,10 @@ public class ComprehensiveComplianceReportController {
 
             updateSummary();
 
+            // --- Build and Store Report Content ---
+            currentReportContent = buildReportContent(municipality, status, startDate, endDate);
+            exportButton.setDisable(false); // Enable export after generation
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
@@ -170,9 +184,135 @@ public class ComprehensiveComplianceReportController {
             alert.showAndWait();
 
         } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to generate report: " + e.getMessage());
             e.printStackTrace();
-            showError("Failed to generate report: " + e.getMessage());
         }
+    }
+
+    /**
+     * Export the generated report using ReportExporter
+     */
+    @FXML
+    private void exportReport(ActionEvent event) {
+        if (currentReportContent.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "No Data", "Please generate a report first.");
+            return;
+        }
+
+        ReportFormat selectedFormat = exportFormatChoiceBox.getValue();
+        if (selectedFormat == null) {
+            showAlert(Alert.AlertType.WARNING, "Selection Error", "Please select an export format.");
+            return;
+        }
+
+        String municipality = municipalityComboBox.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        LocalDate endDate = endDatePicker.getValue();
+
+        // Format: ComplianceReport_[Municipality]_[StartDate]_[EndDate]
+        String defaultFileName = String.format(
+                "ComplianceReport_%s_%s_to_%s",
+                municipality.replace(" ", "_"),
+                startDate,
+                endDate
+        );
+
+        Stage currentStage = (Stage) exportButton.getScene().getWindow();
+        ReportExporter.export(currentReportContent, defaultFileName, selectedFormat, currentStage);
+    }
+
+    /**
+     * Build comprehensive report content as String
+     */
+    private String buildReportContent(String municipality, String status, LocalDate startDate, LocalDate endDate) {
+        StringBuilder report = new StringBuilder();
+
+        // --- Header ---
+        report.append("==================================================================\n");
+        report.append("COMPREHENSIVE COMPLIANCE REPORT\n");
+        report.append("==================================================================\n\n");
+
+        report.append(String.format("Municipality: %s\n", municipality));
+        report.append(String.format("Status Filter: %s\n", status));
+        report.append(String.format("Date Range: %s to %s\n", startDate, endDate));
+        report.append(String.format("Report Generated: %s\n\n", LocalDate.now()));
+
+        // --- Summary Section ---
+        report.append("--- SUMMARY STATISTICS ---\n");
+        report.append(String.format("Total Businesses Analyzed: %s\n", totalBusinessesLabel.getText()));
+        report.append(String.format("Total Active Permits: %s\n", activePermitsLabel.getText()));
+        report.append(String.format("Total Expired Permits: %s\n", expiredPermitsLabel.getText()));
+        report.append(String.format("Overall Compliance Rate: %s\n\n", complianceRateLabel.getText()));
+
+        // --- Detailed Records ---
+        report.append("--- DETAILED COMPLIANCE RECORDS ---\n");
+        report.append(String.format("%-10s | %-30s | %-25s | %-12s | %-8s | %-8s | %-15s\n",
+                "Bus. ID", "Business Name", "Owner", "Status", "Active", "Expired", "Compliance"));
+        report.append("-".repeat(130)).append("\n");
+
+        for (ComplianceReportModel record : reportData) {
+            report.append(String.format("%-10d | %-30s | %-25s | %-12s | %-8d | %-8d | %-15s\n",
+                    record.getBusinessId(),
+                    truncate(record.getBusinessName(), 30),
+                    truncate(record.getOwner(), 25),
+                    record.getStatus(),
+                    record.getActivePermits(),
+                    record.getExpiredPermits(),
+                    record.getCompliance()
+            ));
+        }
+
+        report.append("\n==================================================================\n");
+        report.append("END OF REPORT\n");
+        report.append("==================================================================\n");
+
+        return report.toString();
+    }
+
+    /**
+     * Truncate string to specified length for formatting
+     */
+    private String truncate(String str, int maxLength) {
+        if (str == null) return "";
+        return str.length() > maxLength ? str.substring(0, maxLength - 3) + "..." : str;
+    }
+
+    /**
+     * Update summary labels
+     */
+    private void updateSummary() {
+        int totalBusinesses = reportData.size();
+        int activeCount = 0;
+        int expiredCount = 0;
+        int compliantCount = 0;
+
+        for (ComplianceReportModel record : reportData) {
+            activeCount += record.getActivePermits();
+            expiredCount += record.getExpiredPermits();
+            if (record.getCompliance().equals("Compliant")) {
+                compliantCount++;
+            }
+        }
+
+        totalBusinessesLabel.setText(String.valueOf(totalBusinesses));
+        activePermitsLabel.setText(String.valueOf(activeCount));
+        expiredPermitsLabel.setText(String.valueOf(expiredCount));
+
+        double complianceRate = totalBusinesses > 0 ? (compliantCount * 100.0 / totalBusinesses) : 0;
+        complianceRateLabel.setText(String.format("%.2f%%", complianceRate));
+    }
+
+    /**
+     * Determine compliance status
+     */
+    private String determineCompliance(String status, int activePermits, int expiredPermits) {
+        if (status.equals("Suspended") || status.equals("Revoked") || status.equals("Closed")) {
+            return "Non-Compliant";
+        }
+        if (expiredPermits > 0 || activePermits == 0) {
+            return "Warning";
+        }
+        return "Compliant";
     }
 
     /**
@@ -180,7 +320,6 @@ public class ComprehensiveComplianceReportController {
      */
     private String buildQuery(String municipality, String status, LocalDate startDate, LocalDate endDate) {
         StringBuilder query = new StringBuilder();
-
         query.append("SELECT ")
                 .append("b.business_id, ")
                 .append("b.business_name, ")
@@ -219,98 +358,14 @@ public class ComprehensiveComplianceReportController {
     }
 
     /**
-     * Determine compliance status
+     * Show alert utility
      */
-    private String determineCompliance(String status, int activePermits, int expiredPermits) {
-        if (status.equals("Suspended") || status.equals("Revoked") || status.equals("Closed")) {
-            return "Non-Compliant";
-        }
-
-        if (expiredPermits > 0 || activePermits == 0) {
-            return "Warning";
-        }
-
-        return "Compliant";
-    }
-
-    /**
-     * Update summary statistics
-     */
-    private void updateSummary() {
-        int total = reportData.size();
-        int totalActive = 0;
-        int totalExpired = 0;
-        int compliant = 0;
-
-        for (ComplianceReportModel data : reportData) {
-            totalActive += data.getActivePermits();
-            totalExpired += data.getExpiredPermits();
-            if (data.getCompliance().equals("Compliant")) {
-                compliant++;
-            }
-        }
-
-        double rate = total > 0 ? (compliant * 100.0 / total) : 0;
-
-        totalBusinessesLabel.setText(String.valueOf(total));
-        activePermitsLabel.setText(String.valueOf(totalActive));
-        expiredPermitsLabel.setText(String.valueOf(totalExpired));
-        complianceRateLabel.setText(String.format("%.1f%%", rate));
-    }
-
-    /**
-     * Export to CSV
-     */
-    @FXML
-    private void exportToCSV(ActionEvent event) {
-        if (reportData.isEmpty()) {
-            showError("Please generate a report first.");
-            return;
-        }
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Export Report");
-        fileChooser.setInitialFileName("compliance_report.csv");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("CSV Files", "*.csv")
-        );
-
-        File file = fileChooser.showSaveDialog(generateButton.getScene().getWindow());
-        if (file != null) {
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.append("Business ID,Business Name,Owner,Status,Active Permits,Expired Permits,Compliance\n");
-
-                for (ComplianceReportModel data : reportData) {
-                    writer.append(String.valueOf(data.getBusinessId())).append(",")
-                            .append(csv(data.getBusinessName())).append(",")
-                            .append(csv(data.getOwner())).append(",")
-                            .append(csv(data.getStatus())).append(",")
-                            .append(String.valueOf(data.getActivePermits())).append(",")
-                            .append(String.valueOf(data.getExpiredPermits())).append(",")
-                            .append(csv(data.getCompliance())).append("\n");
-                }
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Report exported successfully!");
-                alert.showAndWait();
-
-            } catch (Exception e) {
-                showError("Failed to export: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * CSV escape helper
-     */
-    private String csv(String value) {
-        if (value == null) return "";
-        if (value.contains(",") || value.contains("\"")) {
-            return "\"" + value.replace("\"", "\"\"") + "\"";
-        }
-        return value;
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     /**
@@ -321,16 +376,5 @@ public class ComprehensiveComplianceReportController {
         Stage stage = (Stage) backButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(stage);
         sceneManager.switchScene("/view/MainView.fxml", "Business Permit System");
-    }
-
-    /**
-     * Show error dialog
-     */
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

@@ -1,97 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="businesspermitsystem.controllers.ComprehensiveComplianceReportController"
-            prefHeight="600.0" prefWidth="800.0"
-            fitToWidth="true"
-            style="-fx-background-color: transparent;">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="businesspermitsystem.controllers.ComprehensiveComplianceReportController"
+      spacing="15"
+      style="-fx-background-color: #f5f5f5; -fx-padding: 20;">
 
-    <content>
-        <VBox alignment="TOP_CENTER"
-              spacing="10"
-              style="-fx-padding:20;">
+    <HBox alignment="CENTER" style="-fx-padding: 10 0 10 0;">
+        <Label text="Comprehensive Compliance Report"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    </HBox>
 
-            <children>
-                <Label text="Comprehensive Compliance Report"
-                       style="-fx-font-size: 18; -fx-font-weight: bold;" />
+    <Separator/>
 
-                <Label text="Filters"
-                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="REPORT FILTERS" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Municipality:" />
-                    <ComboBox fx:id="municipalityComboBox" prefWidth="150" />
-                </HBox>
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="120" prefWidth="120"/>
+                <ColumnConstraints minWidth="250" prefWidth="250" hgrow="ALWAYS"/>
+            </columnConstraints>
 
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Business Status:" />
-                    <ComboBox fx:id="statusComboBox" prefWidth="150" />
-                </HBox>
+            <Label text="Municipality:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                   style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="municipalityComboBox"
+                      GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      prefWidth="250" promptText="Select Municipality"/>
 
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="From Date:" />
-                    <DatePicker fx:id="startDatePicker" prefWidth="150" />
-                    <Label text="To Date:" />
-                    <DatePicker fx:id="endDatePicker" prefWidth="150" />
-                </HBox>
+            <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                   style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="statusComboBox"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      prefWidth="250" promptText="Select Status"/>
 
-                <Button fx:id="generateButton"
-                        text="Generate Report"
-                        onAction="#generateReport"
-                        prefWidth="400" />
+            <Label text="Start Date:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="startDatePicker"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2"
+                        prefWidth="250"/>
 
-                <Label text="Summary"
-                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+            <Label text="End Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                   style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="endDatePicker"
+                        GridPane.columnIndex="1" GridPane.rowIndex="3"
+                        prefWidth="250"/>
+        </GridPane>
 
-                <GridPane hgap="15" vgap="5" style="-fx-padding: 10;">
-                    <Label text="Total Businesses:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <Label fx:id="totalBusinessesLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                           style="-fx-font-weight: bold;" />
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10 0 0 0;">
+            <Button fx:id="generateButton" text="Generate Report"
+                    onAction="#generateReport"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 20;"
+                    prefWidth="180"/>
+        </HBox>
+    </VBox>
 
-                    <Label text="Active Permits:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <Label fx:id="activePermitsLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                           style="-fx-font-weight: bold;" />
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="SUMMARY STATISTICS" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-                    <Label text="Expired Permits:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <Label fx:id="expiredPermitsLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                           style="-fx-font-weight: bold;" />
+        <GridPane hgap="30" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
 
-                    <Label text="Compliance Rate:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <Label fx:id="complianceRateLabel" text="0%" GridPane.columnIndex="1" GridPane.rowIndex="3"
-                           style="-fx-font-weight: bold;" />
-                </GridPane>
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="0"
+                  style="-fx-background-color: #3498db; -fx-background-radius: 5; -fx-padding: 15;">
+                <Label text="Total Businesses" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+                <Label fx:id="totalBusinessesLabel" text="0"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            </VBox>
 
-                <Label text="Report Details"
-                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="1"
+                  style="-fx-background-color: #27ae60; -fx-background-radius: 5; -fx-padding: 15;">
+                <Label text="Active Permits" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+                <Label fx:id="activePermitsLabel" text="0"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            </VBox>
 
-                <TableView fx:id="complianceTable" prefHeight="300">
-                    <columns>
-                        <TableColumn fx:id="businessIdColumn" text="Business ID" prefWidth="80" />
-                        <TableColumn fx:id="businessNameColumn" text="Business Name" prefWidth="150" />
-                        <TableColumn fx:id="ownerColumn" text="Owner" prefWidth="120" />
-                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
-                        <TableColumn fx:id="activePermitsColumn" text="Active Permits" prefWidth="100" />
-                        <TableColumn fx:id="expiredPermitsColumn" text="Expired Permits" prefWidth="100" />
-                        <TableColumn fx:id="complianceColumn" text="Compliance" prefWidth="100" />
-                    </columns>
-                </TableView>
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="2"
+                  style="-fx-background-color: #e74c3c; -fx-background-radius: 5; -fx-padding: 15;">
+                <Label text="Expired Permits" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+                <Label fx:id="expiredPermitsLabel" text="0"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            </VBox>
 
-                <HBox spacing="10" alignment="CENTER">
-                    <Button fx:id="exportButton"
-                            text="Export to CSV"
-                            onAction="#exportToCSV"
-                            prefWidth="190" />
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="3"
+                  style="-fx-background-color: #f39c12; -fx-background-radius: 5; -fx-padding: 15;">
+                <Label text="Compliance Rate" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+                <Label fx:id="complianceRateLabel" text="0.00%"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            </VBox>
+        </GridPane>
+    </VBox>
 
-                    <Button fx:id="backButton"
-                            text="Back to Main Menu"
-                            onAction="#backToMain"
-                            prefWidth="190" />
-                </HBox>
-            </children>
-        </VBox>
-    </content>
-</ScrollPane>
+    <VBox VBox.vgrow="ALWAYS" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="DETAILED RECORDS" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+        <TableView fx:id="complianceTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="businessIdColumn" text="Business ID" prefWidth="100"/>
+                <TableColumn fx:id="businessNameColumn" text="Business Name" prefWidth="200"/>
+                <TableColumn fx:id="ownerColumn" text="Owner" prefWidth="180"/>
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
+                <TableColumn fx:id="activePermitsColumn" text="Active" prefWidth="80"/>
+                <TableColumn fx:id="expiredPermitsColumn" text="Expired" prefWidth="80"/>
+                <TableColumn fx:id="complianceColumn" text="Compliance" prefWidth="130"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
+        <Label text="Export Format:" style="-fx-font-weight: bold;"/>
+        <ChoiceBox fx:id="exportFormatChoiceBox" prefWidth="150"/>
+
+        <Separator orientation="VERTICAL"/>
+
+        <Button fx:id="exportButton" text="Export Report"
+                onAction="#exportReport"
+                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 20;"
+                prefWidth="150"/>
+
+        <Button fx:id="backButton" text="Back to Main"
+                onAction="#backToMain"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 20;"
+                prefWidth="150"/>
+    </HBox>
+
+</VBox>
