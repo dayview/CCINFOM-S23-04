@@ -10,7 +10,7 @@ import java.util.List;
  * Controller for managing permit type operations,
  * including viewing, creating, updating and deleting initial permit types.
  *
- *NOT USED TODO: DELETE FILE AFTER REMOVING ALL REFERENCES
+ *NOT USED TO DO: DELETE FILE AFTER REMOVING ALL REFERENCES
  */
 public class InitialPermitTypeController {
 
