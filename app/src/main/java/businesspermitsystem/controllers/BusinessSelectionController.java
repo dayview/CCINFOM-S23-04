@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * Controller for selecting an existing business.Loads registered businesses into a combo box
+ * and allows proceeding to the owner selection screen.
+ */
 public class BusinessSelectionController {
 
     @FXML private ComboBox<BusinessModel> cmbBusinesses;
@@ -17,6 +21,10 @@ public class BusinessSelectionController {
     private BusinessDAO businessDAO = new BusinessDAO();
     private BusinessModel selectedBusiness;
 
+    /**
+     * Initializes the combo box by loading all businesses
+     * and displays their names
+     */
     @FXML
     public void initialize() {
         // Will load the existing businesses and inserts them into a combobox
@@ -32,7 +40,9 @@ public class BusinessSelectionController {
             }
         });
     }
-
+    /**
+     * Navigates the user to the new business registration screen.
+     */
     @FXML
     private void handleNewBusiness() {
         Stage s = (Stage) cmbBusinesses.getScene().getWindow();
@@ -40,6 +50,9 @@ public class BusinessSelectionController {
         sm.switchScene("/view/addBusinessView.fxml", "New Business");
     }
 
+    /**
+     * Saves the selected business and proceeds to owner selection.
+     */
     @FXML
     private void handleNextBusiness() {
         selectedBusiness = cmbBusinesses.getValue();

@@ -31,8 +31,7 @@ public class InitialPermitMenuController {
     @FXML
     private void handleApply() {
         Stage currentStage = (Stage) applyPermitButton.getScene().getWindow();
-        new SceneManager(currentStage)
-                .switchScene("/view/InitialPermitIssuanceView.fxml", "Initial Permit");
+        new SceneManager(currentStage).switchScene("/view/InitialPermitIssuanceView.fxml", "Initial Permit");
     }
 
     /**
@@ -41,8 +40,7 @@ public class InitialPermitMenuController {
     @FXML
     private void handlePaymentList() {
         Stage currentStage = (Stage) paymentListButton.getScene().getWindow();
-        new SceneManager(currentStage)
-                .switchScene("/view/PermitPaymentListView.fxml", "Applications for Payment");
+        new SceneManager(currentStage).switchScene("/view/PermitPaymentListView.fxml", "Applications for Payment");
     }
 
     /**
@@ -51,8 +49,7 @@ public class InitialPermitMenuController {
     @FXML
     private void handleScheduleInspector() {
         Stage stage = (Stage) scheduleInspectorButton.getScene().getWindow();
-        new SceneManager(stage)
-                .switchScene("/view/InspectorScheduleView.fxml", "Schedule Inspection");
+        new SceneManager(stage).switchScene("/view/InspectorScheduleView.fxml", "Schedule Inspection");
     }
 
     /**
@@ -61,8 +58,7 @@ public class InitialPermitMenuController {
     @FXML
     private void handleRecordInspection() {
         Stage stage = (Stage) recordInspectionButton.getScene().getWindow();
-        new SceneManager(stage)
-                .switchScene("/view/RecordInspectorResult.fxml", "Record Inspection Result");
+        new SceneManager(stage).switchScene("/view/RecordInspectorResult.fxml", "Record Inspection Result");
     }
 
     /**
@@ -71,8 +67,7 @@ public class InitialPermitMenuController {
     @FXML
     private void handleUpdateStatus() {
         Stage stage = (Stage) updatePermitStatusButton.getScene().getWindow();
-        new SceneManager(stage)
-                .switchScene("/view/PermitStatusUpdateView.fxml", "Update Permit Status");
+        new SceneManager(stage).switchScene("/view/PermitStatusUpdateView.fxml", "Update Permit Status");
     }
 
     /**
@@ -81,7 +76,6 @@ public class InitialPermitMenuController {
     @FXML
     private void handleBack() {
         Stage currentStage = (Stage) backButton.getScene().getWindow();
-        new SceneManager(currentStage)
-                .switchScene("/view/MainView.fxml", "Main Menu");
+        new SceneManager(currentStage).switchScene("/view/MainView.fxml", "Main Menu");
     }
 }

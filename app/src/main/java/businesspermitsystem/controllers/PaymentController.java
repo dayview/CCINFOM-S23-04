@@ -51,9 +51,7 @@ public class PaymentController {
         application = SessionStorage.getSelectedApplication();
 
         if (business == null || permitType == null || application == null) {
-            showAlert("Missing Data",
-                    "Payment view opened without application details.\nPlease return and select a valid application.",
-                    Alert.AlertType.ERROR);
+            showAlert("Missing Data", "Payment view opened without application details.\nPlease return and select a valid application.", Alert.AlertType.ERROR);
 
             Stage stage = (Stage) submitPaymentButton.getScene().getWindow();
             new SceneManager(stage).switchScene("/view/MainView.fxml", "Main Menu");
@@ -78,9 +76,7 @@ public class PaymentController {
     private void handleSubmitPayment() {
 
         if (orNumberField.getText().isEmpty()) {
-            showAlert("Missing OR Number",
-                    "Please enter the Official Receipt number.",
-                    Alert.AlertType.WARNING);
+            showAlert("Missing OR Number", "Please enter the Official Receipt number.", Alert.AlertType.WARNING);
             return;
         }
 
@@ -102,9 +98,7 @@ public class PaymentController {
             application.setStatus("Paid");
             applicationDAO.updatePermitApplication(application);
 
-            showAlert("Success",
-                    "Payment successfully recorded!",
-                    Alert.AlertType.INFORMATION);
+            showAlert("Success", "Payment successfully recorded!", Alert.AlertType.INFORMATION);
 
             Stage stage = (Stage) submitPaymentButton.getScene().getWindow();
             new SceneManager(stage).switchScene("/view/MainView.fxml", "Main Menu");

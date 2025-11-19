@@ -6,6 +6,12 @@ import businesspermitsystem.views.InitialPermitTypeView;
 
 import java.util.List;
 
+/**
+ * Controller for managing permit type operations,
+ * including viewing, creating, updating and deleting initial permit types.
+ *
+ *NOT USED TO DO: DELETE FILE AFTER REMOVING ALL REFERENCES
+ */
 public class InitialPermitTypeController {
 
     private InitialPermitTypeDAO permitTypeDAO;

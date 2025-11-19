@@ -81,9 +81,7 @@ public class PermitTypeSelectionController {
         Stage stage = (Stage) continueButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(stage);
 
-        sceneManager.switchScene(
-                "/view/PermitApplicationView.fxml",
-                "Permit Application"
+        sceneManager.switchScene("/view/PermitApplicationView.fxml", "Permit Application"
         );
     }
 
