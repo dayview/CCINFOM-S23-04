@@ -30,7 +30,7 @@ public class InitialPermitView {
 
     public PermitModel getInputForNewPermit() {
         // Placeholder returning dummy Permit at the moment
-        return new PermitModel(0, 0, 0, "issued", (java.sql.Date) new Date(), "");
+        return new PermitModel(0, 0, 0, "issued", (java.sql.Date) new Date(), "", null, null);
     }
 
     public PermitModel getInputForUpdatePermit(PermitModel permitModel) {

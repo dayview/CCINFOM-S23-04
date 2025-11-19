@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import businesspermitsystem.models.OwnerModel;
 
@@ -141,5 +142,38 @@ public class OwnerDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+      public List<OwnerModel> getOwnersByBusinessId(int businessId) {
+        List<OwnerModel> owners = new ArrayList<>();
+        // This assumes a Many-to-Many relationship table called 'business_owner'
+        String query = "SELECT o.* FROM owner o " +
+                       "JOIN business_owner bo ON o.owner_id = bo.owner_id " +
+                       "WHERE bo.business_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, businessId);
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    OwnerModel owner = new OwnerModel(
+                        result.getInt("owner_id"),
+                        result.getString("last_name"),
+                        result.getString("first_name"),
+                        result.getString("middle_name"),
+                        result.getString("contact_no"),
+                        result.getString("email"),
+                        result.getString("gov_id_type"),
+                        result.getString("gov_id_no"),                        
+                        result.getString("tin"),
+                        result.getString("home_address")
+                    );
+                    owners.add(owner);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving owners for business: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return owners;
     }
 }

@@ -84,7 +84,7 @@ public class PaymentController {
             return;
         }
 
-        PaymentModel payment = new PaymentModel();
+        PaymentModel payment = new PaymentModel(0, 0, 0, null, null);
         payment.setApplicationId(application.getApplicationId());
         payment.setBusinessId(business.getBusinessId());
         payment.setPermitTypeId(permitType.getPermitTypeId());
