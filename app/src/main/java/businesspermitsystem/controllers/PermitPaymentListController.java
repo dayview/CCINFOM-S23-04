@@ -97,7 +97,7 @@ public class PermitPaymentListController {
 
                     // Navigate
                     Stage stage = (Stage) btn.getScene().getWindow();
-                    new SceneManager(stage).switchScene("/view/PaymentView.fxml", "Record Payment");
+                    new SceneManager(stage).switchScene("/view/InitialPaymentView.fxml", "Record Payment");
                 });
             }
 

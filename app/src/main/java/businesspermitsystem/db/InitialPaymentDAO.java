@@ -1,17 +1,17 @@
 package businesspermitsystem.db;
 
-import businesspermitsystem.models.PaymentModel;
+import businesspermitsystem.models.InitialPaymentModel;
 import businesspermitsystem.models.PermitApplicationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentDAO {
+public class InitialPaymentDAO {
 
     private final Connection connection;
 
-    public PaymentDAO() {
+    public InitialPaymentDAO() {
         this.connection = DatabaseConnector.connection;
 
         if (this.connection == null) {
@@ -20,7 +20,7 @@ public class PaymentDAO {
     }
 
     // INSERT payment
-    public boolean addPayment(PaymentModel payment) {
+    public boolean addPayment(InitialPaymentModel payment) {
 
         String sql = """
             INSERT INTO payment (application_id, business_id, permit_type_id, municipality_id, payment_date, amount_paid, mode_of_payment, or_number)
@@ -49,7 +49,7 @@ public class PaymentDAO {
     }
 
     // GET payment by ID
-    public PaymentModel getPaymentById(int paymentId) {
+    public InitialPaymentModel getPaymentById(int paymentId) {
         String sql = "SELECT * FROM payment WHERE payment_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -70,9 +70,9 @@ public class PaymentDAO {
     }
 
     // GET all payments for an application
-    public List<PaymentModel> getPaymentsByApplicationId(int applicationId) {
+    public List<InitialPaymentModel> getPaymentsByApplicationId(int applicationId) {
 
-        List<PaymentModel> list = new ArrayList<>();
+        List<InitialPaymentModel> list = new ArrayList<>();
         String sql = "SELECT * FROM payment WHERE application_id = ? ORDER BY payment_date DESC";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -109,8 +109,8 @@ public class PaymentDAO {
     }
 
     // Helper method to build model from ResultSet
-    private PaymentModel extractPayment(ResultSet rs) throws SQLException {
-        PaymentModel payment = new PaymentModel();
+    private InitialPaymentModel extractPayment(ResultSet rs) throws SQLException {
+        InitialPaymentModel payment = new InitialPaymentModel();
 
         payment.setPaymentId(rs.getInt("payment_id"));
         payment.setApplicationId(rs.getInt("application_id"));

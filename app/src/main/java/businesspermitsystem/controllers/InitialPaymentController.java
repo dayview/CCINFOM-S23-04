@@ -1,9 +1,9 @@
 package businesspermitsystem.controllers;
 
-import businesspermitsystem.db.PaymentDAO;
+import businesspermitsystem.db.InitialPaymentDAO;
 import businesspermitsystem.db.PermitApplicationDAO;
 import businesspermitsystem.models.BusinessModel;
-import businesspermitsystem.models.PaymentModel;
+import businesspermitsystem.models.InitialPaymentModel;
 import businesspermitsystem.models.PermitApplicationModel;
 import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.utils.SceneManager;
@@ -19,7 +19,7 @@ import java.time.LocalDate;
  * Controller responsible for recording payments for permit applications.
  * Loads session data, displays business and fee details, and saves payments.
  */
-public class PaymentController {
+public class InitialPaymentController {
 
     @FXML private Label businessNameLabel;
     @FXML private Label permitTypeLabel;
@@ -32,7 +32,7 @@ public class PaymentController {
     @FXML private Button submitPaymentButton;
     @FXML private Button cancelButton;
 
-    private final PaymentDAO paymentDAO = new PaymentDAO();
+    private final InitialPaymentDAO paymentDAO = new InitialPaymentDAO();
     private final PermitApplicationDAO applicationDAO = new PermitApplicationDAO();
 
     private BusinessModel business;
@@ -84,7 +84,7 @@ public class PaymentController {
             return;
         }
 
-        PaymentModel payment = new PaymentModel();
+        InitialPaymentModel payment = new InitialPaymentModel();
         payment.setApplicationId(application.getApplicationId());
         payment.setBusinessId(business.getBusinessId());
         payment.setPermitTypeId(permitType.getPermitTypeId());
