@@ -3,13 +3,20 @@
 -- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
 -- Username: root
 -- Password: <depending on user settings>
+CREATE DATABASE `business_database`;
+
 USE `business_database`;
 
+DROP TABLE IF EXISTS `inspection_result`;
+DROP TABLE IF EXISTS `inspection_schedule`;
+DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
+DROP TABLE IF EXISTS `permit`;
 DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
+DROP TABLE IF EXISTS `fee_schedule`;
 DROP TABLE IF EXISTS `municipality`;
 
 CREATE TABLE `municipality` (
@@ -69,24 +76,83 @@ CREATE TABLE `inspector` (
   FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `permit_type` (
-  `permit_type_id` INT NOT NULL AUTO_INCREMENT,
-  `permit_name` VARCHAR(100) NOT NULL,
-  `base_fee` DECIMAL(10,2) NOT NULL,
-  `surcharge_rule` VARCHAR(200),
-  `validity_months` INT NOT NULL,
-  `document_requirements` TEXT,
-  PRIMARY KEY (`permit_type_id`)
+CREATE TABLE `fee_schedule` (
+    `fee_schedule_id` INT NOT NULL AUTO_INCREMENT,
+    `base_fee` DECIMAL(10,2) NOT NULL,
+    `surcharge_rule` VARCHAR(200),
+    `validity_months` INT NOT NULL,
+    `document_requirements` TEXT,
+    PRIMARY KEY (`fee_schedule_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE business_owner (
-    owner_id INT NOT NULL,
-    business_id INT NOT NULL,
-    PRIMARY KEY(owner_id, business_id),
-    FOREIGN KEY(owner_id) REFERENCES owner(owner_id),
-    FOREIGN KEY(business_id) REFERENCES business(business_id)
+CREATE TABLE `permit_type` (
+    `permit_type_id` INT NOT NULL AUTO_INCREMENT,
+    `permit_name` VARCHAR(100) NOT NULL,
+    `fee_schedule_id` INT NOT NULL,
+    `document_requirements` TEXT,
+    `validity_months` INT NOT NULL,
+    PRIMARY KEY (`permit_type_id`),
+    FOREIGN KEY (`fee_schedule_id`) REFERENCES `fee_schedule`(`fee_schedule_id`)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `permit` (
+  `permit_id` INT NOT NULL AUTO_INCREMENT,
+  `business_id` INT NOT NULL,
+  `permit_type_id` INT NOT NULL,
+  `status` VARCHAR(50) NOT NULL,
+  `status_effective_date` DATE,
+  `note` VARCHAR(500),
+  `validity_start` DATE,
+  `validity_end` DATE,
+  PRIMARY KEY (`permit_id`),
+  FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+  FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `business_owner` (
+    `owner_id` INT NOT NULL,
+    `business_id` INT NOT NULL,
+    PRIMARY KEY(`owner_id`, `business_id`),
+    FOREIGN KEY(`owner_id`) REFERENCES `owner`(`owner_id`),
+    FOREIGN KEY(`business_id`) REFERENCES `business`(`business_id`)
 );
 
+CREATE TABLE `permit_application` (
+    `application_id` INT NOT NULL AUTO_INCREMENT,
+    `business_id` INT NOT NULL,
+    `permit_type_id` INT NOT NULL,
+    `application_date` DATE NOT NULL,
+    `approval_date` DATE,
+    `expiration_date` DATE,
+    `status` VARCHAR(30) NOT NULL DEFAULT 'Pending',
+    `base_fee` DECIMAL(10,2) NOT NULL,
+    `surcharge` DECIMAL(10,2) DEFAULT 0.00,
+    `total_fee` DECIMAL(10,2) NOT NULL,
+    `remarks` TEXT,
+    PRIMARY KEY (`application_id`),
+    FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+    FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `inspection_result` (
+  `inspection_id` INT NOT NULL AUTO_INCREMENT,
+  `schedule_id` INT NOT NULL,
+  `result` VARCHAR(35),
+  `remarks` TEXT,
+  PRIMARY KEY (`inspection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `inspection_schedule` (
+  `schedule_id` INT NOT NULL AUTO_INCREMENT,
+  `inspector_id` INT NOT NULL,
+  `business_id` INT NOT NULL,
+  `inspection_date` DATE,
+  `status` VARCHAR(20),
+  PRIMARY KEY (`schedule_id`),
+  FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`),
+  FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `municipality`
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
@@ -101,7 +167,6 @@ VALUES
 ('Taytay', 'Rizal', 'Region IV-A (CALABARZON)', 'First Class Municipality', '02-658-7600', 'Municipal Hall, Rizal Ave.', NULL, '1920'),
 ('Maribojoc', 'Bohol', 'Region VII (Central Visayas)', 'Fourth Class Municipality', '038-537-9911', 'Municipal Hall, Poblacion', NULL, '6338'),
 ('Laoang', 'Northern Samar', 'Region VIII (Eastern Visayas)', 'Second Class Municipality', '055-251-9302', 'Municipal Hall, Barangay Geracdo', 'Geracdo', '6410');
-
 
 INSERT INTO `business`
 (`business_name`, `trade_name`, `business_type`, `tax_id`, `start_date`, `status`, `street_address`, `barangay`, `municipality_id`)
@@ -145,16 +210,45 @@ VALUES
 ('Perez', 'Mark', 'Bernardo', 'Building Inspector', 'LIC-2023-009', 1, 9),
 ('Santiago', 'Angela', 'Diaz', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
 
-INSERT INTO `permit_type`
-(`permit_name`, `base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
+INSERT INTO `fee_schedule`
+(`base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
 VALUES
-('Mayors Permit', 5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
-('Sanitary Permit', 1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
-('Fire Safety Inspection Certificate', 2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
-('Building Permit', 8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
-('Zoning Clearance', 1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
-('Environmental Compliance Certificate', 3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
-('Occupancy Permit', 2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
-('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
-('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
-('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+    (5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
+    (1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
+    (2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
+    (8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
+    (1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
+    (3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
+    (2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
+    (500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
+    (1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
+    (10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+
+INSERT INTO `permit_type`
+(`permit_name`, `fee_schedule_id`, `document_requirements`, `validity_months`)
+VALUES
+    ('Mayors Permit', 1, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit', 12),
+    ('Sanitary Permit', 2, 'Health Certificate, Sanitary Inspection Report', 12),
+    ('Fire Safety Inspection Certificate', 3, 'Fire Safety Evaluation Clearance, Building Floor Plan', 12),
+    ('Building Permit', 4, 'Building Plans, Structural Design, Lot Plan', 24),
+    ('Zoning Clearance', 5, 'Location Plan, Tax Declaration', 12),
+    ('Environmental Compliance Certificate', 6, 'Environmental Impact Assessment', 36),
+    ('Occupancy Permit', 7, 'Certificate of Completion, Approved Building Plans', 0),
+    ('Health Certificate', 8, 'Medical Certificate, Chest X-Ray', 12),
+    ('Signage Permit', 9, 'Design and Layout of Signage', 12),
+    ('Liquor License', 10, 'Mayors Permit, Police Clearance', 12);
+
+INSERT INTO `permit`
+(`business_id`, `permit_type_id`, `status`, `status_effective_date`, `validity_start`, `validity_end`, `note`)
+VALUES
+(1, 1, 'Active', '2024-01-15', '2024-01-15', '2025-01-14', 'Initial Mayor Permit issuance'),
+(2, 1, 'Active', '2024-05-20', '2024-05-20', '2025-05-19', 'Renewed on time'),
+(3, 2, 'Pending', '2024-11-01', NULL, NULL, 'Awaiting sanitary inspection'),
+(4, 1, 'Active', '2024-08-10', '2024-08-10', '2025-08-09', 'Resort permit'),
+(5, 1, 'Suspended', '2024-03-25', '2024-03-25', '2024-03-24', 'Business inactive'),
+(6, 1, 'Active', '2024-09-12', '2024-09-12', '2025-09-11', 'Digital agency permit'),
+(7, 1, 'Active', '2024-07-07', '2024-07-07', '2025-07-06', 'Hardware store permit'),
+(8, 1, 'Active', '2024-02-28', '2024-02-28', '2025-02-27', 'Export business permit'),
+(9, 1, 'Pending', '2024-01-05', NULL, NULL, 'New business application'),
+(10, 1, 'Revoked', '2024-06-19', '2024-06-19', '2024-06-18', 'Business closed');
+

@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -33,6 +34,7 @@ public class DeleteInspectorController {
     @FXML private Label middleNameLabel;
     @FXML private Label designationLabel;
     @FXML private Label licenseNumberLabel;
+    @FXML private CheckBox isActiveCheckbox;
     @FXML private Label officeLocationLabel;
     @FXML private Button confirmButton;
     @FXML private Button cancelButton;
@@ -119,6 +121,7 @@ public class DeleteInspectorController {
                 middleNameLabel.setText(selectedInspector.getMiddleName());
                 designationLabel.setText(selectedInspector.getDesignation());
                 licenseNumberLabel.setText(selectedInspector.getLicenseNumber());
+                isActiveCheckbox.setSelected(selectedInspector.isActive());
 
                 if (officeLocation != null) {
                     officeLocationLabel.setText(officeLocation.getMunicipalityName() + ", " + officeLocation.getRegion());
@@ -149,6 +152,7 @@ public class DeleteInspectorController {
         designationLabel.setText("");
         licenseNumberLabel.setText("");
         officeLocationLabel.setText("");
+        isActiveCheckbox.setSelected(false);
         selectedInspector = null;
         confirmButton.setDisable(true);
     }

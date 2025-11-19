@@ -135,15 +135,15 @@ public class UpdateInspectorSelectMunicipalityController {
                 }
             };
 
-            // Attach listeners to each ChoiceBox
+            
             attachAllListeners();
 
-            // Initial population and setup
+            
             updateChoiceBoxes();
             
         } catch (SQLException e) {
             e.printStackTrace();
-            // TODO: Show error dialog
+            
         }
     }
 
@@ -236,11 +236,11 @@ public class UpdateInspectorSelectMunicipalityController {
         SingleSelectionModel<T> selectionModel = choiceBox.getSelectionModel();
         T currentSelection = selectionModel.getSelectedItem();
 
-        // Add all unique items to the ChoiceBox
+     
         choiceBox.getItems().addAll(uniqueItems);
 
         if (uniqueItems.size() == 1) {
-            // Only one option available - auto-select and lock the ChoiceBox
+            
             T singleItem = uniqueItems.iterator().next();
             
             if (!singleItem.equals(currentSelection)) {

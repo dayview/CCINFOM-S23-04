@@ -18,7 +18,7 @@ public class FeeScheduleDAO {
 
     public List<FeeScheduleModel> getAllFeeSchedules() {
         List<FeeScheduleModel> feeSchedules = new ArrayList<>();
-        String query = "SELECT * FROM FeeSchedule";
+        String query = "SELECT * FROM fee_schedule";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -41,7 +41,7 @@ public class FeeScheduleDAO {
     }
 
     public FeeScheduleModel getFeeScheduleByID(int feeScheduleID) {
-        String query = "SELECT * FROM FeeSchedule WHERE fee_schedule_id = ?";
+        String query = "SELECT * FROM fee_schedule WHERE fee_schedule_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, feeScheduleID);
@@ -65,7 +65,7 @@ public class FeeScheduleDAO {
     }
 
     public boolean addFeeSchedule(FeeScheduleModel feeSchedule) {
-        String query = "INSERT INTO FeeSchedule (base_fee, surcharge_rule, validity_months, document_requirements) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO fee_schedule (base_fee, surcharge_rule, validity_months, document_requirements) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setDouble(1, feeSchedule.getBaseFee());
@@ -83,7 +83,7 @@ public class FeeScheduleDAO {
     }
 
     public boolean updateFeeSchedule(FeeScheduleModel feeSchedule) {
-        String query = "UPDATE FeeSchedule SET base_fee = ?, surcharge_rule = ?, validity_months = ?, document_requirements = ? WHERE fee_schedule_id = ?";
+        String query = "UPDATE fee_schedule SET base_fee = ?, surcharge_rule = ?, validity_months = ?, document_requirements = ? WHERE fee_schedule_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setDouble(1, feeSchedule.getBaseFee());
@@ -102,7 +102,7 @@ public class FeeScheduleDAO {
     }
 
     public boolean deleteFeeSchedule(int feeScheduleID) {
-        String query = "DELETE FROM FeeSchedule WHERE fee_schedule_id = ?";
+        String query = "DELETE FROM fee_schedule WHERE fee_schedule_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, feeScheduleID);

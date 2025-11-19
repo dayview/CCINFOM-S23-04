@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.DeleteFeeScheduleController"
+      alignment="TOP_CENTER"
+      prefHeight="400.0" prefWidth="600.0"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <children>
+        <Label text="Delete Fee Schedule" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <Label text="Search Fee Schedule" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+
+        <HBox spacing="10">
+            <Label text="Fee Schedule ID:" prefWidth="150" />
+            <TextField fx:id="feeScheduleIdField" promptText="Enter ID" prefWidth="200" />
+            <Button fx:id="searchButton" text="Search" onAction="#onSearch" prefWidth="100" />
+        </HBox>
+
+        <Label text="Fee Schedule Information" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+
+        <HBox spacing="10">
+            <Label text="Base Fee:" prefWidth="150" />
+            <Label fx:id="baseFeeLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Surcharge Rule:" prefWidth="150" />
+            <Label fx:id="surchargeRuleLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Validity (Months):" prefWidth="150" />
+            <Label fx:id="validityMonthsLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+            <Button fx:id="deleteButton" text="Delete" onAction="#onDelete" prefWidth="100" />
+            <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel" prefWidth="100" />
+        </HBox>
+    </children>
+</VBox>
