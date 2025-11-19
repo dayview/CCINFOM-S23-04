@@ -23,8 +23,13 @@
         <Label text="Transactions" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="newBusinessRegistrationButton"
-                text="New Business Registration and Initial Permit Issuance"
+                text="New Business Registration"
                 onAction="#newBusinessRegistrationButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="initialPermitIssuanceButton"
+                text="Initial Permit Issuance"
+                onAction="#initialPermitIssuanceButtonPressed"
                 prefWidth="400" />
 
         <Button fx:id="permitRenewalButton"

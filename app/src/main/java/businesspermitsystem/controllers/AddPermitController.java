@@ -95,7 +95,7 @@ public class AddPermitController {
                     businessId,
                     permitTypeId,
                     status,
-                    effectiveDateUtil,
+                    (java.sql.Date) effectiveDateUtil,
                     note
             );
 

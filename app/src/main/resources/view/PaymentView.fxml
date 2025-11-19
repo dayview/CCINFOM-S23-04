@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.PaymentController"
+      alignment="TOP_CENTER"
+      spacing="12"
+      style="-fx-padding: 20;"
+      prefWidth="600" prefHeight="500">
+
+    <children>
+
+        <!-- TITLE -->
+        <Label text="Payment Processing"
+               style="-fx-font-size: 20; -fx-font-weight: bold;" />
+
+        <!-- BUSINESS -->
+        <HBox spacing="10">
+            <Label text="Business:" prefWidth="150"/>
+            <Label fx:id="businessNameLabel" prefWidth="300"/>
+        </HBox>
+
+        <!-- PERMIT TYPE -->
+        <HBox spacing="10">
+            <Label text="Permit Type:" prefWidth="150"/>
+            <Label fx:id="permitTypeLabel" prefWidth="300"/>
+        </HBox>
+
+        <!-- AMOUNT DUE -->
+        <HBox spacing="10">
+            <Label text="Amount Due:" prefWidth="150"/>
+            <Label fx:id="amountDueLabel" prefWidth="300"/>
+        </HBox>
+
+        <!-- PAYMENT DATE -->
+        <HBox spacing="10">
+            <Label text="Payment Date:" prefWidth="150"/>
+            <DatePicker fx:id="paymentDatePicker" prefWidth="300"/>
+        </HBox>
+
+        <!-- MODE OF PAYMENT -->
+        <HBox spacing="10">
+            <Label text="Mode of Payment:" prefWidth="150"/>
+            <ComboBox fx:id="paymentModeComboBox"
+                      prefWidth="300" />
+        </HBox>
+
+        <!-- OR Number -->
+        <HBox spacing="10">
+            <Label text="OR Number:" prefWidth="150"/>
+            <TextField fx:id="orNumberField" prefWidth="300"/>
+        </HBox>
+
+        <!-- BUTTONS -->
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 15;">
+            <Button fx:id="submitPaymentButton" text="Submit Payment" prefWidth="150" onAction="#handleSubmitPayment"/>
+            <Button fx:id="cancelButton" text="Cancel" prefWidth="150" onAction="#handleCancel"/>
+        </HBox>
+
+    </children>
+
+</VBox>

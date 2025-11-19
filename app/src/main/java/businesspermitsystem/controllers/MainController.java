@@ -13,7 +13,16 @@ import javafx.stage.Stage;
 public class MainController {
 
     // TRANSACTIONS BUTTONS
+
+    /**
+     * 
+     */
     @FXML private Button newBusinessRegistrationButton;
+    @FXML private Button initialPermitIssuanceButton;
+
+    /**
+     *
+     */
     @FXML private Button permitRenewalButton;
     @FXML private Button inspectionScheduleButton;
     @FXML private Button businessStatusUpdateButton;
@@ -45,13 +54,34 @@ public class MainController {
 
     // INSPECTORS BUTTONS
     @FXML private Button addInspectorButton;
+
+    /**
+     * 
+     */
     @FXML private Button updateInspectorButton;
+
+    /**
+     * 
+     */
     @FXML private Button deleteInspectorButton;
 
     // MUNICIPALITY BUTTONS
+
+    /**
+     * 
+     */
     @FXML private Button addMunicipalityButton;
+
+    /**
+     * 
+     */
     @FXML private Button updateMunicipalityButton;
+
+    /**
+     * 
+     */
     @FXML private Button deleteMunicipalityButton;
+    
 
     // REPORTS BUTTONS
     @FXML private Button generatePaymentsCollectedButton;
@@ -65,12 +95,23 @@ public class MainController {
 
     @FXML
     private void newBusinessRegistrationButtonPressed(ActionEvent event) {
-        // TODO: Implement navigation to New Business Registration View
+        Stage currentStage = (Stage) newBusinessRegistrationButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/BusinessSelectionView.fxml",
+                "New Business Registration and Others");
+    }
+
+    @FXML
+    private void initialPermitIssuanceButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) initialPermitIssuanceButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InitialPermitMenuView.fxml",
+                "Initial Permit Issuance");
     }
 
     @FXML
     private void permitRenewalButtonPressed(ActionEvent event) {
-        // TODO: Implement navigation to Permit Renewal View
+
     }
 
     @FXML
@@ -86,7 +127,6 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/BusinessStatusUpdate.fxml", "Business Status Update Transaction");
     }
-
     // BUSINESS ACTIONS
     @FXML
     private void addBusinessButtonPressed(ActionEvent event) {
@@ -108,6 +148,8 @@ public class MainController {
         SceneManager sceneManager = new SceneManager(currentStage);
         sceneManager.switchScene("/view/UpdateBusinessView.fxml", "Update Business");
     }
+
+
 
     // OWNERS ACTIONS
     @FXML
@@ -289,7 +331,7 @@ public class MainController {
     private void generateComprehensiveComplianceButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) generateComprehensiveComplianceButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/ComprehensiveComplianceView.fxml", "Comprehensive Compliance Report");
+        sceneManager.switchScene("/view/ComprehensiveComplianceReportView.fxml", "Comprehensive Compliance Report");
     }
 
 
