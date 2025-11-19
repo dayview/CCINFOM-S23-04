@@ -31,8 +31,9 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
-
     implementation("com.mysql:mysql-connector-j:9.4.0")
+    implementation("com.github.librepdf:openpdf:1.3.30")
+    implementation("org.slf4j:slf4j-simple:2.0.9") 
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -40,6 +41,7 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+
 }
 
 application {
@@ -50,4 +52,11 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.named<JavaCompile>("compileJava") {
+    doFirst {
+        options.compilerArgs.addAll(listOf("--module-path", classpath.asPath))
+        classpath = files() 
+    }
 }
