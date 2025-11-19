@@ -16,6 +16,10 @@ public class PermitDAO {
         }
     }
 
+    /**
+     * Retrieves all permits from the database
+     * @return List of all PermitModel objects
+     */
     public List<PermitModel> getAllPermits() {
         List<PermitModel> permits = new ArrayList<>();
         String query = "SELECT * FROM Permit";
@@ -41,6 +45,11 @@ public class PermitDAO {
         return permits;
     }
 
+    /**
+     * Retrieves a single permit by ID
+     * @param permitID the permit's unique identifier
+     * @return PermitModel or null if not found
+     */
     public PermitModel getPermitByID(int permitID) {
         String query = "SELECT * FROM Permit WHERE permit_id = ?";
 
@@ -66,6 +75,11 @@ public class PermitDAO {
         return null;
     }
 
+    /**
+     * Retrieves all permits for a specific business
+     * @param businessID the business's unique identifier
+     * @return List of PermitModel objects for that business
+     */
     public List<PermitModel> getPermitsByBusinessID(int businessID) {
         List<PermitModel> permits = new ArrayList<>();
         String query = "SELECT * FROM Permit WHERE business_id = ?";
@@ -93,6 +107,11 @@ public class PermitDAO {
         return permits;
     }
 
+    /**
+     * Adds a new permit to the database
+     * @param permit the PermitModel to insert
+     * @return true if successful, false otherwise
+     */
     public boolean addPermit(PermitModel permit) {
         String query = "INSERT INTO Permit (business_id, permit_type_id, status, status_effective_date, note) VALUES (?, ?, ?, ?, ?)";
 
@@ -112,6 +131,11 @@ public class PermitDAO {
         }
     }
 
+    /**
+     * Updates an existing permit's full record
+     * @param permit the PermitModel with updated values
+     * @return true if successful, false otherwise
+     */
     public boolean updatePermit(PermitModel permit) {
         String query = "UPDATE Permit SET business_id = ?, permit_type_id = ?, status = ?, status_effective_date = ?, note = ? WHERE permit_id = ?";
 
@@ -132,6 +156,11 @@ public class PermitDAO {
         }
     }
 
+    /**
+     * Deletes a permit from the database
+     * @param permitID the permit's unique identifier
+     * @return true if successful, false otherwise
+     */
     public boolean deletePermit(int permitID) {
         String query = "DELETE FROM Permit WHERE permit_id = ?";
 
@@ -148,7 +177,7 @@ public class PermitDAO {
     }
 
     public boolean updatePermitStatus(int permitID, String newStatus, java.util.Date effectiveDate, String note) {
-        String query = "UPDATE Permit SET status = ?, status_effective_date = ?, note = ?, WHERE permit_id = ?";
+        String query = "UPDATE Permit SET status = ?, status_effective_date = ?, note = ? WHERE permit_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, newStatus);
@@ -162,6 +191,37 @@ public class PermitDAO {
             System.err.println("Error updating permit status: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * Updates status for ALL permits belonging to a business (bulk update).
+     * Used when a business status changes - all its permits must follow.
+     *
+     * Example: Business gets suspended and all its permits get suspended (or archived) too.
+     *
+     * @param businessID the business whose permits should be updated
+     * @param newStatus the new status for all permits
+     * @param effectiveDate when the status change takes effect
+     * @param note reason or note about the bulk status change
+     * @return number of permits updated
+     */
+    public int updatePermitsByBusinessID(int businessID, String newStatus, java.util.Date effectiveDate, String note) {
+        String query = "UPDATE Permit SET status = ?, status_effective_date = ?, note = ? WHERE business_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, newStatus);
+            pstmt.setDate(2, new java.sql.Date(effectiveDate.getTime()));
+            pstmt.setString(3, note);
+            pstmt.setInt(4, businessID);
+
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Updated " + rowsAffected + " permit(s) for business ID " + businessID);
+            return rowsAffected;
+        } catch (SQLException e) {
+            System.err.println("Error bulk updating permits for business: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
         }
     }
 }
