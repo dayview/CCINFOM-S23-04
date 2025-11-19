@@ -53,8 +53,11 @@ public class MainController {
     @FXML private Button updateMunicipalityButton;
     @FXML private Button deleteMunicipalityButton;
 
-    // REPORT BUTTONS
-    @FXML private Button generateReportPermitsIssued;
+    // REPORTS BUTTONS
+    @FXML private Button generatePaymentsCollectedButton;
+    @FXML private Button generateInspectionResultsButton;
+    @FXML private Button generatePermitsIssuedButton;
+    @FXML private Button generateComprehensiveComplianceButton;
 
     // ------------------------------------------------------------------------------------------------
 
@@ -258,8 +261,36 @@ public class MainController {
         sceneManager.switchScene("/view/deleteMunicipalityView.fxml", "Delete Municipality");
     }
 
+    // REPORTS ACTIONS
     @FXML
-    private void generateReportPermitsIssuedPressed(ActionEvent event) {
-
+    private void generatePaymentsCollectedButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generatePaymentsCollectedButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        // TODO: Create PaymentsCollectedReportView.fxml
+        sceneManager.switchScene("/view/PaymentsCollectedReportView.fxml", "Payments Collected Report");
     }
+
+    @FXML
+    private void generateInspectionResultsButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generateInspectionResultsButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        // TODO: Create InspectionResultsReportView.fxml", "Inspection Results Report");
+        sceneManager.switchScene("/view/InspectionResultsView.fxml", "Inspection Results Report");
+    }
+
+    @FXML
+    private void generatePermitsIssuedButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generatePermitsIssuedButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/PermitsIssuedReportView.fxml", "Permits Issued Report");
+    }
+
+    @FXML
+    private void generateComprehensiveComplianceButtonPressed(ActionEvent event) {
+        Stage currentStage = (Stage) generateComprehensiveComplianceButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/ComprehensiveComplianceView.fxml", "Comprehensive Compliance Report");
+    }
+
+
 }
