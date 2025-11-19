@@ -64,6 +64,11 @@
                 onAction="#removeBusinessButtonPressed"
                 prefWidth="400" />
 
+        <Button fx:id="viewBusinessButton"
+                text="View Business"
+                onAction="#viewBusinessButtonPressed"
+                prefWidth="400" />
+
         <Label text="Owner" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addOwnerButton"
@@ -79,6 +84,11 @@
         <Button fx:id="deleteOwnerButton"
                 text="Delete Owner"
                 onAction="#deleteOwnerButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="viewOwnerButton"
+                text="View Owner"
+                onAction="#viewOwnerButtonPressed"
                 prefWidth="400" />
 
         <Label text="Inspector" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
@@ -120,6 +130,11 @@
                 onAction="#deleteFeeScheduleButtonPressed"
                 prefWidth="400" />
 
+        <Button fx:id="viewFeeScheduleButton"
+                text="View Fee Schedule"
+                onAction="#viewFeeScheduleButtonPressed"
+                prefWidth="400" />
+
         <Label text="Permit Type" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addPermitTypeButton"
@@ -137,6 +152,11 @@
                 onAction="#deletePermitTypeButtonPressed"
                 prefWidth="400" />
 
+        <Button fx:id="viewPermitTypeButton"
+                text="View Permit Type"
+                onAction="#viewPermitTypeButtonPressed"
+                prefWidth="400" />
+
         <Label text="Permit" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addPermitButton"
@@ -152,6 +172,11 @@
         <Button fx:id="deletePermitButton"
                 text="Delete Permit"
                 onAction="#deletePermitButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="viewPermitButton"
+                text="View Permit"
+                onAction="#viewPermitButtonPressed"
                 prefWidth="400" />
 
         <Label text="Municipality" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
