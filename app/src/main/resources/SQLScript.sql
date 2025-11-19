@@ -8,7 +8,7 @@ CREATE DATABASE `business_database`;
 USE `business_database`;
 
 DROP TABLE IF EXISTS `inspection_result`;
-DROP TABLE IF EXISTS `inspection_handle`;
+DROP TABLE IF EXISTS `inspection_schedule`;
 DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `permit`;
