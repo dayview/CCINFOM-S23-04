@@ -98,6 +98,11 @@
                 onAction="#deleteInspectorButtonPressed"
                 prefWidth="400" />
 
+        <Button fx:id="viewInspectorButton"
+                text="View Inspector"
+                onAction="#viewInspectorButtonPressed"
+                prefWidth="400" />
+
         <Label text="Fee Schedule" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
 
         <Button fx:id="addFeeScheduleButton"
@@ -164,6 +169,11 @@
         <Button fx:id="deleteMunicipalityButton"
                 text="Delete Municipality"
                 onAction="#deleteMunicipalityButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="viewMunicipalityButton"
+                text="View Municipality"
+                onAction="#viewMunicipalityButtonPressed"
                 prefWidth="400" />
 
         <Label text="Reports" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
