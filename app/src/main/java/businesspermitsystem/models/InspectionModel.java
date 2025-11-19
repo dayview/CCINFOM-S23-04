@@ -6,7 +6,7 @@ public class InspectionModel {
     private int inspectionID;
     private int renewalID;
     private int inspectorID;
-    private Date inspectionDate;
+    private Date inspectionDate; 
 
     public InspectionModel(int inspectionID, int renewalID, int inspectorID, Date inspectionDate) {
         this.inspectionID = inspectionID;

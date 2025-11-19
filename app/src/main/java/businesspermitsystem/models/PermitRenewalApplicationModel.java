@@ -10,7 +10,7 @@ public class PermitRenewalApplicationModel {
     private double renewalFee;
     private double surcharge;
     private double totalAmount;
-    private String status;
+    private String status; 
 
     public PermitRenewalApplicationModel(int renewalID, int businessID, int previousPermitID, Date applicationDate, double renewalFee,
             double surcharge, double totalAmount, String status) {

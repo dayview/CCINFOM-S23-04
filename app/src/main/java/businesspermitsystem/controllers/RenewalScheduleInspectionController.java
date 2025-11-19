@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RenewalScheduleInspectionController {
-
+ 
     @FXML private ComboBox<String> renewalComboBox;
     @FXML private ComboBox<String> inspectorComboBox;
     @FXML private DatePicker datePicker;

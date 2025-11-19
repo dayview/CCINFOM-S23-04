@@ -7,7 +7,7 @@ public class PaymentModel {
     private int renewalID;
     private double amount;
     private String method;
-    private Date paymentDate;
+    private Date paymentDate; 
 
     public PaymentModel(int paymentID, int renewalID, double amount, String method, Date paymentDate) {
         this.paymentID = paymentID;

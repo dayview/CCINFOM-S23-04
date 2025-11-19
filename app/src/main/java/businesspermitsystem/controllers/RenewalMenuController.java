@@ -12,7 +12,7 @@ public class RenewalMenuController {
     @FXML private Button ScheduleInspectionButton;
     @FXML private Button FinalizeRenewalButton;
 
-    @FXML
+    @FXML 
     private void applyRenewalButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) ApplyRenewalButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
