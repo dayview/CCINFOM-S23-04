@@ -2,31 +2,170 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.MainController">
-   <children>
-      <Label id="titleLabel" text="Business Permit System" />
-      <Button id="newBusinessButton" fx:id="newBusinessRegistrationButton" mnemonicParsing="false" onAction="#newBusinessRegistrationButtonPressed" text="New Business Registration" />
-       <Button id="initialPermitIssuanceButton" fx:id="initialPermitIssuanceButton" mnemonicParsing="false" onAction="#initialPermitIssuanceButtonPressed" text="Initial Permit Issuance" />
+<ScrollPane xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.MainController"
+      prefHeight="600.0" prefWidth="600.0"
+      fitToWidth="true"
+      style="-fx-background-color: transparent;">
 
-       <Button id="permitRenewalButton" fx:id="permitRenewalButton" mnemonicParsing="false" onAction="#permitRenewalButtonPressed" text="Permit Renewal Transaction" />
-      <Button id="inspectionSchedulingButton" fx:id="inspectionScheduleButton" mnemonicParsing="false" onAction="#inspectionScheduleButtonPressed" text="Inspection Scheduling &amp; Clearance Transaction" />
-      <Button id="businessStatusButton" fx:id="businessStatusUpdateButton" mnemonicParsing="false" onAction="#businessStatusUpdateButtonPressed" text="Business Status Update Transaction" />
-      <Label id="titleLabel" layoutX="248.0" layoutY="10.0" text="Business" />
-       <Button fx:id="addBusinessButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addBusinessButtonPressed" text="Add Business" />
-       <Button fx:id="updateBusinessButton" layoutX="248.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateBusinessButtonPressed" text="Update Business" />
-       <Button fx:id="deleteBusinessButton" layoutX="251.0" layoutY="269.0" mnemonicParsing="false" onAction="#removeBusinessButtonPressed" text="Delete Business" />
-      <Label id="titleLabel" layoutX="288.0" layoutY="130.0" text="Owner" />
-       <Button fx:id="addOwnerButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addOwnerButtonPressed" text="Add Owner" />
-      <Label id="titleLabel" layoutX="292.0" layoutY="148.0" text="Permit Type And Fee Schedule" />
-      <Label id="titleLabel" layoutX="229.0" layoutY="165.0" text="Inspector" />
-      <Button fx:id="addInspectorButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#addInspectorButtonPressed" text="Add Inspector" />
-      <Button fx:id="updateInspectorButton" layoutX="248.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateInspectorButtonPressed" text="Update Inspector" />
-      <Button fx:id="deleteInspectorButton" layoutX="251.0" layoutY="269.0" mnemonicParsing="false" onAction="#deleteInspectorButtonPressed" text="Delete Inspector" />
-      <Label id="titleLabel" layoutX="285.0" layoutY="183.0" text="Municipality" />
-      <Button fx:id="addMunicipalityButton" mnemonicParsing="false" onAction="#addMunicipalityButtonPressed" text="Add Municipality" />
-      <Button fx:id="updateMunicipalityButton" layoutX="257.0" layoutY="218.0" mnemonicParsing="false" onAction="#updateMunicipalityButtonPressed" text="Update Municipality" />
-      <Button fx:id="deleteMunicipalityButton" layoutX="248.0" layoutY="244.0" mnemonicParsing="false" onAction="#deleteMunicipalityButtonPressed" text="Delete Municipality" />
-   </children>
-</VBox>
+    <content>
+        <VBox alignment="TOP_CENTER"
+              spacing="10"
+              style="-fx-padding:20;">
+
+    <children>
+        <Label text="Business Permit System" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <Label text="Transactions" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="newBusinessRegistrationButton"
+                text="New Business Registration"
+                onAction="#newBusinessRegistrationButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="initialPermitIssuanceButton"
+                text="Initial Permit Issuance"
+                onAction="#initialPermitIssuanceButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="permitRenewalButton"
+                text="Permit Renewal Transaction"
+                onAction="#permitRenewalButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="inspectionScheduleButton"
+                text="Inspection Scheduling &amp; Clearance Transaction"
+                onAction="#inspectionScheduleButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="businessStatusUpdateButton"
+                text="Business Status Update Transaction"
+                onAction="#businessStatusUpdateButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Business" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addBusinessButton"
+                text="Add Business"
+                onAction="#addBusinessButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updateBusinessButton"
+                text="Update Business"
+                onAction="#updateBusinessButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deleteBusinessButton"
+                text="Delete Business"
+                onAction="#removeBusinessButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Owner" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addOwnerButton"
+                text="Add Owner"
+                onAction="#addOwnerButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updateOwnerButton"
+                text="Update Owner"
+                onAction="#updateOwnerButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deleteOwnerButton"
+                text="Delete Owner"
+                onAction="#deleteOwnerButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Inspector" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addInspectorButton"
+                text="Add Inspector"
+                onAction="#addInspectorButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updateInspectorButton"
+                text="Update Inspector"
+                onAction="#updateInspectorButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deleteInspectorButton"
+                text="Delete Inspector"
+                onAction="#deleteInspectorButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Fee Schedule" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addFeeScheduleButton"
+                text="Add Fee Schedule"
+                onAction="#addFeeScheduleButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updateFeeScheduleButton"
+                text="Update Fee Schedule"
+                onAction="#updateFeeScheduleButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deleteFeeScheduleButton"
+                text="Delete Fee Schedule"
+                onAction="#deleteFeeScheduleButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Permit Type" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addPermitTypeButton"
+                text="Add Permit Type"
+                onAction="#addPermitTypeButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updatePermitTypeButton"
+                text="Update Permit Type"
+                onAction="#updatePermitTypeButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deletePermitTypeButton"
+                text="Delete Permit Type"
+                onAction="#deletePermitTypeButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Permit" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addPermitButton"
+                text="Add Permit"
+                onAction="#addPermitButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updatePermitButton"
+                text="Update Permit"
+                onAction="#updatePermitButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deletePermitButton"
+                text="Delete Permit"
+                onAction="#deletePermitButtonPressed"
+                prefWidth="400" />
+
+        <Label text="Municipality" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="addMunicipalityButton"
+                text="Add Municipality"
+                onAction="#addMunicipalityButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="updateMunicipalityButton"
+                text="Update Municipality"
+                onAction="#updateMunicipalityButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="deleteMunicipalityButton"
+                text="Delete Municipality"
+                onAction="#deleteMunicipalityButtonPressed"
+                prefWidth="400" />
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

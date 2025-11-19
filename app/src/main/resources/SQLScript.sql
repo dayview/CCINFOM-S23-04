@@ -5,9 +5,8 @@
 -- Password: <depending on user settings>
 
 CREATE DATABASE IF NOT EXISTS `business_database`;
+
 USE `business_database`;
-
-
 
 DROP TABLE IF EXISTS `inspection_result`;
 DROP TABLE IF EXISTS `inspection_schedule`;
@@ -18,10 +17,11 @@ DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
 
 DROP TABLE IF EXISTS `permit`;
+DROP TABLE IF EXISTS `business`;
 DROP TABLE IF EXISTS `owner`;
 DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
-DROP TABLE IF EXISTS `business`;
+DROP TABLE IF EXISTS `fee_schedule`;
 DROP TABLE IF EXISTS `municipality`;
 
 CREATE TABLE `municipality` (
@@ -81,14 +81,24 @@ CREATE TABLE `inspector` (
   FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `fee_schedule` (
+    `fee_schedule_id` INT NOT NULL AUTO_INCREMENT,
+    `base_fee` DECIMAL(10,2) NOT NULL,
+    `surcharge_rule` VARCHAR(200),
+    `validity_months` INT NOT NULL,
+    `document_requirements` TEXT,
+    PRIMARY KEY (`fee_schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `permit_type` (
-  `permit_type_id` INT NOT NULL AUTO_INCREMENT,
-  `permit_name` VARCHAR(100) NOT NULL,
-  `base_fee` DECIMAL(10,2) NOT NULL,
-  `surcharge_rule` VARCHAR(200),
-  `validity_months` INT NOT NULL,
-  `document_requirements` TEXT,
-  PRIMARY KEY (`permit_type_id`)
+    `permit_type_id` INT NOT NULL AUTO_INCREMENT,
+    `permit_name` VARCHAR(100) NOT NULL,
+    `fee_schedule_id` INT NOT NULL,
+    `document_requirements` TEXT,
+    `validity_months` INT NOT NULL,
+    PRIMARY KEY (`permit_type_id`),
+    FOREIGN KEY (`fee_schedule_id`) REFERENCES `fee_schedule`(`fee_schedule_id`)
+        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `permit` (
@@ -222,19 +232,33 @@ VALUES
 ('Perez', 'Mark', 'Bernardo', 'Building Inspector', 'LIC-2023-009', 1, 9),
 ('Santiago', 'Angela', 'Diaz', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
 
-INSERT INTO `permit_type`
-(`permit_name`, `base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
+INSERT INTO `fee_schedule`
+(`base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
 VALUES
-('Mayors Permit', 5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
-('Sanitary Permit', 1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
-('Fire Safety Inspection Certificate', 2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
-('Building Permit', 8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
-('Zoning Clearance', 1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
-('Environmental Compliance Certificate', 3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
-('Occupancy Permit', 2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
-('Health Certificate', 500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
-('Signage Permit', 1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
-('Liquor License', 10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+    (5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
+    (1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
+    (2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
+    (8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
+    (1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
+    (3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
+    (2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
+    (500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
+    (1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
+    (10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+
+INSERT INTO `permit_type`
+(`permit_name`, `fee_schedule_id`, `document_requirements`, `validity_months`)
+VALUES
+    ('Mayors Permit', 1, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit', 12),
+    ('Sanitary Permit', 2, 'Health Certificate, Sanitary Inspection Report', 12),
+    ('Fire Safety Inspection Certificate', 3, 'Fire Safety Evaluation Clearance, Building Floor Plan', 12),
+    ('Building Permit', 4, 'Building Plans, Structural Design, Lot Plan', 24),
+    ('Zoning Clearance', 5, 'Location Plan, Tax Declaration', 12),
+    ('Environmental Compliance Certificate', 6, 'Environmental Impact Assessment', 36),
+    ('Occupancy Permit', 7, 'Certificate of Completion, Approved Building Plans', 0),
+    ('Health Certificate', 8, 'Medical Certificate, Chest X-Ray', 12),
+    ('Signage Permit', 9, 'Design and Layout of Signage', 12),
+    ('Liquor License', 10, 'Mayors Permit, Police Clearance', 12);
 
 INSERT INTO `permit`
 (`business_id`, `permit_type_id`, `status`, `status_effective_date`, `validity_start`, `validity_end`, `note`)

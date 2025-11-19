@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="businesspermitsystem.controllers.DeletePermitController"
+      alignment="TOP_CENTER"
+      prefHeight="500.0" prefWidth="600.0"
+      spacing="10"
+      style="-fx-padding: 20;">
+
+    <children>
+        <Label text="Delete Permit" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+        <Label text="Search Permit" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+
+        <HBox spacing="10">
+            <Label text="Permit ID:" prefWidth="150" />
+            <TextField fx:id="permitIdField" promptText="Enter ID" prefWidth="200" />
+            <Button fx:id="searchButton" text="Search" onAction="#onSearch" prefWidth="100" />
+        </HBox>
+
+        <Label text="Permit Information" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+
+        <HBox spacing="10">
+            <Label text="Business ID:" prefWidth="150" />
+            <Label fx:id="businessIdLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Permit Type ID:" prefWidth="150" />
+            <Label fx:id="permitTypeLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Status:" prefWidth="150" />
+            <Label fx:id="statusLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Status Effective Date:" prefWidth="150" />
+            <Label fx:id="statusEffectiveDateLabel" text="-" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10" alignment="TOP_LEFT">
+            <Label text="Note:" prefWidth="150" />
+            <Label fx:id="noteLabel" text="-" prefWidth="300" wrapText="true" />
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10;">
+            <Button fx:id="deleteButton" text="Delete" onAction="#onDelete" prefWidth="100" />
+            <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel" prefWidth="100" />
+        </HBox>
+    </children>
+</VBox>
