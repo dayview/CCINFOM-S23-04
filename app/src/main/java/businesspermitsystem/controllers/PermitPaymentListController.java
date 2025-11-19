@@ -35,11 +35,9 @@ public class PermitPaymentListController {
     @FXML
     public void initialize() {
 
-        // Table mappings
         colAppId.setCellValueFactory(new PropertyValueFactory<>("applicationId"));
         colFee.setCellValueFactory(new PropertyValueFactory<>("totalFee"));
 
-        // Business Name Lookup (Null Safe)
         colBusiness.setCellValueFactory(cell -> {
             BusinessModel business = null;
             try {
@@ -52,18 +50,14 @@ public class PermitPaymentListController {
             );
         });
 
-        // Permit Type Lookup (Null Safe)
         colPermit.setCellValueFactory(cell -> {
             InitialPermitTypeModel t = permitTypeDAO.getPermitTypeByID(cell.getValue().getPermitTypeId());
-            return new SimpleStringProperty(
-                    t != null ? t.getPermitName() : "UNKNOWN"
-            );
+            return new SimpleStringProperty(t != null ? t.getPermitName() : "UNKNOWN");
         });
 
-        // Load applications
+
         paymentTable.getItems().addAll(applicationDAO.getApplicationsForPayment());
 
-        // Add "Pay" button
         addPayButton();
     }
 
@@ -95,7 +89,6 @@ public class PermitPaymentListController {
                     SessionStorage.setSelectedPermitType(permitType);
                     SessionStorage.setSelectedApplication(app);
 
-                    // Navigate
                     Stage stage = (Stage) btn.getScene().getWindow();
                     new SceneManager(stage).switchScene("/view/PaymentView.fxml", "Record Payment");
                 });
@@ -112,8 +105,7 @@ public class PermitPaymentListController {
     @FXML
     private void handleBack() {
         Stage stage = (Stage) backButton.getScene().getWindow();
-        new SceneManager(stage)
-                .switchScene("/view/InitialPermitMenuView.fxml", "Initial Permit Menu");
+        new SceneManager(stage).switchScene("/view/InitialPermitMenuView.fxml", "Initial Permit Menu");
     }
 
     private void showAlert(String title, String msg, Alert.AlertType type) {

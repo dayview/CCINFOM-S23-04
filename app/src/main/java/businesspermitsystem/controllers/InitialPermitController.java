@@ -62,7 +62,7 @@ public class InitialPermitController {
                 return;
             }
 
-            // Loads all owners for the selected business
+            // loads the owners of a selected business
             List<OwnerModel> owners = ownerDAO.getOwnersByBusinessId(business.getBusinessId());
 
             StringBuilder sb = new StringBuilder();
@@ -100,8 +100,7 @@ public class InitialPermitController {
         if (selectedBusiness == null) {
             return;
         }
-
-        // Store business for later steps
+        // Store business for later usage
         SessionStorage.setSelectedBusiness(selectedBusiness);
 
         Stage currentStage = (Stage) nextButton.getScene().getWindow();

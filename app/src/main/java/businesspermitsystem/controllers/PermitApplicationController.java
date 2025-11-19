@@ -36,7 +36,7 @@ public class PermitApplicationController {
     @FXML
     public void initialize() {
 
-        // Load saved session data
+        // load the saved data
         selectedBusiness = SessionStorage.getSelectedBusiness();
         selectedPermit = SessionStorage.getSelectedPermitType();
 
@@ -45,7 +45,6 @@ public class PermitApplicationController {
             return;
         }
 
-        // Fill labels
         businessNameLabel.setText(selectedBusiness.getBusinessName());
         permitTypeLabel.setText(selectedPermit.getPermitName());
 
@@ -90,9 +89,7 @@ public class PermitApplicationController {
 
         // These fields will only be assigned AFTER inspection or approval
         app.setApprovalDate(null);
-        app.setExpirationDate(
-                applicationDatePicker.getValue().plusMonths(selectedPermit.getValidityMonths())
-        );
+        app.setExpirationDate(applicationDatePicker.getValue().plusMonths(selectedPermit.getValidityMonths()));
 
         app.setStatus("For Payment");  // Correct workflow stage
 

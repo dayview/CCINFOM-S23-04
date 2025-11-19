@@ -6,8 +6,7 @@ import businesspermitsystem.models.InitialPermitTypeModel;
 import businesspermitsystem.models.PermitApplicationModel;
 
 /**
- * A temporary in-memory storage for selected objects used across
- * multi-step workflows in the Business Permit System.
+ * A temporary in-memory storage for selected objects to allow for smooth transitions between views
  *
  * This utility class stores:
  * - The selected business
