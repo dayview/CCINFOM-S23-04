@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="businesspermitsystem.controllers.ComprehensiveComplianceReportController"
+            prefHeight="600.0" prefWidth="800.0"
+            fitToWidth="true"
+            style="-fx-background-color: transparent;">
+
+    <content>
+        <VBox alignment="TOP_CENTER"
+              spacing="10"
+              style="-fx-padding:20;">
+
+            <children>
+                <Label text="Comprehensive Compliance Report"
+                       style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+                <Label text="Filters"
+                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Municipality:" />
+                    <ComboBox fx:id="municipalityComboBox" prefWidth="150" />
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Business Status:" />
+                    <ComboBox fx:id="statusComboBox" prefWidth="150" />
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="From Date:" />
+                    <DatePicker fx:id="startDatePicker" prefWidth="150" />
+                    <Label text="To Date:" />
+                    <DatePicker fx:id="endDatePicker" prefWidth="150" />
+                </HBox>
+
+                <Button fx:id="generateButton"
+                        text="Generate Report"
+                        onAction="#generateReport"
+                        prefWidth="400" />
+
+                <Label text="Summary"
+                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+                <GridPane hgap="15" vgap="5" style="-fx-padding: 10;">
+                    <Label text="Total Businesses:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="totalBusinessesLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                           style="-fx-font-weight: bold;" />
+
+                    <Label text="Active Permits:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="activePermitsLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                           style="-fx-font-weight: bold;" />
+
+                    <Label text="Expired Permits:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="expiredPermitsLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                           style="-fx-font-weight: bold;" />
+
+                    <Label text="Compliance Rate:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Label fx:id="complianceRateLabel" text="0%" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                           style="-fx-font-weight: bold;" />
+                </GridPane>
+
+                <Label text="Report Details"
+                       style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+                <TableView fx:id="complianceTable" prefHeight="300">
+                    <columns>
+                        <TableColumn fx:id="businessIdColumn" text="Business ID" prefWidth="80" />
+                        <TableColumn fx:id="businessNameColumn" text="Business Name" prefWidth="150" />
+                        <TableColumn fx:id="ownerColumn" text="Owner" prefWidth="120" />
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                        <TableColumn fx:id="activePermitsColumn" text="Active Permits" prefWidth="100" />
+                        <TableColumn fx:id="expiredPermitsColumn" text="Expired Permits" prefWidth="100" />
+                        <TableColumn fx:id="complianceColumn" text="Compliance" prefWidth="100" />
+                    </columns>
+                </TableView>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="exportButton"
+                            text="Export to CSV"
+                            onAction="#exportToCSV"
+                            prefWidth="190" />
+
+                    <Button fx:id="backButton"
+                            text="Back to Main Menu"
+                            onAction="#backToMain"
+                            prefWidth="190" />
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>
