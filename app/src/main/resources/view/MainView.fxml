@@ -165,6 +165,28 @@
                 text="Delete Municipality"
                 onAction="#deleteMunicipalityButtonPressed"
                 prefWidth="400" />
+
+        <Label text="Reports" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" />
+
+        <Button fx:id="generatePaymentsCollectedButton"
+                text="Payments Collected Report"
+                onAction="#generatePaymentsCollectedButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="generateInspectionResultsButton"
+                text="Inspection Results Report"
+                onAction="#generateInspectionResultsButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="generatePermitsIssuedButton"
+                text="Permits Issued Report"
+                onAction="#generatePermitsIssuedButtonPressed"
+                prefWidth="400" />
+
+        <Button fx:id="generateComprehensiveComplianceButton"
+                text="Comprehensive Compliance Report"
+                onAction="#generateComprehensiveComplianceButtonPressed"
+                prefWidth="400" />
             </children>
         </VBox>
     </content>

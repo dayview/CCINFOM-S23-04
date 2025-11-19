@@ -11,9 +11,9 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.UpdateInspectorController">
    <children>
-      <Label alignment="CENTER" text="Update Inspector" textAlignment="CENTER">
+      <Label alignment="CENTER" style="-fx-font-size: 18; -fx-font-weight: bold;" text="Update Inspector" textAlignment="CENTER">
          <VBox.margin>
-            <Insets />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin></Label>
       <HBox>
          <children>

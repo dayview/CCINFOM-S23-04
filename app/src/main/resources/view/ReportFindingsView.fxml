@@ -1,45 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Separator?>
+
+<VBox alignment="TOP_CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.ReportFindingsController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="File Inspection Findings" />
+
+    <GridPane hgap="10.0" vgap="10.0">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30.0" />
+            <ColumnConstraints percentWidth="70.0" />
+        </columnConstraints>
+        
+     
+        <Label text="Filter Date (Optional):" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <HBox spacing="5.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <DatePicker fx:id="filterDatePicker" promptText="Select Date" />
+            <Button fx:id="clearDateFilterButton" onAction="#clearDateFilter" text="Clear Filter" />
+        </HBox>
+
+        <Label text="Select Schedule ID:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <ChoiceBox fx:id="scheduleIDChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label style="-fx-font-weight: bold;" text="Business Being Inspected:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="businessDetailsLabel" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <Label text="Scheduled Date:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="inspectionDateLabel" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </GridPane>
+
+    <Separator />
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.ReportFindingsController">
-   <children>
-      <Label text="Report Findings" />
-      <HBox layoutX="10.0" layoutY="28.0">
-         <children>
-            <Label text="Date: " />
-            <DatePicker fx:id="filterDatePicker" />
-            <Button fx:id="clearDateFilterButton" mnemonicParsing="false" onAction="#clearDateFilter" text="Clear Filter" />
-         </children>
-      </HBox>
-      <HBox layoutX="10.0" layoutY="28.0">
-         <children>
-            <Label text="Schedule ID" />
-            <ChoiceBox fx:id="scheduleIDChoiceBox" prefWidth="150.0" />
-         </children>
-      </HBox>
-      <HBox>
-         <children>
-            <Label text="Result" />
-            <ChoiceBox fx:id="resultChoiceBox" prefWidth="150.0" />
-         </children>
-      </HBox>
-      <Label layoutX="10.0" layoutY="292.0" text="Remarks:" />
-      <TextArea fx:id="remarksTextArea" prefHeight="200.0" prefWidth="200.0" />
-      <Label fx:id="businessDetailsLabel" layoutX="10.0" layoutY="10.0" text="Business Details" />
-      <Label fx:id="inspectionDateLabel" layoutX="10.0" layoutY="179.0" text="Inspection Date" />
-      <HBox>
-         <children>
-            <Button fx:id="reportButton" mnemonicParsing="false" onAction="#reportButtonPressed" text="Report" />
-            <Button fx:id="cancelButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" />
-         </children>
-      </HBox>
-   </children>
+    <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Inspection Result (Mandatory)" />
+    
+    <GridPane hgap="10.0" vgap="10.0">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30.0" />
+            <ColumnConstraints percentWidth="70.0" />
+        </columnConstraints>
+
+        <Label text="Inspection Result:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <ChoiceBox fx:id="resultChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label text="Remarks:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextArea fx:id="remarksTextArea" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    </GridPane>
+    
+    <Separator />
+
+
+    <VBox fx:id="permitUpdateContainer" spacing="10.0">
+        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Permit Status Updates (Granular Control)" />
+        <Label text="Select a schedule to load permit data..." />
+    </VBox>
+    
+    <Separator />
+
+    <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Overall Business Status Update (Optional)" />
+    
+    <GridPane hgap="10.0" vgap="10.0">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30.0" />
+            <ColumnConstraints percentWidth="70.0" />
+        </columnConstraints>
+        
+        <Label text="Current Business Status:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="currentBusinessStatusLabel" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <HBox alignment="CENTER_LEFT" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <CheckBox fx:id="updateBusinessStatusCheckBox" text="Apply New Status:" />
+            <ChoiceBox fx:id="suggestedBusinessStatusChoiceBox" prefWidth="150.0" />
+        </HBox>
+    </GridPane>
+    
+    <Separator />
+
+
+    <HBox alignment="CENTER" spacing="20.0">
+        <Button fx:id="reportButton" onAction="#reportButtonPressed" text="File Report &amp; Update Statuses" style="-fx-font-weight: bold;" />
+        <Button onAction="#cancelButtonPressed" text="Close" />
+    </HBox>
+
 </VBox>
