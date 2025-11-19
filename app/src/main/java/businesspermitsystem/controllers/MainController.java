@@ -289,7 +289,7 @@ public class MainController {
     private void generateComprehensiveComplianceButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) generateComprehensiveComplianceButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/ComprehensiveComplianceView.fxml", "Comprehensive Compliance Report");
+        sceneManager.switchScene("/view/ComprehensiveComplianceReportView.fxml", "Comprehensive Compliance Report");
     }
 
 
