@@ -128,7 +128,26 @@ public class PaymentDAO {
     public List<PermitApplicationModel> getApplicationsForPayment() {
         List<PermitApplicationModel> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM permit_application WHERE status = 'For Payment'";
+        String sql = """
+        SELECT pa.application_id,
+               pa.business_id,
+               pa.permit_type_id,
+               pa.application_date,
+               pa.approval_date,
+               pa.expiration_date,
+               pa.status,
+               pa.base_fee,
+               pa.surcharge,
+               pa.total_fee,
+               pa.remarks,
+               pt.permit_name,
+               fs.base_fee AS fs_base_fee,
+               fs.surcharge_rule
+        FROM permit_application pa
+        JOIN permit_type pt ON pa.permit_type_id = pt.permit_type_id
+        JOIN fee_schedule fs ON pt.fee_schedule_id = fs.fee_schedule_id
+        WHERE pa.status = 'For Payment'
+    """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -153,6 +172,9 @@ public class PaymentDAO {
                 app.setTotalFee(rs.getBigDecimal("total_fee"));
                 app.setRemarks(rs.getString("remarks"));
 
+                // Extra fields for UI display
+                app.setPermitName(rs.getString("permit_name"));
+
                 list.add(app);
             }
 
@@ -162,5 +184,6 @@ public class PaymentDAO {
 
         return list;
     }
+
 
 }

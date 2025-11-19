@@ -114,4 +114,15 @@ public class PermitApplicationModel {
     public void setTotalFee(BigDecimal totalFee) { this.totalFee = totalFee; }
 
     public void setRemarks(String remarks) { this.remarks = remarks; }
+
+    private String permitName;
+
+    public String getPermitName() { return permitName; }
+    public void setPermitName(String permitName) { this.permitName = permitName; }
+
+    @Override
+    public String toString() {
+        return permitName != null ? permitName : "Unknown Permit";
+    }
+
 }

@@ -51,7 +51,12 @@ public class PaymentController {
         application = SessionStorage.getSelectedApplication();
 
         if (business == null || permitType == null || application == null) {
-            System.err.println("ERROR: Payment View opened without session data!");
+            showAlert("Missing Data",
+                    "Payment view opened without application details.\nPlease return and select a valid application.",
+                    Alert.AlertType.ERROR);
+
+            Stage stage = (Stage) submitPaymentButton.getScene().getWindow();
+            new SceneManager(stage).switchScene("/view/MainView.fxml", "Main Menu");
             return;
         }
 
@@ -60,10 +65,10 @@ public class PaymentController {
         amountDueLabel.setText(permitType.getBaseFee().toString());
 
         paymentDatePicker.setValue(LocalDate.now());
-
         paymentModeComboBox.getItems().addAll("Cash", "GCash", "Bank Transfer", "Credit Card");
         paymentModeComboBox.getSelectionModel().selectFirst();
     }
+
 
     /**
      * Validates the user input and records a new payment.
