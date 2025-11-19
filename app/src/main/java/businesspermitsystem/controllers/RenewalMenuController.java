@@ -16,27 +16,27 @@ public class RenewalMenuController {
     private void applyRenewalButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) ApplyRenewalButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/ApplyRenewalButton.fxml", "Apply for Renewal");
+        sceneManager.switchScene("/view/ApplyRenewalView.fxml", "Apply for Renewal");
     }
 
     @FXML
     private void recordPaymentButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) RecordPaymentButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/RecordPaymentButton.fxml", "Record Payment");
+        sceneManager.switchScene("/view/RecordPaymentView.fxml", "Record Payment");
     }
 
     @FXML
     private void scheduleInspectionPressed(ActionEvent event) {
         Stage currentStage = (Stage) ScheduleInspectionButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/ScheduleInspectionButton.fxml", "Schedule Inspection");
+        sceneManager.switchScene("/view/RenewalScheduleInspectionView.fxml", "Schedule Inspection");
     }
 
     @FXML
     private void finalizeRenewalButtonPressed(ActionEvent event) {
         Stage currentStage = (Stage) FinalizeRenewalButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/FinalizeRenewalButton.fxml", "Finalize Renewal");
+        sceneManager.switchScene("/view/FinalizeRenewalView.fxml", "Finalize Renewal");
     }
 }
