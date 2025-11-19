@@ -2,6 +2,7 @@ package businesspermitsystem.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -107,6 +108,32 @@ public class InspectionDAO {
             return false;
         }
     }
+
+    public int addInspectionGetID(InspectionModel inspection) {
+    String query = "INSERT INTO inspection (renewal_id, inspector_id, inspection_date) VALUES (?, ?, ?)";
+    
+    try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setInt(1, inspection.getRenewalID());
+        statement.setInt(2, inspection.getInspectorID());
+        statement.setDate(3, new java.sql.Date(inspection.getInspectionDate().getTime()));
+
+        int rowsAffected = statement.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
+        }
+        return -1;
+
+    } catch (SQLException e) {
+        System.err.println("Error adding inspection: " + e.getMessage());
+        e.printStackTrace();
+        return -1;
+    }
+}
 
     public boolean updateInspection(InspectionModel inspection) {
         String query = "UPDATE inspection SET renewal_id = ?, inspector_id = ?, inspection_date = ? WHERE inspection_id = ?";

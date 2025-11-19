@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="plainBG" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="635.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.ScheduleInspectionController">
+   <children>
+      <Rectangle fx:id="topHeader" arcHeight="5.0" arcWidth="5.0" fill="#046a38" height="108.0" stroke="#046a38" strokeType="INSIDE" width="635.0" />
+      <Text fx:id="headerText" fill="WHITE" layoutX="100.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule Inspection">
+         <font>
+            <Font name="System Bold" size="45.0" />
+         </font>
+      </Text>
+      
+      <VBox layoutX="52.0" layoutY="147.0" prefHeight="370.0" prefWidth="531.0" spacing="15">
+         <children>
+            <!-- Renewal Selection -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label prefWidth="150" text="Renewal ID:" textFill="#046a38">
+                  <font>
+                     <Font name="Arial Black" size="14.0" />
+                  </font>
+               </Label>
+               <ComboBox fx:id="renewalComboBox" prefWidth="380" promptText="Select Renewal" />
+            </HBox>
+
+            <!-- Inspector Selection -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label prefWidth="150" text="Inspector:" textFill="#046a38">
+                  <font>
+                     <Font name="Arial Black" size="14.0" />
+                  </font>
+               </Label>
+               <ComboBox fx:id="inspectorComboBox" prefWidth="380" promptText="Select Inspector" />
+            </HBox>
+
+            <!-- Date -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+               <Label prefWidth="150" text="Date:" textFill="#046a38">
+                  <font>
+                     <Font name="Arial Black" size="14.0" />
+                  </font>
+               </Label>
+               <DatePicker fx:id="datePicker" prefWidth="380" />
+            </HBox>
+
+            <!-- Buttons -->
+            <HBox alignment="CENTER" spacing="15" style="-fx-padding: 20;">
+               <Button fx:id="scheduleButton" onAction="#onSchedule" prefWidth="100" style="-fx-background-color: #046a38; -fx-text-fill: white; -fx-font-weight: bold;" text="Schedule" />
+               <Button fx:id="cancelButton" onAction="#onCancel" prefWidth="100" style="-fx-background-color: #cccccc; -fx-font-weight: bold;" text="Cancel" />
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

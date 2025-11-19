@@ -3,6 +3,7 @@ package businesspermitsystem.db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -110,6 +111,33 @@ public class PaymentDAO {
             return false;
         }
     }
+
+    public int addPaymentGetID(PaymentModel payment) {
+    String query = "INSERT INTO payment (renewal_id, amount, method, payment_date) VALUES (?, ?, ?, ?)";
+    
+    try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setInt(1, payment.getRenewalID());
+        statement.setDouble(2, payment.getAmount());
+        statement.setString(3, payment.getMethod());
+        statement.setDate(4, new java.sql.Date(payment.getPaymentDate().getTime()));
+
+        int rowsAffected = statement.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
+        }
+        return -1;
+
+    } catch (SQLException e) {
+        System.err.println("Error adding payment: " + e.getMessage());
+        e.printStackTrace();
+        return -1;
+    }
+}
 
     public boolean updatePayment(PaymentModel payment) {
         String query = "UPDATE payment SET renewal_id = ?, amount = ?, method = ?, payment_date = ? WHERE payment_id = ?";
