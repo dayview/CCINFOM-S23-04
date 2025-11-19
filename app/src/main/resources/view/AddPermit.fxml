@@ -15,7 +15,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="businesspermitsystem.controllers.AddPermitController"
       alignment="TOP_CENTER"
-      prefHeight="500.0" prefWidth="600.0"
+      prefHeight="650.0" prefWidth="600.0"
       spacing="10"
       style="-fx-padding: 20;">
 
@@ -50,6 +50,16 @@
         <HBox spacing="10">
             <Label text="Status Effective Date:" prefWidth="150" />
             <DatePicker fx:id="statusEffectiveDatePicker" prefWidth="300" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Validity Start Date:" prefWidth="150" />
+            <DatePicker fx:id="validityStartPicker" prefWidth="300" promptText="Optional" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Validity End Date:" prefWidth="150" />
+            <DatePicker fx:id="validityEndPicker" prefWidth="300" promptText="Optional" />
         </HBox>
 
         <HBox spacing="10" alignment="TOP_LEFT">
