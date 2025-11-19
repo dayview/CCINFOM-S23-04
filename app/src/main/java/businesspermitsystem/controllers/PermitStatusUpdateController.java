@@ -49,18 +49,10 @@ public class PermitStatusUpdateController {
             return;
         }
 
-        boolean success = dao.issuePermit(
-                selected.getBusinessId(),
-                selected.getPermitTypeId(),
-                Date.valueOf(start),
-                Date.valueOf(end),
-                "Initial permit issued."
-        );
+        boolean success = dao.issuePermit(selected.getBusinessId(), selected.getPermitTypeId(), Date.valueOf(start), Date.valueOf(end), "Initial permit issued.");
 
         if (success) {
-            showAlert("Success",
-                    "Permit issued for: " + selected.getBusinessName(),
-                    Alert.AlertType.INFORMATION);
+            showAlert("Success", "Permit issued for: " + selected.getBusinessName(), Alert.AlertType.INFORMATION);
 
             Stage s = (Stage) issueButton.getScene().getWindow();
             new SceneManager(s).switchScene("/view/MainView.fxml", "Main Menu");
