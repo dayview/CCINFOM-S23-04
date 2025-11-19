@@ -3,7 +3,7 @@ package businesspermitsystem.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class PaymentModel {
+public class InitialPaymentModel {
 
     private int paymentId;
     private int applicationId;
@@ -17,10 +17,10 @@ public class PaymentModel {
     private String orNumber;
 
     // default contructor
-    public PaymentModel() {}
+    public InitialPaymentModel() {}
 
 
-    public PaymentModel(int paymentId, int applicationId, int businessId, int permitTypeId, int municipalityId, LocalDate paymentDate, BigDecimal amountPaid, String modeOfPayment, String orNumber) {
+    public InitialPaymentModel(int paymentId, int applicationId, int businessId, int permitTypeId, int municipalityId, LocalDate paymentDate, BigDecimal amountPaid, String modeOfPayment, String orNumber) {
 
         this.paymentId = paymentId;
         this.applicationId = applicationId;
