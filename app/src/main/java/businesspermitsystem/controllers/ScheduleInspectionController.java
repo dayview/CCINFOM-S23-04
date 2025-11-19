@@ -204,7 +204,7 @@ public class ScheduleInspectionController {
     private void cancelButtonPressed() {
         Stage currentStage = (Stage) cancelButton.getScene().getWindow();
         SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
     
     private void showAlert(AlertType type, String title, String message) {

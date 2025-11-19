@@ -32,15 +32,38 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.InspectionScheduleController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="businesspermitsystem.controllers.InspectionScheduleController">
    <children>
-      <Label text="Inspection Schedule" />
-      <Button fx:id="createScheduleButton" mnemonicParsing="false" onAction="#createScheduleButtonPressed" text="Schedule An Inspection" />
-      <Button fx:id="reportFindingsButton" mnemonicParsing="false" onAction="#reportFindingsButtonPressed" text="Record Findings" />
-      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" />
+      <Label style="-fx-background-size: 18; -fx-font-weight: bold;" text="Inspection Schedule">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin></Label>
+      <Button fx:id="createScheduleButton" mnemonicParsing="false" onAction="#createScheduleButtonPressed" text="Schedule An Inspection">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin></Button>
+      <Button fx:id="viewScheduleButton" layoutX="240.0" layoutY="27.0" mnemonicParsing="false" onAction="#viewScheduleButtonPressed" text="View Schedules">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+      </Button>
+      <Button fx:id="reportFindingsButton" mnemonicParsing="false" onAction="#reportFindingsButtonPressed" text="Record Findings">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin></Button>
+      <Button fx:id="viewResultsButton" layoutX="261.0" layoutY="52.0" mnemonicParsing="false" onAction="#viewResultsButtonPressed" text="View Inspection Results">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+      </Button>
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin></Button>
    </children>
 </VBox>
