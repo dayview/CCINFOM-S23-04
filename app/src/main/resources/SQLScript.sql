@@ -1,17 +1,15 @@
--- RUN THIS IN MYSQL WORKBENCH BEFORE LOGGING IN
--- Common Login Credentials:
--- URL: jdbc:mysql://localhost:3306/business_database?useSSL=false&serverTimezone=UTC
--- Username: root
--- Password: <depends on your local settings>
+DROP DATABASE IF EXISTS `business_database`;
+CREATE DATABASE `business_database`;
 
-CREATE DATABASE IF NOT EXISTS `business_database`;
 USE `business_database`;
 
 DROP TABLE IF EXISTS `audit_log`;
 DROP TABLE IF EXISTS `notification_log`;
 DROP TABLE IF EXISTS `inspection_result`;
 DROP TABLE IF EXISTS `inspection_schedule`;
+DROP TABLE IF EXISTS `inspection`;
 DROP TABLE IF EXISTS `payment`;
+DROP TABLE IF EXISTS `permit_renewal_application`;
 DROP TABLE IF EXISTS `permit_application`;
 DROP TABLE IF EXISTS `business_owner`;
 DROP TABLE IF EXISTS `permit`;
@@ -21,7 +19,6 @@ DROP TABLE IF EXISTS `inspector`;
 DROP TABLE IF EXISTS `permit_type`;
 DROP TABLE IF EXISTS `fee_schedule`;
 DROP TABLE IF EXISTS `municipality`;
-
 
 CREATE TABLE `municipality` (
   `municipality_id` INT NOT NULL AUTO_INCREMENT,
@@ -45,7 +42,7 @@ CREATE TABLE `business` (
   `business_type` VARCHAR(100),
   `tax_id` VARCHAR(50) UNIQUE,
   `start_date` DATE,
-  `status` VARCHAR(50) NOT NULL DEFAULT '',
+  `status` VARCHAR(50) NOT NULL DEFAULT 'Active',
   `status_effective_date` DATE,
   `status_reason` VARCHAR(500),
   `support_doc_ref` VARCHAR(255),
@@ -97,6 +94,7 @@ CREATE TABLE `permit_type` (
     `validity_months` INT NOT NULL,
     PRIMARY KEY (`permit_type_id`),
     FOREIGN KEY (`fee_schedule_id`) REFERENCES `fee_schedule`(`fee_schedule_id`)
+        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `permit` (
@@ -119,7 +117,7 @@ CREATE TABLE `business_owner` (
     PRIMARY KEY(`owner_id`, `business_id`),
     FOREIGN KEY(`owner_id`) REFERENCES `owner`(`owner_id`),
     FOREIGN KEY(`business_id`) REFERENCES `business`(`business_id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `permit_application` (
     `application_id` INT NOT NULL AUTO_INCREMENT,
@@ -138,29 +136,55 @@ CREATE TABLE `permit_application` (
     FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `permit_renewal_application` (
+    `renewal_id` INT NOT NULL AUTO_INCREMENT,
+    `business_id` INT NOT NULL,
+    `previous_permit_id` INT NOT NULL,
+    `application_date` DATE NOT NULL,
+    `renewal_fee` DECIMAL(10,2) NOT NULL,
+    `surcharge` DECIMAL(10,2) DEFAULT 0.00,
+    `total_amount` DECIMAL(10,2) NOT NULL,
+    `status` VARCHAR(30) NOT NULL DEFAULT 'pending',
+    PRIMARY KEY (`renewal_id`),
+    FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
+    FOREIGN KEY (`previous_permit_id`) REFERENCES `permit`(`permit_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `payment` (
     `payment_id` INT NOT NULL AUTO_INCREMENT,
-    `application_id` INT NOT NULL,
+    `renewal_id` INT,
+    `application_id` INT,
     `business_id` INT NOT NULL,
     `permit_type_id` INT NOT NULL,
     `municipality_id` INT NOT NULL,
-    `payment_date` DATE NOT NULL,
+    `payment_date` DATETIME NOT NULL,
     `amount_paid` DECIMAL(10,2) NOT NULL,
     `mode_of_payment` VARCHAR(50),
     `or_number` VARCHAR(50),
     PRIMARY KEY (`payment_id`),
+    FOREIGN KEY (`renewal_id`) REFERENCES `permit_renewal_application`(`renewal_id`),
     FOREIGN KEY (`application_id`) REFERENCES `permit_application`(`application_id`),
     FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`),
     FOREIGN KEY (`permit_type_id`) REFERENCES `permit_type`(`permit_type_id`),
     FOREIGN KEY (`municipality_id`) REFERENCES `municipality`(`municipality_id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `inspection` (
+    `inspection_id` INT NOT NULL AUTO_INCREMENT,
+    `renewal_id` INT NOT NULL,
+    `inspector_id` INT NOT NULL,
+    `inspection_date` DATE NOT NULL,
+    PRIMARY KEY (`inspection_id`),
+    FOREIGN KEY (`renewal_id`) REFERENCES `permit_renewal_application`(`renewal_id`),
+    FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `inspection_schedule` (
   `schedule_id` INT NOT NULL AUTO_INCREMENT,
   `inspector_id` INT NOT NULL,
   `business_id` INT NOT NULL,
   `inspection_date` DATE,
-  `status` VARCHAR(20),
+  `status` VARCHAR(20) DEFAULT 'Scheduled',
   PRIMARY KEY (`schedule_id`),
   FOREIGN KEY (`inspector_id`) REFERENCES `inspector`(`inspector_id`),
   FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
@@ -171,7 +195,8 @@ CREATE TABLE `inspection_result` (
   `schedule_id` INT NOT NULL,
   `result` VARCHAR(35),
   `remarks` TEXT,
-  PRIMARY KEY (`inspection_id`)
+  PRIMARY KEY (`inspection_id`),
+  FOREIGN KEY (`schedule_id`) REFERENCES `inspection_schedule`(`schedule_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `notification_log` (
@@ -219,13 +244,13 @@ INSERT INTO `business`
 VALUES
 ('SR Transport Logistics Corp.', 'SR Logistics', 'Transportation', 'TIN-400-001', '2020-01-15', 'Active', 'Lot 10, Industrial Park Ave.', 'Barangay Don Jose', 1),
 ('Pampanga Culinary Arts Center', 'Kulinarya PH', 'Restaurant/Education', 'TIN-400-002', '2019-05-20', 'Active', 'Unit 3 Commercial Complex', 'Sto. Niño', 2),
-('Tagum Agri-Supply Hub', 'AgriHub', 'Retail/Agriculture', 'TIN-400-003', '2022-11-01', 'Pending', 'Apokon Road, near Public Market', 'Apokon', 3),
+('Tagum Agri-Supply Hub', 'AgriHub', 'Retail/Agriculture', 'TIN-400-003', '2022-11-01', 'Active', 'Apokon Road, near Public Market', 'Apokon', 3),
 ('Bayawan Ecotourism Resort', 'The Mangrove Retreat', 'Hospitality', 'TIN-400-004', '2018-08-10', 'Active', 'Coastal Highway, Sitio Kalikasan', 'Banga', 4),
 ('Isabela Grains and Milling', 'IGM Corp.', 'Manufacturing', 'TIN-400-005', '2023-03-25', 'Inactive', 'National Road, Zone 5', 'Alibagu', 5),
 ('Naga Digital Marketing Agency', 'Bicol Boost', 'Service/IT', 'TIN-400-006', '2021-09-12', 'Active', '4th Floor, CBD Plaza', 'Barangay Triangulo', 6),
 ('Vizcaya Hardware and Supplies', 'Vizcaya Build', 'Retail/Construction', 'TIN-400-007', '2020-07-07', 'Active', 'Main Street, Poblacion South', 'Poblacion', 7),
 ('Rizal Garment Export Inc.', 'RGEI', 'Manufacturing/Export', 'TIN-400-008', '2019-02-28', 'Active', 'Taytay Industrial Zone, Lot 22', 'San Juan', 8),
-('Bohol Aquatic Farms', 'Aquafish Maribojoc', 'Agriculture/Fishery', 'TIN-400-009', '2024-01-05', 'Pending', 'Purok 1, Coastal Area', 'Poblacion', 9),
+('Bohol Aquatic Farms', 'Aquafish Maribojoc', 'Agriculture/Fishery', 'TIN-400-009', '2024-01-05', 'Active', 'Purok 1, Coastal Area', 'Poblacion', 9),
 ('Samar Power Systems', 'SPS Energy', 'Utilities/Service', 'TIN-400-010', '2017-06-19', 'Closed', 'Barangay Hall Road', 'Geracdo', 10);
 
 INSERT INTO `owner`
@@ -242,6 +267,11 @@ VALUES
 ('Morales', 'Daniel', 'Perez', '0996-901-2345', 'dmorales@email.com', 'TIN ID', '901-234-567-000', '901-234-567-000', '579 Quezon Blvd., Taytay, Rizal'),
 ('Valencia', 'Isabella', 'Santos', '0912-012-3456', 'ivalencia@email.com', 'PRC ID', 'PRC-2023-567890', '012-345-678-000', '864 Roxas Ave., Bayombong, Nueva Vizcaya');
 
+INSERT INTO `business_owner` (`owner_id`, `business_id`)
+VALUES
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5),
+(6, 6), (7, 7), (8, 8), (9, 9), (10, 10);
+
 INSERT INTO `inspector`
 (`last_name`, `first_name`, `middle_name`, `designation`, `license_number`, `active`, `municipality_id`)
 VALUES
@@ -251,7 +281,7 @@ VALUES
 ('Garcia', 'Ana', 'Lim', 'Mechanical Inspector', 'LIC-2023-004', 1, 4),
 ('Villanueva', 'Carlos', 'Ramos', 'Structural Inspector', 'LIC-2023-005', 1, 5),
 ('Cruz', 'Emilia', 'Flores', 'Plumbing Inspector', 'LIC-2023-006', 1, 6),
-('Torres', 'Roberto', 'Alonzo', 'Fire Safety Inspector', 'LIC-2023-007', 0, 7),
+('Torres', 'Roberto', 'Alonzo', 'Fire Safety Inspector', 'LIC-2023-007', 1, 7),
 ('Domingo', 'Liza', 'Chua', 'Environmental Inspector', 'LIC-2023-008', 1, 8),
 ('Perez', 'Mark', 'Bernardo', 'Building Inspector', 'LIC-2023-009', 1, 9),
 ('Santiago', 'Angela', 'Diaz', 'Occupational Safety Inspector', 'LIC-2023-010', 1, 10);
@@ -259,41 +289,77 @@ VALUES
 INSERT INTO `fee_schedule`
 (`base_fee`, `surcharge_rule`, `validity_months`, `document_requirements`)
 VALUES
-    (5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
-    (1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
-    (2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
-    (8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
-    (1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
-    (3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
-    (2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
-    (500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
-    (1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
-    (10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
+(5000.00, 'Late Renewal: 25% Surcharge after 30 days', 12, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit, Occupancy Permit, DTI/SEC Registration'),
+(1500.00, 'Late Renewal: 500.00 Flat Surcharge', 12, 'Health Certificate, Sanitary Inspection Report, Business Layout Plan'),
+(2000.00, 'Late Renewal: 10% Surcharge per Month', 12, 'Fire Safety Evaluation Clearance, Building Floor Plan, Certificate of Electrical Inspection'),
+(8000.00, 'Late Renewal: 1000.00 per Month delay', 24, 'Building Plans, Structural Design, Lot Plan, Tax Declaration, Occupancy Permit'),
+(1000.00, 'No surcharge', 12, 'Location Plan, Tax Declaration, Land title or Contract of Lease'),
+(3500.00, 'Late Renewal: 15% Surcharge', 36, 'Environmental Impact Assessment, Business Permit, Tax ID'),
+(2500.00, 'Late Renewal: 20% Surcharge after 60 days', 0, 'Certificate of Completion, Approved Building Plans, Electrical Safety Certificate'),
+(500.00, 'Late Renewal: 200.00 Flat Fee', 12, 'Medical Certificate, Chest X-Ray, Fecalysis Result'),
+(1200.00, 'Late Renewal: 10% Surcharge', 12, 'Design and Layout of Signage, Lease Contract or Lot Title, Business Permit'),
+(10000.00, 'Late Renewal: 30% surcharge after 15 days', 12, 'Mayors Permit, Police Clearance, Barangay Certification, SEC/DTI Registration');
 
 INSERT INTO `permit_type`
 (`permit_name`, `fee_schedule_id`, `document_requirements`, `validity_months`)
 VALUES
-    ('Mayors Permit', 1, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit', 12),
-    ('Sanitary Permit', 2, 'Health Certificate, Sanitary Inspection Report', 12),
-    ('Fire Safety Inspection Certificate', 3, 'Fire Safety Evaluation Clearance, Building Floor Plan', 12),
-    ('Building Permit', 4, 'Building Plans, Structural Design, Lot Plan', 24),
-    ('Zoning Clearance', 5, 'Location Plan, Tax Declaration', 12),
-    ('Environmental Compliance Certificate', 6, 'Environmental Impact Assessment', 36),
-    ('Occupancy Permit', 7, 'Certificate of Completion, Approved Building Plans', 0),
-    ('Health Certificate', 8, 'Medical Certificate, Chest X-Ray', 12),
-    ('Signage Permit', 9, 'Design and Layout of Signage', 12),
-    ('Liquor License', 10, 'Mayors Permit, Police Clearance', 12);
+('Mayors Permit', 1, 'Barangay Clearance, Fire Safety Certificate, Sanitary Permit', 12),
+('Sanitary Permit', 2, 'Health Certificate, Sanitary Inspection Report', 12),
+('Fire Safety Inspection Certificate', 3, 'Fire Safety Evaluation Clearance, Building Floor Plan', 12),
+('Building Permit', 4, 'Building Plans, Structural Design, Lot Plan', 24),
+('Zoning Clearance', 5, 'Location Plan, Tax Declaration', 12),
+('Environmental Compliance Certificate', 6, 'Environmental Impact Assessment', 36),
+('Occupancy Permit', 7, 'Certificate of Completion, Approved Building Plans', 0),
+('Health Certificate', 8, 'Medical Certificate, Chest X-Ray', 12),
+('Signage Permit', 9, 'Design and Layout of Signage', 12),
+('Liquor License', 10, 'Mayors Permit, Police Clearance', 12);
 
 INSERT INTO `permit`
 (`business_id`, `permit_type_id`, `status`, `status_effective_date`, `validity_start`, `validity_end`, `note`)
 VALUES
-(1, 1, 'Active', '2024-01-15', '2024-01-15', '2025-01-14', 'Initial Mayor Permit issuance'),
-(2, 1, 'Active', '2024-05-20', '2024-05-20', '2025-05-19', 'Renewed on time'),
-(3, 2, 'Pending', '2024-11-01', NULL, NULL, 'Awaiting sanitary inspection'),
-(4, 1, 'Active', '2024-08-10', '2024-08-10', '2025-08-09', 'Resort permit'),
+(1, 1, 'Active', '2024-12-01', '2024-01-15', '2025-01-14', 'Initial Mayor Permit issuance'),
+(2, 1, 'Active', '2024-12-01', '2024-05-20', '2025-05-19', 'Renewed on time'),
+(3, 1, 'Active', '2024-12-01', '2024-11-01', '2025-10-31', 'New business permit'),
+(4, 1, 'Active', '2024-12-01', '2024-08-10', '2025-08-09', 'Resort permit'),
 (5, 1, 'Suspended', '2024-03-25', '2024-03-25', '2024-03-24', 'Business inactive'),
-(6, 1, 'Active', '2024-09-12', '2024-09-12', '2025-09-11', 'Digital agency permit'),
-(7, 1, 'Active', '2024-07-07', '2024-07-07', '2025-07-06', 'Hardware store permit'),
+(6, 1, 'Active', '2024-01-01', '2024-01-01', '2024-12-31', 'Permit expired - needs renewal'),
+(7, 1, 'Active', '2024-06-01', '2024-01-01', '2024-12-31', 'Late renewal case'),
 (8, 1, 'Active', '2024-02-28', '2024-02-28', '2025-02-27', 'Export business permit'),
 (9, 1, 'Pending', '2024-01-05', NULL, NULL, 'New business application'),
-(10, 1, 'Revoked', '2024-06-19', '2024-06-19', '2024-06-18', 'Business closed');
+(10, 1, 'Revoked', '2024-06-19', '2024-06-19', '2024-06-18', 'Business closed'),
+(1, 2, 'Active', '2024-12-01', '2024-01-15', '2025-01-14', 'Sanitary permit'),
+(2, 3, 'Active', '2024-12-01', '2024-05-20', '2025-05-19', 'Fire safety certificate'),
+(3, 2, 'Pending', '2024-11-01', NULL, NULL, 'Awaiting sanitary inspection');
+
+INSERT INTO `permit_renewal_application`
+(`business_id`, `previous_permit_id`, `application_date`, `renewal_fee`, `surcharge`, `total_amount`, `status`)
+VALUES
+(1, 1, '2024-12-01', 5000.00, 0.00, 5000.00, 'pending'),
+(2, 2, '2024-12-05', 5000.00, 0.00, 5000.00, 'pending'),
+(3, 3, '2024-11-20', 5000.00, 0.00, 5000.00, 'paid'),
+(4, 4, '2024-11-25', 5000.00, 0.00, 5000.00, 'paid'),
+(6, 6, '2024-12-15', 5000.00, 1250.00, 6250.00, 'pending');
+
+INSERT INTO `payment`
+(`renewal_id`, `application_id`, `business_id`, `permit_type_id`, `municipality_id`, `payment_date`, `amount_paid`, `mode_of_payment`, `or_number`)
+VALUES
+(3, NULL, 3, 1, 3, '2024-11-20 10:30:00', 5000.00, 'Cash', 'OR-2024-001'),
+(4, NULL, 4, 1, 4, '2024-11-25 14:15:00', 5000.00, 'GCash', 'OR-2024-002');
+
+INSERT INTO `inspection`
+(`renewal_id`, `inspector_id`, `inspection_date`)
+VALUES
+(3, 3, '2024-11-25'),
+(4, 4, '2024-11-28');
+
+INSERT INTO `inspection_schedule`
+(`inspector_id`, `business_id`, `inspection_date`, `status`)
+VALUES
+(1, 1, '2024-12-10', 'Scheduled'),
+(3, 3, '2024-11-25', 'Completed'),
+(4, 4, '2024-11-28', 'Scheduled');
+
+INSERT INTO `inspection_result`
+(`schedule_id`, `result`, `remarks`)
+VALUES
+(2, 'PASS', 'All requirements met. Business complies with safety standards.');
