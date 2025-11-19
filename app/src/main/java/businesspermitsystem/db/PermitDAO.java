@@ -224,4 +224,38 @@ public class PermitDAO {
             return 0;
         }
     }
+
+    /**
+     * Retrieves all permits whose status effective date falls within the specified year.
+     * This method is crucial for the Permits Issued Report.
+     * * @param year the year to filter the permits by
+     * @return List of PermitModel objects issued in that year
+     */
+    public List<PermitModel> getPermitDataForYear(int year) {
+        List<PermitModel> permits = new ArrayList<>();
+        String query = "SELECT * FROM Permit WHERE YEAR(status_effective_date) = ? AND status != 'pending'"; 
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            
+            pstmt.setInt(1, year); 
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    PermitModel permit = new PermitModel(
+                        rs.getInt("permit_id"),
+                        rs.getInt("business_id"),
+                        rs.getInt("permit_type_id"),
+                        rs.getString("status"),
+                        rs.getDate("status_effective_date"),
+                        rs.getString("note")
+                    );
+                    permits.add(permit);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving permits for year " + year + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return permits;
+    }
 }
