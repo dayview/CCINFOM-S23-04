@@ -7,13 +7,15 @@ import businesspermitsystem.db.MunicipalityDAO;
 import businesspermitsystem.models.PermitModel;
 import businesspermitsystem.models.BusinessModel;
 import businesspermitsystem.models.PermitTypeModel;
-import businesspermitsystem.utils.SceneManager;
 import businesspermitsystem.models.MunicipalityModel;
-
+import businesspermitsystem.utils.ReportExporter; 
+import businesspermitsystem.utils.ReportFormat;   
+import businesspermitsystem.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections; 
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,6 +30,10 @@ public class PermitsIssuedReportController {
     @FXML private TextField yearTextField;
     @FXML private TextArea reportTextArea;
     @FXML private Button generateReportButton;
+    
+    // --- Export Controls ---
+    @FXML private ChoiceBox<ReportFormat> exportFormatChoiceBox;
+    @FXML private Button exportButton;
 
     // --- Data Access Objects (DAOs) ---
     private final PermitDAO permitDAO = new PermitDAO();
@@ -35,17 +41,22 @@ public class PermitsIssuedReportController {
     private final PermitTypeDAO permitTypeDAO = new PermitTypeDAO(); 
     private final MunicipalityDAO municipalityDAO = new MunicipalityDAO(); 
     
-
+    // --- Internal State ---
     private Map<Integer, PermitTypeModel> permitTypeCache;
     private Map<Integer, MunicipalityModel> municipalityCache;
+    private String currentReportContent = ""; 
 
     @FXML
     private void initialize() {
-  
+        // Pre-fill the current year
         yearTextField.setText(String.valueOf(Year.now().getValue()));
-        reportTextArea.setText("Enter a year and click 'Generate Report' to view the analysis.");
+        reportTextArea.setText("Enter a year and click 'Generate' to view the analysis.");
         
-        // Disable button if year field is empty
+        // Setup Export Options
+        exportFormatChoiceBox.setItems(FXCollections.observableArrayList(ReportFormat.values()));
+        exportFormatChoiceBox.getSelectionModel().select(ReportFormat.PDF); 
+        
+        // Disable generate button if year field is invalid
         yearTextField.textProperty().addListener((obs, oldVal, newVal) -> 
             generateReportButton.setDisable(newVal.trim().isEmpty() || !newVal.matches("\\d{4}"))
         );
@@ -54,15 +65,13 @@ public class PermitsIssuedReportController {
     }
     
     /**
-     * Loads necessary  data (Permit Types and Municipalities) into the variables.
+     * Loads necessary master data (Permit Types and Municipalities) into memory caches.
      */
     private void loadCaches() {
         try {
-            // Load Permit Types
             permitTypeCache = permitTypeDAO.getAllPermitTypes().stream()
                 .collect(Collectors.toMap(PermitTypeModel::getID, type -> type));
                 
-            // Load Municipalities
             municipalityCache = municipalityDAO.getMunicipalities().stream()
                 .collect(Collectors.toMap(MunicipalityModel::getMunicipalityID, muni -> muni));
                 
@@ -80,24 +89,33 @@ public class PermitsIssuedReportController {
         }
 
         int year = Integer.parseInt(yearText);
-        
-        // Ensure caches are loaded before processing
         loadCaches();
         
         reportTextArea.setText("Generating report for year " + year + "...\n");
         generateReportButton.setDisable(true);
+        exportButton.setDisable(true); 
 
         try {
           
             List<PermitModel> permitsInYear = permitDAO.getPermitDataForYear(year);
             
-         
+            
             String reportContent = buildReportContent(year, permitsInYear);
             
+          
             reportTextArea.setText(reportContent);
+            currentReportContent = reportContent;
+            
+            
+            if (!permitsInYear.isEmpty()) {
+                exportButton.setDisable(false);
+            } else {
+                
+                exportButton.setDisable(false);
+            }
 
         } catch (SQLException e) {
-            reportTextArea.setText("ERROR: Failed to retrieve data for the report due to a database error: " + e.getMessage());
+            reportTextArea.setText("ERROR: Failed to retrieve data: " + e.getMessage());
             showAlert(AlertType.ERROR, "Database Error", "Failed to generate report: " + e.getMessage());
             e.printStackTrace();
         } finally {
@@ -106,12 +124,36 @@ public class PermitsIssuedReportController {
     }
 
     /**
-     * Processes the list of permits and generates the final formatted report string.
+     * Handles the export action using the selected format.
+     */
+    @FXML
+    private void exportReport() {
+        if (currentReportContent.isEmpty()) {
+            showAlert(AlertType.WARNING, "No Data", "Please generate a report first.");
+            return;
+        }
+
+        ReportFormat selectedFormat = exportFormatChoiceBox.getValue();
+        if (selectedFormat == null) {
+            showAlert(AlertType.WARNING, "Selection Error", "Please select an export format.");
+            return;
+        }
+
+        String year = yearTextField.getText();
+        String defaultFileName = String.format("Permits_Issued_Report_FY%s", year); // Extension handled by exporter
+        Stage currentStage = (Stage) reportTextArea.getScene().getWindow();
+
+        
+        ReportExporter.export(currentReportContent, defaultFileName, selectedFormat, currentStage);
+    }
+
+    /**
+     * Aggregates data and builds the formatted report string using StringBuilder.
      */
     private String buildReportContent(int year, List<PermitModel> permits) throws SQLException {
         StringBuilder report = new StringBuilder();
         
-        //  Header 
+        // --- Header ---
         report.append("==================================================================\n");
         report.append(String.format("PERMITS ISSUED REPORT - FY %d\n", year));
         report.append("==================================================================\n\n");
@@ -124,21 +166,20 @@ public class PermitsIssuedReportController {
             return report.toString();
         }
 
-        // Permit Distribution 
+        // --- Section 1: Permit Distribution Analysis ---
         report.append("--- I. PERMIT DISTRIBUTION ANALYSIS ---\n\n");
 
-        //  By Status
+        // 1.1 By Status
         Map<String, Long> statusDistribution = permits.stream()
             .collect(Collectors.groupingBy(PermitModel::getStatus, Collectors.counting()));
             
         report.append("1.1 Distribution by Permit Status:\n");
         statusDistribution.entrySet().stream()
             .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-            .forEach(entry -> report.append(String.format("  - %-15s: %d\n", entry.getKey(), entry.getValue())));
+            .forEach(entry -> report.append(String.format("  - %-20s: %d\n", entry.getKey(), entry.getValue())));
         report.append("\n");
 
-
-        //  By Permit Type
+        // 1.2 By Permit Type
         Map<String, Long> typeDistribution = permits.stream()
             .collect(Collectors.groupingBy(
                 permit -> {
@@ -154,7 +195,7 @@ public class PermitsIssuedReportController {
             .forEach(entry -> report.append(String.format("  - %-25s: %d\n", entry.getKey(), entry.getValue())));
         report.append("\n");
         
-        // Aggregation 1.3: By Business (Top 5 businesses with the most permits)
+        // 1.3 Top Businesses
         Map<String, Long> businessDistribution = permits.stream()
             .collect(Collectors.groupingBy(
                 permit -> {
@@ -162,7 +203,7 @@ public class PermitsIssuedReportController {
                         BusinessModel business = businessDAO.getBusinessByID(permit.getBusinessID());
                         return business != null ? business.getBusinessName() : "Unknown Business ID " + permit.getBusinessID();
                     } catch (SQLException e) {
-                        return "DB Error Business ID " + permit.getBusinessID();
+                        return "DB Error";
                     }
                 },
                 Collectors.counting()
@@ -175,10 +216,10 @@ public class PermitsIssuedReportController {
             .forEach(entry -> report.append(String.format("  - %-30s: %d\n", entry.getKey(), entry.getValue())));
         report.append("\n");
 
-        
+        // --- Section 2: Geographic Distribution ---
         report.append("--- II. GEOGRAPHIC DISTRIBUTION ---\n\n");
         
-
+        // 2.1 Group permits by Municipality Name
         Map<String, List<PermitModel>> permitsByMunicipality = new HashMap<>();
 
         for (PermitModel permit : permits) {
@@ -193,21 +234,21 @@ public class PermitsIssuedReportController {
         
         report.append("2.1 Permit Distribution per Municipality:\n");
         permitsByMunicipality.entrySet().stream()
-            .sorted(Map.Entry.<String, List<PermitModel>>comparingByValue( (l1, l2) -> Integer.compare(l2.size(), l1.size()) ))
+            .sorted(Map.Entry.<String, List<PermitModel>>comparingByValue((l1, l2) -> Integer.compare(l2.size(), l1.size()))) // Sort by count descending
             .forEach(entry -> {
                 String muniName = entry.getKey();
                 int count = entry.getValue().size();
                 
-               
+                report.append(String.format("\n>> %s (TOTAL: %d Permits)\n", muniName, count));
+                
+                // Detailed breakdown per municipality
                 Map<String, Long> muniStatusBreakdown = entry.getValue().stream()
                     .collect(Collectors.groupingBy(PermitModel::getStatus, Collectors.counting()));
-                
-                report.append(String.format("\n>> %s (TOTAL: %d Permits)\n", muniName, count));
                 
                 muniStatusBreakdown.entrySet().stream()
                     .sorted(Map.Entry.<String, Long>comparingByKey())
                     .forEach(statusEntry -> 
-                        report.append(String.format("    - %s: %d\n", statusEntry.getKey(), statusEntry.getValue())));
+                        report.append(String.format("    - %-15s: %d\n", statusEntry.getKey(), statusEntry.getValue())));
             });
 
         report.append("\n==================================================================\n");
@@ -215,8 +256,6 @@ public class PermitsIssuedReportController {
         
         return report.toString();
     }
-    
-    // --- Helper Methods ---
 
     private void showAlert(AlertType type, String title, String message) {
         Alert alert = new Alert(type);
@@ -228,8 +267,8 @@ public class PermitsIssuedReportController {
 
     @FXML
     private void closeReport() {
-        Stage currentStage = (Stage) yearTextField.getScene().getWindow();
-        SceneManager sceneManager = new SceneManager(currentStage);
-        sceneManager.switchScene("/view/MainView.fxml", "Business Permit Dashboard");
+        Stage stage = (Stage) exportButton.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(stage);
+        sceneManager.switchScene("/view/mainView.fxml", "Business Permit System");
     }
 }
