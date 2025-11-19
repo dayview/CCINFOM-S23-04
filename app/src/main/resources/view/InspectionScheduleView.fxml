@@ -56,7 +56,7 @@
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin></Button>
-      <Button fx:id="viewResults" layoutX="261.0" layoutY="52.0" mnemonicParsing="false" onAction="#viewResultsPressed" text="View Inspection Results">
+      <Button fx:id="viewResultsButton" layoutX="261.0" layoutY="52.0" mnemonicParsing="false" onAction="#viewResultsButtonPressed" text="View Inspection Results">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin>

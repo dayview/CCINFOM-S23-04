@@ -2,6 +2,7 @@ package businesspermitsystem.controllers;
 
 import businesspermitsystem.db.InspectionScheduleDAO;
 import businesspermitsystem.models.InspectionScheduleModel;
+import businesspermitsystem.utils.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -27,7 +28,7 @@ public class ViewInspectionSchedulesController {
     @FXML private TableColumn<InspectionScheduleModel, Integer> colScheduleID;
     @FXML private TableColumn<InspectionScheduleModel, Integer> colBusinessID;
     @FXML private TableColumn<InspectionScheduleModel, Integer> colInspectorID;
-    @FXML private TableColumn<InspectionScheduleModel, String> colDate; // LocalDate binds as String/Object often
+    @FXML private TableColumn<InspectionScheduleModel, String> colDate; 
     @FXML private TableColumn<InspectionScheduleModel, String> colStatus;
 
     
@@ -106,7 +107,6 @@ public class ViewInspectionSchedulesController {
                     return false; 
                 }
             }
-
            
             LocalDate date = schedule.getInspectionDate();
             LocalDate from = filterDateFrom.getValue();
@@ -133,8 +133,9 @@ public class ViewInspectionSchedulesController {
 
     @FXML
     private void closeWindow() {
-        Stage stage = (Stage) scheduleTable.getScene().getWindow();
-        stage.close();
+        Stage currentStage = (Stage) filterBusinessIdField.getScene().getWindow();
+        SceneManager sceneManager = new SceneManager(currentStage);
+        sceneManager.switchScene("/view/InspectionScheduleView.fxml", "Inspection Schedules And Clearance");
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
