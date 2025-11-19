@@ -5,14 +5,21 @@ import businesspermitsystem.models.PermitApplicationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Data Access Object (DAO) for managing Permit Application records
+ * in the Business Permit System. Provides CRUD operations as well as
+ * specialized queries for payment processing and inspector scheduling.
+ */
 public class PermitApplicationDAO {
 
+    /** Active database connection retrieved from DatabaseConnector. */
     private final Connection connection;
 
+    /**
+     * Initializes the DAO and validates that a DB connection exists.
+     */
     public PermitApplicationDAO() {
         this.connection = DatabaseConnector.connection;
 
@@ -21,7 +28,12 @@ public class PermitApplicationDAO {
         }
     }
 
-    // INSERT NEW APPLICATION
+    /**
+     * Inserts a new permit application record into the database.
+     *
+     * @param app the permit application model containing the record details
+     * @return generated application ID if inserted successfully, otherwise -1
+     */
     public int addPermitApplication(PermitApplicationModel app) {
         String sql = """
             INSERT INTO permit_application 
@@ -35,10 +47,8 @@ public class PermitApplicationDAO {
             preparedStatement.setInt(1, app.getBusinessId());
             preparedStatement.setInt(2, app.getPermitTypeId());
             preparedStatement.setDate(3, Date.valueOf(app.getApplicationDate()));
-
             preparedStatement.setDate(4, app.getApprovalDate() != null ? Date.valueOf(app.getApprovalDate()) : null);
             preparedStatement.setDate(5, app.getExpirationDate() != null ? Date.valueOf(app.getExpirationDate()) : null);
-
             preparedStatement.setString(6, app.getStatus());
             preparedStatement.setBigDecimal(7, app.getBaseFee());
             preparedStatement.setBigDecimal(8, app.getSurcharge());
@@ -59,7 +69,12 @@ public class PermitApplicationDAO {
         return -1;
     }
 
-    // GET SINGLE APPLICATION
+    /**
+     * Retrieves a specific permit application by ID.
+     *
+     * @param id application ID
+     * @return matching PermitApplicationModel, or null if not found
+     */
     public PermitApplicationModel getApplicationById(int id) {
         String sql = "SELECT * FROM permit_application WHERE application_id = ?";
 
@@ -76,7 +91,12 @@ public class PermitApplicationDAO {
         return null;
     }
 
-    // GET BUSINESS APPLICATIONS
+    /**
+     * Retrieves all permit applications associated with a specific business.
+     *
+     * @param businessId the business ID
+     * @return list of permit applications belonging to the business
+     */
     public List<PermitApplicationModel> getApplicationsByBusinessId(int businessId) {
         List<PermitApplicationModel> list = new ArrayList<>();
 
@@ -96,7 +116,12 @@ public class PermitApplicationDAO {
         return list;
     }
 
-    // GET BY STATUS
+    /**
+     * Retrieves permit applications by a specific status value.
+     *
+     * @param status application status (e.g., "Paid", "Pending")
+     * @return list of applications matching the status
+     */
     public List<PermitApplicationModel> getApplicationsByStatus(String status) {
         List<PermitApplicationModel> list = new ArrayList<>();
 
@@ -116,7 +141,12 @@ public class PermitApplicationDAO {
         return list;
     }
 
-    // **FIXED UPDATE — MATCHES NEW SCHEMA**
+    /**
+     * Updates an existing permit application to the new schema format.
+     *
+     * @param app updated permit application model
+     * @return true if updated successfully, false otherwise
+     */
     public boolean updatePermitApplication(PermitApplicationModel app) {
         String sql = """
             UPDATE permit_application
@@ -138,16 +168,13 @@ public class PermitApplicationDAO {
             preparedStatement.setInt(1, app.getBusinessId());
             preparedStatement.setInt(2, app.getPermitTypeId());
             preparedStatement.setDate(3, Date.valueOf(app.getApplicationDate()));
-
             preparedStatement.setDate(4, app.getApprovalDate() != null ? Date.valueOf(app.getApprovalDate()) : null);
             preparedStatement.setDate(5, app.getExpirationDate() != null ? Date.valueOf(app.getExpirationDate()) : null);
-
             preparedStatement.setString(6, app.getStatus());
             preparedStatement.setBigDecimal(7, app.getBaseFee());
             preparedStatement.setBigDecimal(8, app.getSurcharge());
             preparedStatement.setBigDecimal(9, app.getTotalFee());
             preparedStatement.setString(10, app.getRemarks());
-
             preparedStatement.setInt(11, app.getApplicationId());
 
             return preparedStatement.executeUpdate() > 0;
@@ -159,7 +186,12 @@ public class PermitApplicationDAO {
         return false;
     }
 
-    // DELETE
+    /**
+     * Deletes a permit application from the database.
+     *
+     * @param id application ID to delete
+     * @return true if deleted successfully, false otherwise
+     */
     public boolean deletePermitApplication(int id) {
         String sql = "DELETE FROM permit_application WHERE application_id = ?";
 
@@ -172,33 +204,11 @@ public class PermitApplicationDAO {
         return false;
     }
 
-    // MAP RESULTSET → MODEL
-    private PermitApplicationModel extractApplication(ResultSet rs) throws SQLException {
-        PermitApplicationModel app = new PermitApplicationModel();
-
-        app.setApplicationId(rs.getInt("application_id"));
-        app.setBusinessId(rs.getInt("business_id"));
-        app.setPermitTypeId(rs.getInt("permit_type_id"));
-
-        app.setApplicationDate(rs.getDate("application_date").toLocalDate());
-
-        Date approval = rs.getDate("approval_date");
-        if (approval != null) app.setApprovalDate(approval.toLocalDate());
-
-        Date exp = rs.getDate("expiration_date");
-        if (exp != null) app.setExpirationDate(exp.toLocalDate());
-
-        app.setStatus(rs.getString("status"));
-
-        app.setBaseFee(rs.getBigDecimal("base_fee"));
-        app.setSurcharge(rs.getBigDecimal("surcharge"));
-        app.setTotalFee(rs.getBigDecimal("total_fee"));
-
-        app.setRemarks(rs.getString("remarks"));
-
-        return app;
-    }
-
+    /**
+     * Retrieves all applications with status 'For Payment' for the payment screen.
+     *
+     * @return list of applications waiting for payment
+     */
     public List<PermitApplicationModel> getApplicationsForPayment() {
         List<PermitApplicationModel> list = new ArrayList<>();
 
@@ -207,28 +217,7 @@ public class PermitApplicationDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
-            while (rs.next()) {
-                PermitApplicationModel app = new PermitApplicationModel();
-
-                app.setApplicationId(rs.getInt("application_id"));
-                app.setBusinessId(rs.getInt("business_id"));
-                app.setPermitTypeId(rs.getInt("permit_type_id"));
-                app.setApplicationDate(rs.getDate("application_date").toLocalDate());
-
-                if (rs.getDate("approval_date") != null)
-                    app.setApprovalDate(rs.getDate("approval_date").toLocalDate());
-
-                if (rs.getDate("expiration_date") != null)
-                    app.setExpirationDate(rs.getDate("expiration_date").toLocalDate());
-
-                app.setStatus(rs.getString("status"));
-                app.setBaseFee(rs.getBigDecimal("base_fee"));
-                app.setSurcharge(rs.getBigDecimal("surcharge"));
-                app.setTotalFee(rs.getBigDecimal("total_fee"));
-                app.setRemarks(rs.getString("remarks"));
-
-                list.add(app);
-            }
+            while (rs.next()) list.add(extractApplication(rs));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,10 +227,10 @@ public class PermitApplicationDAO {
     }
 
     /**
-     * Returns a map of application_id -> business_name
-     * for all applications that are already paid and ready for inspection.
+     * Retrieves all paid applications that have NOT been scheduled yet for inspection.
+     * Excludes businesses that already have an inspection schedule entry.
      *
-     * This avoids modifying the PermitApplicationModel.
+     * @return a list of ApplicationEntry objects containing application + business info
      */
     public List<InspectorScheduleController.ApplicationEntry> getPaidApplicationsForScheduling() {
 
@@ -266,13 +255,11 @@ public class PermitApplicationDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int appId = rs.getInt("application_id");
-                int bizId = rs.getInt("business_id");
-                int muniId = rs.getInt("municipality_id");
-                String businessName = rs.getString("business_name");
-
                 list.add(new InspectorScheduleController.ApplicationEntry(
-                        appId, bizId, muniId, businessName
+                        rs.getInt("application_id"),
+                        rs.getInt("business_id"),
+                        rs.getInt("municipality_id"),
+                        rs.getString("business_name")
                 ));
             }
 
@@ -284,5 +271,33 @@ public class PermitApplicationDAO {
         return list;
     }
 
+    /**
+     * Extracts a PermitApplicationModel from a result set.
+     *
+     * @param rs ResultSet from SQL query
+     * @return constructed PermitApplicationModel
+     * @throws SQLException if column access is invalid
+     */
+    private PermitApplicationModel extractApplication(ResultSet rs) throws SQLException {
+        PermitApplicationModel app = new PermitApplicationModel();
 
+        app.setApplicationId(rs.getInt("application_id"));
+        app.setBusinessId(rs.getInt("business_id"));
+        app.setPermitTypeId(rs.getInt("permit_type_id"));
+        app.setApplicationDate(rs.getDate("application_date").toLocalDate());
+
+        Date approval = rs.getDate("approval_date");
+        if (approval != null) app.setApprovalDate(approval.toLocalDate());
+
+        Date exp = rs.getDate("expiration_date");
+        if (exp != null) app.setExpirationDate(exp.toLocalDate());
+
+        app.setStatus(rs.getString("status"));
+        app.setBaseFee(rs.getBigDecimal("base_fee"));
+        app.setSurcharge(rs.getBigDecimal("surcharge"));
+        app.setTotalFee(rs.getBigDecimal("total_fee"));
+        app.setRemarks(rs.getString("remarks"));
+
+        return app;
+    }
 }
