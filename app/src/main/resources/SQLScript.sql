@@ -7,6 +7,8 @@ CREATE DATABASE `business_database`;
 
 USE `business_database`;
 
+DROP TABLE IF EXISTS `audit_log`;
+DROP TABLE IF EXISTS `notification_log`;
 DROP TABLE IF EXISTS `inspection_result`;
 DROP TABLE IF EXISTS `inspection_schedule`;
 DROP TABLE IF EXISTS `permit_application`;
@@ -154,6 +156,38 @@ CREATE TABLE `inspection_schedule` (
   FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `notification_log` (
+    `notice_id` INT NOT NULL AUTO_INCREMENT,
+    `business_id` INT NOT NULL,
+    `owner_id` INT NOT NULL,
+    `channel` VARCHAR(20) NOT NULL, -- 'SMS' or 'Email'
+    `sent_date_time` DATETIME NOT NULL,
+    `subject` VARCHAR(255),
+    `message_preview` TEXT,
+    PRIMARY KEY (`notice_id`),
+    FOREIGN KEY (`business_id`) REFERENCES `business`(`business_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`owner_id`) REFERENCES `owner`(`owner_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    INDEX `idx_business_notifications` (`business_id`),
+    INDEX `idx_owner_notifications` (`owner_id`),
+    INDEX `idx_notification_date` (`sent_date_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `audit_log` (
+    `audit_id` INT NOT NULL AUTO_INCREMENT,
+    `entity` VARCHAR(50) NOT NULL,  -- 'Business', 'Permit', 'Payment', etc.
+    `entity_id` INT NOT NULL,
+    `action` VARCHAR(20) NOT NULL,  -- 'CREATE', 'UPDATE', 'DELETE'
+    `changed_by_user` VARCHAR(100),
+    `change_datetime` DATETIME NOT NULL,
+    `change_summary` TEXT,  -- JSON format of changes
+    PRIMARY KEY (`audit_id`),
+    INDEX `idx_entity_audit` (`entity`, `entity_id`),
+    INDEX `idx_user_audit` (`changed_by_user`),
+    INDEX `idx_audit_date` (`change_datetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO `municipality`
 (`municipality_name`, `province`, `region`, `classification`, `contact_number`, `office_street`, `office_barangay`, `office_zipcode`)
 VALUES
@@ -251,4 +285,3 @@ VALUES
 (8, 1, 'Active', '2024-02-28', '2024-02-28', '2025-02-27', 'Export business permit'),
 (9, 1, 'Pending', '2024-01-05', NULL, NULL, 'New business application'),
 (10, 1, 'Revoked', '2024-06-19', '2024-06-19', '2024-06-18', 'Business closed');
-

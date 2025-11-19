@@ -2,20 +2,23 @@ package businesspermitsystem.services;
 
 import businesspermitsystem.db.*;
 import businesspermitsystem.models.*;
-
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessStatusUpdateService {
+
     private final BusinessDAO businessDAO;
     private final OwnerDAO ownerDAO;
     private final PermitDAO permitDAO;
-    // private final NotificationLogDAO notificationLogDAO;
-    // private final AuditLogDAO auditLogDAO;
+    private final NotificationLogDAO notificationLogDAO;
+    private final AuditLogDAO auditLogDAO;
 
     /**
      * Constructor - initializes all required DAOs
@@ -24,8 +27,8 @@ public class BusinessStatusUpdateService {
         this.businessDAO = new BusinessDAO();
         this.ownerDAO = new OwnerDAO();
         this.permitDAO = new PermitDAO();
-        // this.notificationLogDAO = new NotificationLogDAO();
-        // this.auditLogDAO = new AuditLogDAO();
+        this.notificationLogDAO = new NotificationLogDAO();
+        this.auditLogDAO = new AuditLogDAO();
     }
 
     /**
@@ -67,10 +70,10 @@ public class BusinessStatusUpdateService {
                 return new StatusUpdateResult(false, "Invalid status: " + newStatus);
             }
 
+
             conn.setAutoCommit(false);
 
             boolean businessUpdated = businessDAO.updateBusinessStatus(businessId, newStatus, effectiveDate, reason, supportDocRef);
-
             if (!businessUpdated) {
                 conn.rollback();
                 return new StatusUpdateResult(false, "Failed to update business status");
@@ -79,11 +82,8 @@ public class BusinessStatusUpdateService {
             if (shouldCascadeToPermits(newStatus)) {
                 String permitNote = "Permit status updated due to business status change to: " + newStatus;
                 int permitsUpdated = permitDAO.updatePermitsByBusinessID(businessId, newStatus, new java.util.Date(), permitNote);
-
                 if (permitsUpdated == 0) {
                     System.out.println("Warning: No permits were updated for business " + businessId);
-                    // conn.rollback();
-                    // return new StatusUpdateResult(false, "Failed to update related permits");
                 }
             }
 
@@ -96,24 +96,43 @@ public class BusinessStatusUpdateService {
                 String subject = "Business Status Update: " + business.getBusinessName();
                 String message = buildNotificationMessage(business.getBusinessName(), oldStatus, newStatus, effectiveDate, reason);
 
-                // NotificationLogModel notification = new NotificationLogModel(businessId, owner.getOwnerID(), notificationChannel, Timestamp.valueOf(LocalDateTime.now()), subject, message);
+                NotificationLogModel notification = new NotificationLogModel(
+                        businessId,
+                        owner.getOwnerID(),
+                        notificationChannel,
+                        Timestamp.valueOf(LocalDateTime.now()),
+                        subject,
+                        message
+                );
 
-                // boolean notificationLogged = notificationLogDAO.addNotificationLog(notification);
-                // if (!notificationLogged) {
-                    // System.err.println("Warning: Failed to log notification for owner " + owner.getOwnerID());
-                // }
+                boolean notificationLogged = notificationLogDAO.addNotificationLog(notification);
+                if (!notificationLogged) {
+                    System.err.println("Warning: Failed to log notification for owner " + owner.getOwnerID());
+                }
             }
 
             String changeSummary = buildAuditChangeSummary(oldStatus, newStatus, effectiveDate, reason, supportDocRef);
-            // AuditLogModel auditLog = new AuditLogModel("Business", businessId, "UPDATE", changedByUser, Timestamp.valueOf(LocalDateTime.now()), changeSummary);
 
-            // boolean auditLogged = auditLogDAO.addAuditLog(auditLog);
-            // if (!auditLogged) {
-            //    conn.rollback();
-            //     return new StatusUpdateResult(false, "Failed to create audit log");
-            // }
+            AuditLogModel auditLog = new AuditLogModel(
+                    "Business",
+                    businessId,
+                    "UPDATE",
+                    changedByUser,
+                    Timestamp.valueOf(LocalDateTime.now()),
+                    changeSummary
+            );
+
+            boolean auditLogged = auditLogDAO.addAuditLog(auditLog);
+            if (!auditLogged) {
+                conn.rollback();
+                return new StatusUpdateResult(false, "Failed to create audit log");
+            }
+
             conn.commit();
-            return new StatusUpdateResult(true, "Business status successfully updated from '" + oldStatus + "' to '" + newStatus + "'");
+            return new StatusUpdateResult(true,
+                    "Business status successfully updated from '" + oldStatus + "' to '" + newStatus + "'. " +
+                            "Notifications sent to " + owners.size() + " owner(s).");
+
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -122,6 +141,7 @@ public class BusinessStatusUpdateService {
             }
             e.printStackTrace();
             return new StatusUpdateResult(false, "Database error: " + e.getMessage());
+
         } finally {
             try {
                 conn.setAutoCommit(true);
@@ -136,9 +156,9 @@ public class BusinessStatusUpdateService {
      */
     private boolean isValidStatus(String status) {
         return status.equals("Active") || status.equals("Suspended") ||
-               status.equals("Closed") || status.equals("Pending") ||
-               status.equals("Revoked") || status.equals("Merged") ||
-               status.equals("Retired");
+                status.equals("Closed") || status.equals("Pending") ||
+                status.equals("Revoked") || status.equals("Merged") ||
+                status.equals("Retired");
     }
 
     /**
@@ -146,32 +166,67 @@ public class BusinessStatusUpdateService {
      */
     private boolean shouldCascadeToPermits(String newStatus) {
         return newStatus.equals("Suspended") || newStatus.equals("Revoked") ||
-               newStatus.equals("Closed") || newStatus.equals("Retired");
+                newStatus.equals("Closed") || newStatus.equals("Retired");
     }
 
     /**
      * Gets the owners associated with a business.
-     * Note: Requires business_owner junction table query.
-     * For now, returns an empty list - implement when business_owner is available.
+     * Queries business_owner junction table.
      */
     private List<OwnerModel> getOwnersForBusiness(int businessId) {
-        // TODO: Query business_owner table to get owner_ids, then fetch OwnerModel for each
-        // For new returning empty list until junction table DAO is implemented
-        return List.of();
+        List<OwnerModel> owners = new ArrayList<>();
+        String query = "SELECT o.* FROM owner o " +
+                "INNER JOIN business_owner bo ON o.owner_id = bo.owner_id " +
+                "WHERE bo.business_id = ?";
+
+        try (PreparedStatement pstmt = DatabaseConnector.connection.prepareStatement(query)) {
+            pstmt.setInt(1, businessId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    OwnerModel owner = new OwnerModel(
+                            rs.getInt("owner_id"),
+                            rs.getString("last_name"),
+                            rs.getString("first_name"),
+                            rs.getString("middle_name"),
+                            rs.getString("contact_no"),
+                            rs.getString("email"),
+                            rs.getString("gov_id_type"),
+                            rs.getString("gov_id_no"),
+                            rs.getString("tin"),
+                            rs.getString("home_address")
+                    );
+                    owners.add(owner);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving owners for business: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return owners;
     }
 
     /**
      * Builds the notification message content
      */
-    private String buildNotificationMessage(String businessName, String oldStatus, String newStatus, LocalDate effectiveDate, String reason) {
-        return String.format("Business '%s' status has been updated from '%s' to '%s' effective %s. Reason: %s", businessName, oldStatus, newStatus, effectiveDate.toString(), reason);
+    private String buildNotificationMessage(String businessName, String oldStatus,
+                                            String newStatus, LocalDate effectiveDate, String reason) {
+        return String.format(
+                "Business '%s' status has been updated from '%s' to '%s' effective %s. Reason: %s",
+                businessName, oldStatus, newStatus, effectiveDate.toString(), reason
+        );
     }
 
     /**
      * Builds JSON summary of changes for audit log
      */
-    private String buildAuditChangeSummary(String oldStatus, String newStatus, LocalDate effectiveDate, String reason, String supportDocRef) {
-        return String.format("{\"status\":\"%s -> %s\",\"effectiveDate\":\"%s\",\"reason\":\"%s\",\"supportDocRef\":\"%s\"}", oldStatus, newStatus, effectiveDate.toString(), reason, supportDocRef);
+    private String buildAuditChangeSummary(String oldStatus, String newStatus,
+                                           LocalDate effectiveDate, String reason, String supportDocRef) {
+        return String.format(
+                "{\"status\":\"%s -> %s\",\"effectiveDate\":\"%s\",\"reason\":\"%s\",\"supportDocRef\":\"%s\"}",
+                oldStatus, newStatus, effectiveDate.toString(), reason, supportDocRef
+        );
     }
 
     /**
@@ -190,7 +245,7 @@ public class BusinessStatusUpdateService {
             return success;
         }
 
-        public String getMessage(){
+        public String getMessage() {
             return message;
         }
     }
