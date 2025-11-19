@@ -156,7 +156,7 @@ public class UpdatePermitController {
                     businessId,
                     permitTypeId,
                     status,
-                    effectiveDateUtil,
+                    (java.sql.Date) effectiveDateUtil,
                     note
             );
 
