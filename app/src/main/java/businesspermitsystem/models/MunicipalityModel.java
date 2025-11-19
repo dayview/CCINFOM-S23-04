@@ -1,7 +1,7 @@
 package businesspermitsystem.models;
 
 /**
- * 
+ * Represents a Municipality (city or town) record in the Business Permit System.
  */
 public class MunicipalityModel {
     /**
@@ -44,7 +44,9 @@ public class MunicipalityModel {
     private String officeZipCode;
 
 
-
+    /**
+     * Constructor for the MunicipalityModel.
+     */
     public MunicipalityModel(int municipalityID, String municipalityName, String province, String region,String classification , String contactNumber, String officeStreet, String officeBarangay, String officeZipCode) {
         this.municipalityID = municipalityID;
         this.municipalityName = municipalityName;
@@ -56,61 +58,71 @@ public class MunicipalityModel {
         this.officeStreet = officeStreet;
         this.officeZipCode = officeZipCode;
     }
+    
+    // --- Getters ---
+
     public int getMunicipalityID() {
         return municipalityID;
-    }
-    public void setMunicipalityID(int municipalityID) {
-        this.municipalityID = municipalityID;
     }
     public String getMunicipalityName() {
         return municipalityName;
     }
-    public void setMunicipalityName(String municipalityName) {
-        this.municipalityName = municipalityName;
-    }
     public String getRegion() {
         return region;
-    }
-    public void setRegion(String region) {
-        this.region = region;
     }
     public String getContactNumber() {
         return contactNumber;
     }
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
     public String getProvince() {
         return province;
-    }
-    public void setProvince(String province) {
-        this.province = province;
     }
     public String getClassification() {
         return classification;
     }
-    public void setClassification(String classification) {
-        this.classification = classification;
-    }
     public String getOfficeStreet() {
         return officeStreet;
-    }
-    public void setOfficeStreet(String officeStreet) {
-        this.officeStreet = officeStreet;
     }
     public String getOfficeBarangay() {
         return officeBarangay;
     }
-    public void setOfficeBarangay(String officeBarangay) {
-        this.officeBarangay = officeBarangay;
-    }
     public String getOfficeZipCode() {
         return officeZipCode;
+    }
+    
+    // --- Setters ---
+
+    public void setMunicipalityID(int municipalityID) {
+        this.municipalityID = municipalityID;
+    }
+    public void setMunicipalityName(String municipalityName) {
+        this.municipalityName = municipalityName;
+    }
+    public void setRegion(String region) {
+        this.region = region;
+    }
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+    public void setProvince(String province) {
+        this.province = province;
+    }
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+    public void setOfficeStreet(String officeStreet) {
+        this.officeStreet = officeStreet;
+    }
+    public void setOfficeBarangay(String officeBarangay) {
+        this.officeBarangay = officeBarangay;
     }
     public void setOfficeZipCode(String officeZipCode) {
         this.officeZipCode = officeZipCode;
     }
 
+    /**
+     * Provides a concatenated string representation of the location.
+     */
+    @Override
     public String toString() {
         return municipalityName + ", " + region + ", " + province;
     }

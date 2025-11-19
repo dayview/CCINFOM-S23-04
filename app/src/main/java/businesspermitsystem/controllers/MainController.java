@@ -53,6 +53,9 @@ public class MainController {
     @FXML private Button updateMunicipalityButton;
     @FXML private Button deleteMunicipalityButton;
 
+    // REPORT BUTTONS
+    @FXML private Button generateReportPermitsIssued;
+
     // ------------------------------------------------------------------------------------------------
 
     // TRANSACTIONS ACTIONS
@@ -255,4 +258,8 @@ public class MainController {
         sceneManager.switchScene("/view/deleteMunicipalityView.fxml", "Delete Municipality");
     }
 
+    @FXML
+    private void generateReportPermitsIssuedPressed(ActionEvent event) {
+
+    }
 }
